@@ -1,5 +1,5 @@
 const { response, request } = require('express')
-const { Heroes } = require('../models/mySqlHeroes.model');
+const { Heroes } = require('../models/my-sql-heroes.model');
 const { bdmysql,bdmysqlNube } = require('../database/my-sql-connection');
 
 //CRUD
@@ -74,7 +74,8 @@ const heroesComoGet = async(req = request, res = response) => {
     const { termino } = req.params;
 
     try {
-        const [results, metadata] = await bdmysqlNube.query(
+        //const [results, metadata] = await bdmysqlNube.query(
+        const [results, metadata] = await bdmysql.query(
             "SELECT nombre,bio" +
             " FROM heroes" +
             " WHERE nombre LIKE '%" + termino + "%'" +
