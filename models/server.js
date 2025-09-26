@@ -1,7 +1,7 @@
 const express = require('express')
 const cors = require('cors')
 //const { bdmysql } = require('../database/MariaDbConnection');
-const { bdmysql,bdmysqlNube } = require('../database/my-sql-connection');
+const { bdmysql,bdmysqlNube } = require('../database/connection');
 
 class Server {
     constructor() {

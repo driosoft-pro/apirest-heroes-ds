@@ -1,6 +1,6 @@
 const { response, request } = require('express')
-const { Heroes } = require('../models/my-sql-heroes.model');
-const { bdmysql,bdmysqlNube } = require('../database/my-sql-connection');
+const { Heroes } = require('../models/heroes.model');
+const { bdmysql,bdmysqlNube } = require('../database/connection');
 
 //CRUD
 // Create/INSERT/POST - OK

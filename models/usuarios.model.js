@@ -1,5 +1,5 @@
 const { DataTypes } = require('sequelize');
-const { bdmysql,bdmysqlNube } = require('../database/my-sql-connection');
+const { bdmysql,bdmysqlNube } = require('../database/connection');
 
 const Usuarios = bdmysqlNube.define('usuarios',
     {
