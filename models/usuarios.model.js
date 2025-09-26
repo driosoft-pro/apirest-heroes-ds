@@ -1,7 +1,8 @@
 const { DataTypes } = require('sequelize');
 const { bdmysql,bdmysqlNube } = require('../database/connection');
 
-const Usuarios = bdmysqlNube.define('usuarios',
+//const Usuarios = bdmysqlNube.define('usuarios_ds',
+const Usuarios = bdmysql.define('usuarios_ds',
     {
         // Model attributes are defined here
         id: {
