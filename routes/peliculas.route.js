@@ -1,6 +1,6 @@
 import { Router } from 'express';
 
-import { peliculasGet, peliculaIdGet, peliculasPost, peliculaPut, peliculaDelete } from '../controllers/peliculas.controller.js';
+import { peliculasGet, peliculaIdGet, peliculasPost, peliculaPut, peliculaDelete, peliculaProtagonistasGet, peliculaMultimediasGet} from '../controllers/peliculas.controller.js';
 
 const router = Router();
 
@@ -14,5 +14,9 @@ router.post('/', peliculasPost);
 router.put('/:id', peliculaPut);
 
 router.delete('/:id', peliculaDelete);
+
+router.get('/:id/protagonistas', peliculaProtagonistasGet);
+
+router.get('/:id/multimedias', peliculaMultimediasGet);
 
 export default router;
