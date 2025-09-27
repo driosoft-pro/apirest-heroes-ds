@@ -1,150 +1,154 @@
 # API REST con Node.js + Express — Gestión de Héroes, Películas y Multimedia
 
-### Actividad segundo corte Almacenación de Datos
-
-**Proyecto:** Ampliación de la API/REST en **Node.js + Express** — Gestión de Héroes, Películas y Elementos Multimedia
-
-**Descripción corta**
-
-Este repositorio contiene una API REST construida con **Node.js** y **Express**, conectada a **MySQL**, que gestiona héroes, películas y elementos multimedia relacionados. La ampliación incluye relaciones entre héroes y películas (protagonistas con rol) y entre héroes y elementos multimedia. También permite consultar multimedia de películas a través de los héroes protagonistas.
+## 📌 Actividad segundo corte Almacenación de Datos  
+**Proyecto:** Ampliación de la API/REST en Node.js + Express — Gestión de Héroes, Películas y Elementos Multimedia
 
 ---
 
-## Estructura del proyecto
+## 📖 Descripción corta
+Este repositorio contiene una API REST construida con Node.js y Express, conectada a MySQL (usando Sequelize), que gestiona héroes, películas y elementos multimedia relacionados.  
+La ampliación incluye relaciones muchos-a-muchos entre:
+- **Héroes y Películas** (a través de la tabla Protagonistas, especificando un rol).
+- **Héroes y Multimedia** (asociando elementos como fotos/videos a héroes específicos).
 
+También permite consultar el multimedia de las películas a través de sus héroes protagonistas, facilitando consultas complejas sobre las relaciones establecidas.
+
+---
+
+## 📂 Estructura del proyecto
 ```
-├── controllers/        # Controladores de cada entidad
+├── controllers/        
 │   ├── heroes.controller.js
-│   ├── multimedia.controller.js
-│   ├── multimedia-heroes.controller.js
+│   ├── multimedias.controller.js
+│   ├── multimediasHeroes.controller.js  
 │   ├── peliculas.controller.js
 │   ├── protagonistas.controller.js
 │   └── usuarios.controller.js
 │
-├── database/           # Conexión a MySQL
-│   └── my-sql-connection.js
+├── database/           
+│   └── connection.js
 │
-├── helpers/            # Validadores y funciones auxiliares
+├── helpers/            
 │   ├── db-validators.js
 │   └── generar-jwt.js
 │
-├── middlewares/        # Middlewares de validación
+├── middlewares/        
 │   ├── validar-campos.js
 │   ├── validar-jwt.js
 │   └── validar-roles.js
 │
-├── models/             # Modelos de base de datos
-│   ├── multimedia-heroes.js
-│   ├── multimedia.model.js
-│   ├── my-sql-connection.model.js
-│   ├── peliculas.models.js
-│   ├── protagonistas.model.js
+├── models/             
+│   ├── heroes.model.js
+│   ├── multimediasHeroes.model.js      
+│   ├── multimedias.model.js
+│   ├── peliculas.model.js
+│   ├── protagonistas.model.js          
 │   └── usuarios.model.js
 │
-├── routes/             # Rutas de la API
+├── routes/             
 │   ├── heroes.route.js
-│   ├── multimedia.route.js
+│   ├── multimedias.route.js
+│   ├── multimediasHeroes.route.js
 │   ├── peliculas.route.js
 │   ├── protagonistas.route.js
 │   └── usuarios.route.js
 │
-├── app.js              # Configuración principal del servidor
-├── .env                # Variables de entorno
-├── package.json        # Dependencias y scripts
-└── README.md           # Documentación del proyecto
+├── app.js              
+├── .env                
+├── package.json        
+└── README.md           
 ```
 
 ---
 
-## Requisitos
-
-* Node.js >= 18
-* MySQL >= 8
+## ⚙️ Requisitos
+- Node.js >= 18  
+- MySQL >= 8  
 
 ---
 
-## Instalación y configuración
-
+## 🚀 Instalación y configuración
 1. Clona el repositorio:
-
-```bash
-git clone <url-del-repo>
-cd <nombre-del-proyecto>
-```
+   ```bash
+   git clone <url-del-repo>
+   cd <nombre-del-proyecto>
+   ```
 
 2. Instala dependencias:
+   ```bash
+   npm install
+   ```
 
-```bash
-npm install
-```
-
-3. Configura el archivo `.env`:
-
-```env
-PORT=4000
-DB_HOST=localhost
-DB_USER=root
-DB_PASSWORD=tu_password
-DB_NAME=heroesdb
-JWT_SECRET=mi_secret_key
-```
+3. Configura el archivo `.env` con las credenciales de tu base de datos y la clave secreta para JWT:
+   ```env
+   PORT=4000
+   DB_HOST=localhost
+   DB_USER=root
+   DB_PASSWORD=tu_password
+   DB_NAME=heroesdb
+   JWT_SECRET=mi_secret_key
+   # Agrega las variables para la BD en la nube si las usas (DB_REMOTE_...)
+   ```
 
 4. Inicia el servidor:
+   ```bash
+   npm start
+   ```
 
-```bash
-npm start
-```
-
-Por defecto se levanta en: `http://localhost:4000/api`
-
----
-
-## Endpoints principales
-
-### Héroes
-
-* `GET /api/heroes` — listar héroes
-* `GET /api/heroes/:id` — obtener héroe
-* `POST /api/heroes` — crear héroe
-* `PUT /api/heroes/:id` — actualizar héroe
-* `DELETE /api/heroes/:id` — eliminar héroe
-
-### Películas
-
-* `GET /api/peliculas` — listar películas
-* `GET /api/peliculas/:id` — obtener película
-* `POST /api/peliculas` — crear película
-* `PUT /api/peliculas/:id` — actualizar película
-* `DELETE /api/peliculas/:id` — eliminar película
-
-### Protagonistas (relación héroe-película)
-
-* `POST /api/protagonistas` — asignar héroe a película con rol
-* `GET /api/peliculas/:id/protagonistas` — obtener héroes de una película con su rol
-* `PUT /api/protagonistas/:id` — actualizar rol
-* `DELETE /api/protagonistas/:id` — eliminar relación
-
-### Multimedia
-
-* `GET /api/multimedia` — listar multimedia
-* `GET /api/multimedia/:id` — detalle de un multimedia
-* `POST /api/multimedia` — crear multimedia (asociado a un héroe)
-* `PUT /api/multimedia/:id` — actualizar multimedia
-* `DELETE /api/multimedia/:id` — eliminar multimedia
-* `GET /api/heroes/:id/multimedia` — obtener multimedia de un héroe
+👉 Por defecto se levanta en: `http://localhost:4000/api`
 
 ---
 
-## Consultas adicionales
+## 📌 Endpoints principales
 
-1. **Por película obtener protagonistas y su rol**
+### 👤 Usuarios
+- `POST /api/usuarios` — crear un nuevo usuario.  
+- `POST /api/usuarios/login` — autenticación y generación de JWT.  
+- `GET /api/usuarios` — listar todos los usuarios (Ruta protegida por JWT y Rol ADMIN_ROLE).  
 
-```http
-GET /api/peliculas/:id/protagonistas
-```
+### 🦸‍♂️ Héroes
+- `GET /api/heroes` — listar héroes  
+- `GET /api/heroes/:id` — obtener héroe por ID  
+- `GET /api/heroes/como/:termino` — buscar héroes por término  
+- `POST /api/heroes` — crear héroe  
+- `PUT /api/heroes/:id` — actualizar héroe  
+- `DELETE /api/heroes/:id` — eliminar héroe  
+
+### 🎬 Películas
+- `GET /api/peliculas` — listar películas  
+- `GET /api/peliculas/:id` — obtener película por ID  
+- `POST /api/peliculas` — crear película  
+- `PUT /api/peliculas/:id` — actualizar película  
+- `DELETE /api/peliculas/:id` — eliminar película  
+
+### 🎭 Protagonistas (Relación Héroe-Película M:M)
+- `POST /api/protagonistas` — asignar héroe a película con rol (papel)  
+- `GET /api/protagonistas` — listar todas las relaciones (Protagonistas)  
+- `GET /api/protagonistas/:id` — obtener una relación por ID  
+- `PUT /api/protagonistas/:id` — actualizar rol de la relación  
+- `DELETE /api/protagonistas/:id` — eliminar relación  
+
+### 🖼 Multimedia
+- `GET /api/multimedias` — listar todo el multimedia  
+- `GET /api/multimedias/:id` — detalle de un multimedia por ID  
+- `POST /api/multimedias` — crear un nuevo elemento multimedia  
+- `PUT /api/multimedias/:id` — actualizar multimedia  
+- `DELETE /api/multimedias/:id` — eliminar multimedia  
+
+### 🎞 Multimedia-Héroes (Relación M:M)
+- `POST /api/multimediasHeroes` — asociar multimedia a un héroe  
+- `GET /api/multimediasHeroes` — listar todas las asociaciones  
+- `GET /api/multimediasHeroes/:id` — obtener una asociación por ID  
+- `PUT /api/multimediasHeroes/:id` — actualizar asociación  
+- `DELETE /api/multimediasHeroes/:id` — eliminar asociación  
+
+---
+
+## 🔍 Consultas adicionales (Query Endpoints)
+### 📌 Por película obtener protagonistas y su rol
+**GET** `/api/peliculas/:id/protagonistas`  
 
 Ejemplo de respuesta:
-
 ```json
 [
   { "hero_id": 1, "name": "Superman", "role": "Protagonista" },
@@ -152,67 +156,55 @@ Ejemplo de respuesta:
 ]
 ```
 
-2. **Por película obtener multimedia de sus héroes protagonistas**
-
-```http
-GET /api/peliculas/:id/multimedia
-```
+### 📌 Por héroe obtener su multimedia asociado
+**GET** `/api/heroes/:id/multimedia`  
 
 Ejemplo de respuesta:
-
 ```json
 [
-  { "id": 10, "type": "photo", "url": "https://cdn/.../superman.jpg", "hero": "Superman" },
-  { "id": 12, "type": "video", "url": "https://cdn/.../batman.mp4", "hero": "Batman" }
+  { "idmultimedia": 10, "nombre": "Foto promocional", "url": "https://cdn/.../superman.jpg", "tipo": "photo" },
+  { "idmultimedia": 12, "nombre": "Clip de la película", "url": "https://cdn/.../superman-clip.mp4", "tipo": "video" }
+]
+```
+
+### 📌 Por película obtener multimedia de sus héroes protagonistas
+**GET** `/api/peliculas/:id/multimedia`  
+
+Ejemplo de respuesta:
+```json
+[
+  { "idmultimedia": 10, "tipo": "photo", "url": "https://cdn/.../superman.jpg", "hero_name": "Superman" },
+  { "idmultimedia": 12, "tipo": "video", "url": "https://cdn/.../batman.mp4", "hero_name": "Batman" }
 ]
 ```
 
 ---
 
-## Validaciones
-
-* **BD**: claves foráneas, campos obligatorios, relaciones muchos-a-muchos.
-* **API**:
-
-  * Validar datos de entrada (`express-validator`).
-  * Validación JWT para rutas protegidas.
-  * Roles para restringir acceso.
+## 🔒 Validaciones y Seguridad
+- **Validaciones BD:** Uso de Sequelize para claves foráneas, campos obligatorios y relaciones M:M.  
+- **Validaciones API:**  
+  - `express-validator` para validar datos de entrada.  
+  - JWT para autenticación en rutas protegidas.  
+  - Manejo de Roles para restringir acceso (ADMIN_ROLE).  
 
 ---
 
-## Scripts disponibles
-
-* `npm start` — inicia el servidor en modo producción
-* `npm run dev` — inicia con nodemon en modo desarrollo
-
----
-
-## Pruebas
-
-Se recomienda usar **Jest** o **Mocha + Chai** para pruebas unitarias e integración.
-
-Ejemplo:
-
-```bash
-npm test
-```
+## 📜 Scripts disponibles
+- `npm start` — inicia el servidor en modo producción.  
+- `npm run dev` — inicia con nodemon en modo desarrollo.  
 
 ---
 
-## Notas finales
+## 📝 Notas finales
+- Documentar la API con Swagger en `docs/`.  
+- Usar variables de entorno (.env) para credenciales sensibles.  
+- Considerar paginación y filtros en endpoints de listado.  
 
-* Documenta la API con Swagger en la carpeta `docs/`.
-* Usa variables de entorno para credenciales sensibles.
-* Considera paginación y filtros en los endpoints de lista.
+---
 
-✍️ Autores
-
-✍️ Desarrollado por: Deyton Riasco Ortiz
-
-✍️ Desarrollado por: Samuel Izquierdo Bonilla
-
-📅 Fecha: 2025
-
-📧 Contacto: driosoftpro@gmail.com
-
-📧 Contacto: samuelizquier98@gmail.com
+## ✍️ Autores
+- ✍️ Desarrollado por: **Deyton Riasco Ortiz**  
+- ✍️ Desarrollado por: **Samuel Izquierdo Bonilla**  
+📅 **Fecha:** 2025  
+📧 Contacto: driosoftpro@gmail.com  
+📧 Contacto: samuelizquier98@gmail.com  
