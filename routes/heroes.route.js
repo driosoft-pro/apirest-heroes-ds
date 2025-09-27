@@ -6,16 +6,12 @@ const { heroesGet,
         heroesPost,
         heroePut,
         heroeDelete
-    //pruebaPost,
-    //pruebaPut,
-    //pruebaDelete,
-    //pruebaPatch
+
 } = require('../controllers/heroes.controller');
 
 const router = Router();
 
 //END Points
-//SELECT/GET * from heroes
 router.get('/', heroesGet);
 
 router.get('/:id', heroeIdGet);
