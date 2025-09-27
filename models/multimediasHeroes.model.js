@@ -1,8 +1,10 @@
 import { DataTypes } from 'sequelize';
-import { bdmysql,bdmysqlNube } from '../database/connection.js'; 
+import { bdmysql,bdmysqlNube } from '../database/connection.js';
+import { Heroes } from './heroes.model.js';
+import { Multimedias } from './multimedias.model.js';
 
 // Definición del modelo MultimediasHeroes
-export const MultimediasHeroes = bdmysql.define('multimedias_heroes_ds', {
+export const MultimediasHeroes = bdmysql.define('multimedias_heroe_ds', {
     heroes_id: {
         type: DataTypes.INTEGER,
         allowNull: false,
@@ -17,4 +19,10 @@ export const MultimediasHeroes = bdmysql.define('multimedias_heroes_ds', {
     updatedAt: false,
 });
 
+// RELACIONES
+Heroes.belongsToMany(Multimedias, { through: MultimediasHeroes,foreignKey: 'heroes_id', otherKey: 'idmultimedia', as: 'multimedias'});
 
+Multimedias.belongsToMany(Heroes, { 
+    through: MultimediasHeroes,   
+    foreignKey: 'idmultimedia', otherKey: 'heroes_id', as: 'heroes'
+});

@@ -1,6 +1,6 @@
 import { DataTypes } from 'sequelize';
 import { bdmysql,bdmysqlNube } from '../database/connection.js'; 
-import { Heroes } from './hero.model.js';
+import { Heroes } from './heroes.model.js';
 import { Peliculas } from './peliculas.model.js';
 
 // Definición del modelo Protagonistas
@@ -40,3 +40,9 @@ export const Protagonistas = bdmysql.define('protagonistas_ds', {
     updatedAt: false,
 });
 
+// Relaciones
+Protagonistas.belongsTo(Heroes, { foreignKey: 'heroes_id', as: 'heroes' });
+Protagonistas.belongsTo(Peliculas, { foreignKey: 'peliculas_id' });
+
+Heroes.hasMany(Protagonistas, { foreignKey: 'heroes_id', as: 'protagonistas' });
+Peliculas.hasMany(Protagonistas, { foreignKey: 'peliculas_id' });

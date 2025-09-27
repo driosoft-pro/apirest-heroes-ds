@@ -79,6 +79,8 @@ export const peliculaDelete = async (req, res = response) => {
     }
 };
 
+// =============================================================================
+// CONSULTAS EXTRAS ACTIVIDAD
 export const peliculaProtagonistasGet = async (req, res = response) => {
   const { id } = req.params;
   try {
@@ -87,6 +89,7 @@ export const peliculaProtagonistasGet = async (req, res = response) => {
       include: [
         {
           model: Heroes,
+          as: 'heroes',
           attributes: ['id', 'nombre', 'casa', 'img']
         }
       ]
@@ -112,9 +115,11 @@ export const peliculaMultimediasGet = async (req, res = response) => {
       include: [
         {
           model: Heroes,
+          as: 'heroes',
           include: [
             {
               model: Multimedias,
+              as: 'multimedias',
               through: { attributes: [] } // oculta la tabla intermedia
             }
           ]

@@ -15,6 +15,7 @@ router.put('/:id', peliculaPut);
 
 router.delete('/:id', peliculaDelete);
 
+//ROUTES EXTRA ACTIVIDAD
 router.get('/:id/protagonistas', peliculaProtagonistasGet);
 
 router.get('/:id/multimedias', peliculaMultimediasGet);
