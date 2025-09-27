@@ -2,7 +2,7 @@ const { DataTypes } = require('sequelize');
 const { bdmysql,bdmysqlNube } = require('../database/connection');
 
 //const Heroes = bdmysqlNube.define('heroes',
-const Heroes = bdmysql.define('heroes',
+export const Heroes = bdmysql.define('heroes_ds',
     {
         // Model attributes are defined here
         'id': {
@@ -44,7 +44,3 @@ const Heroes = bdmysql.define('heroes',
         updatedAt: false
     }
 );
-
-module.exports = {
-    Heroes,
-}
