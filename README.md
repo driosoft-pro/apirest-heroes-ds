@@ -70,8 +70,10 @@ También permite consultar el multimedia de las películas a través de sus hér
 ## 🚀 Instalación y configuración
 1. Clona el repositorio:
    ```bash
-   git clone <url-del-repo>
-   cd <nombre-del-proyecto>
+   git clone https://github.com/driosoft-pro/apirest-heroes-ds.git
+   ```
+   ```bash
+   cd nombre-del-proyecto
    ```
 
 2. Instala dependencias:
