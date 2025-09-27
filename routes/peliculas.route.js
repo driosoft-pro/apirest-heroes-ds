@@ -1,12 +1,6 @@
-const { Router } = require('express');
+import { Router } from 'express';
 
-const { 
-    peliculasGet,
-    peliculaIdGet,
-    peliculasPost,
-    peliculaPut,
-    peliculaDelete
-} = require('../controllers/peliculas.controller');
+import { peliculasGet, peliculaIdGet, peliculasPost, peliculaPut, peliculaDelete } from '../controllers/peliculas.controller.js';
 
 const router = Router();
 
@@ -21,6 +15,4 @@ router.put('/:id', peliculaPut);
 
 router.delete('/:id', peliculaDelete);
 
-// router.patch('/', peliculasPatch); // si algún día lo requieres
-
-module.exports = router;
+export default router;

@@ -1,8 +1,10 @@
-const jwt = require('jsonwebtoken');
-const { request, response } = require("express");
-const { Usuarios } = require('../models/usuarios.model');
+import pkg from 'jsonwebtoken';
+const { verify } = pkg;
+import { request, response } from "express";
+import { Usuarios } from '../models/usuarios.model.js';
 
-const validarJWT = async (req = request, res = response, next) => {
+// Middleware para validar el JWT
+export const validarJWT = async (req = request, res = response, next) => {
     const token = req.header('x-token');
 
     if (!token) {
@@ -13,21 +15,21 @@ const validarJWT = async (req = request, res = response, next) => {
 
     try {
         //Valida el token
-        const {uid} = jwt.verify(token, process.env.SECRETORPRIVATEKEY);
+        const { uid } = verify(token, process.env.SECRETORPRIVATEKEY);
 
         console.log(uid);
 
         const usuario = await Usuarios.findByPk(uid);
         //const usuario = await Usuarios.findByPk(uid);
 
-        if(!usuario){
+        if (!usuario) {
             return res.status(401).json({
                 msg: 'Token no valido - usuario no existe en BD'
             })
         }
 
 
-        if(!usuario.estado){
+        if (!usuario.estado) {
             return res.status(401).json({
                 msg: 'Token no valido - usuario con estado: false'
             })
@@ -44,6 +46,3 @@ const validarJWT = async (req = request, res = response, next) => {
     }
 }
 
-module.exports = {
-    validarJWT
-}

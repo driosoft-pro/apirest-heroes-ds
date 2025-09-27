@@ -1,13 +1,6 @@
-const { Router } = require('express');
+import { Router } from 'express';
 
-const { heroesGet,
-        heroeIdGet,
-        heroesComoGet,
-        heroesPost,
-        heroePut,
-        heroeDelete
-
-} = require('../controllers/heroes.controller');
+import { heroesGet, heroeIdGet, heroesComoGet, heroesPost, heroePut, heroeDelete } from '../controllers/heroes.controller.js';
 
 const router = Router();
 
@@ -26,4 +19,4 @@ router.delete('/:id', heroeDelete);
 
 //router.patch('/', usuariosPatch);
 
-module.exports = router;
+export default router;

@@ -1,8 +1,10 @@
-const { Sequelize } = require('sequelize');
-require('dotenv').config();
+import { Sequelize } from 'sequelize';
+import dotenv from 'dotenv';
+
+dotenv.config();
 
 // Configuración para la BD local
-const bdmysql = new Sequelize(
+export const bdmysql = new Sequelize(
     process.env.DB_LOCAL_NAME,
     process.env.DB_LOCAL_USER,
     process.env.DB_LOCAL_PASSWORD,
@@ -14,7 +16,7 @@ const bdmysql = new Sequelize(
 );
 
 // Configuración para la BD en la nube
-const bdmysqlNube = new Sequelize(
+export const bdmysqlNube = new Sequelize(
     process.env.DB_REMOTE_NAME,
     process.env.DB_REMOTE_USER,
     process.env.DB_REMOTE_PASSWORD,
@@ -24,5 +26,3 @@ const bdmysqlNube = new Sequelize(
         dialect: process.env.DB_REMOTE_DIALECT
     }
 );
-
-module.exports = { bdmysql, bdmysqlNube };

@@ -1,5 +1,5 @@
-const { DataTypes } = require('sequelize');
-const { bdmysql,bdmysqlNube } = require('../database/connection');
+import { DataTypes } from 'sequelize';
+import { bdmysql,bdmysqlNube } from '../database/connection.js'; 
 
 //const Heroes = bdmysqlNube.define('heroes',
 export const Heroes = bdmysql.define('heroes_ds',

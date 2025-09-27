@@ -1,50 +1,41 @@
-const { Usuarios } = require('../models/usuarios.model');
-
-const bcryptjs = require("bcryptjs");
-const { generarJWT } = require("../helpers/generar-jwt");
+import { Usuarios } from '../models/usuarios.model.js';
+import { genSaltSync, hashSync, compareSync } from "bcryptjs";
+import { generarJWT } from "../helpers/generar-jwt.js";
 
 //INSERT - CREATE
-const usuariosPost = async (req, res = response) => {
-
-
+export const usuariosPost = async (req, res = response) => {
     //Desestructuracion de los Datos, desde el BODY, que es donde estamos pasando la informacion
     const { nombre, correo, password, img, rol, google } = req.body;
-
-
     const usuario = new Usuarios({ nombre, correo, password, img, rol, google });
 
     try {
-       
-        const existeUsuario = await Usuarios.findOne({ where: { correo: correo} });
-
+        const existeUsuario = await Usuarios.findOne({ where: { correo: correo } });
         if (existeUsuario) {
-            return res.status(400).json({ok:false,
+            return res.status(400).json({
+                ok: false,
                 msg: 'Ya existe un Usuario con el correo ' + correo
             })
         }
-
-        console.log("Sin encriptar",usuario.password);
+        console.log("Sin encriptar", usuario.password);
 
         //ENCRIPTAR la constraseña
-        const salt = bcryptjs.genSaltSync();
-        //let unpassword = usuario.password;
-        usuario.password = bcryptjs.hashSync(usuario.password, salt);
+        const salt = genSaltSync();
 
-        console.log("Encriptado",usuario.password);
+        //let unpassword = usuario.password;
+        usuario.password = hashSync(usuario.password, salt);
+        console.log("Encriptado", usuario.password);
 
         // Guardar en BD
         newUsuario = await usuario.save();
-
         //console.log(newHeroe.null);
+
         //Ajusta el Id del nuevo registro al Usuario
         usuario.id = newUsuario.null;
-
         res.json({
-            ok:true,
-            msg:"Usuario CREADO",
-            data:usuario
+            ok: true,
+            msg: "Usuario CREADO",
+            data: usuario
         });
-       
 
     } catch (error) {
         console.log(error);
@@ -53,22 +44,15 @@ const usuariosPost = async (req, res = response) => {
             msg: 'Hable con el Administrador',
             err: error
         })
-
     }
+};
 
-}
-
-
-
-const login = async (req, res = response) => {
-
+export const login = async (req, res = response) => {
     const { correo, password } = req.body;
 
     try {
-
-        const usuario = await Usuarios.findOne({ where: { correo: correo} });
+        const usuario = await Usuarios.findOne({ where: { correo: correo } });
         console.log(usuario);
-       
         if (!usuario) {
             return res
                 .status(400)
@@ -88,11 +72,9 @@ const login = async (req, res = response) => {
                 });
         }
 
+        const validaPassword = compareSync(password, usuario.password);
 
-        const validaPassword = bcryptjs.compareSync(password, usuario.password);
         // Verificar la contraseña
-
-
         if (!validaPassword) {
             return res
                 .status(400)
@@ -102,10 +84,8 @@ const login = async (req, res = response) => {
                 });
         }
 
-
         // Generar el JWT
         const token = await generarJWT(usuario.id);
-
 
         res.json({
             ok: true,
@@ -123,19 +103,14 @@ const login = async (req, res = response) => {
     }
 };
 
-//SELECT * FROM usuarios
-const usuariosGet = async (req, res = response) => {
-
+export const usuariosGet = async (req, res = response) => {
 
     try {
-        //select * from usuarios;
         const unosUsuarios = await Usuarios.findAll();
-
         res.json({
             ok: true,
             data: unosUsuarios
         });
-
 
     } catch (error) {
         console.log(error);
@@ -144,15 +119,8 @@ const usuariosGet = async (req, res = response) => {
             msg: 'Hable con el Administrador',
             err: error
         })
-
     }
-}
+};
 
-
-module.exports = {
-    usuariosPost,
-    login,
-    usuariosGet
-}
 
 

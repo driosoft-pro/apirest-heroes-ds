@@ -1,14 +1,11 @@
-const { validationResult } = require('express-validator');
+import { validationResult } from 'express-validator';
 
-const validarCampos = (req, res, next) => {
+// Middleware para validar los campos de las requests
+export const validarCampos = (req, res, next) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
         //console.log("llego aqui")
         return res.status(400).json(errors);
     }
     next();
-}
-
-module.exports = {
-    validarCampos
 }

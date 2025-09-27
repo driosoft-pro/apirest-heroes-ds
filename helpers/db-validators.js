@@ -1,23 +1,22 @@
-const { Usuarios, } = require("../models/usuarios.model");
+import { Usuarios } from "../models/usuarios.model.js";
 
-const existeEmail = async (correo = "") => {
+// Validar si el rol existe
+export const existeEmail = async (correo = "") => {
 
-  const existeEmail = await Usuarios.findOne({ where: { correo: correo} });
-       
-  if (existeEmail) {
-    throw new Error(`El email ${correo} ya existe en la Base de Datos...`);
-  }
+    const existeEmail = await Usuarios.findOne({ where: { correo: correo } });
+
+    if (existeEmail) {
+        throw new Error(`El email ${correo} ya existe en la Base de Datos...`);
+    }
 };
 
-const noExisteEmail = async (correo = "") => {
+// Validar si el usuario existe por id
+export const noExisteEmail = async (correo = "") => {
 
-  const existeEmail = await Usuarios.findOne({ where: { correo: correo} });
-       
-  if (!existeEmail) {
-    throw new Error(`El email ${correo} No existe en la Base de Datos...`);
-  }
+    const existeEmail = await Usuarios.findOne({ where: { correo: correo } });
+
+    if (!existeEmail) {
+        throw new Error(`El email ${correo} No existe en la Base de Datos...`);
+    }
 };
 
-module.exports = {
-  existeEmail,noExisteEmail
-};

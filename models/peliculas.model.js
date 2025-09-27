@@ -1,7 +1,8 @@
-const { DataTypes } = require('sequelize');
-const { bdmysql } = require('../database/connection');
+import { DataTypes } from 'sequelize';
+import { bdmysql,bdmysqlNube } from '../database/connection.js'; 
 
-const Peliculas = bdmysql.define('peliculas_ds', {
+// Definición del modelo Peliculas
+export const Peliculas = bdmysql.define('peliculas_ds', {
     id: {
         type: DataTypes.INTEGER,
         primaryKey: true,
@@ -17,4 +18,4 @@ const Peliculas = bdmysql.define('peliculas_ds', {
     updatedAt: false,
 });
 
-module.exports = { Peliculas };
+
