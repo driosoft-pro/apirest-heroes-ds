@@ -1,10 +1,10 @@
 import { DataTypes } from 'sequelize';
-import { bdmysql,bdmysqlNube } from '../database/connection.js';
+import { sequelize } from '../database/connection.js';
 import { Heroes } from './heroes.model.js';
 import { Multimedias } from './multimedias.model.js';
 
 // Definición del modelo MultimediasHeroes
-export const MultimediasHeroes = bdmysql.define('multimedias_heroe_ds', {
+export const MultimediasHeroes = sequelize.define('multimedias_heroe_ds', {
     heroes_id: {
         type: DataTypes.INTEGER,
         allowNull: false,

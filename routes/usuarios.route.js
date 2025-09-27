@@ -32,20 +32,20 @@ router.post('/login',
 // Gets read
 router.get('/', usuariosGet);
 
-// PUT: actualizar usuario (Ruta Protegida: REQUIERE JWT Y ROL DE ADMINISTRADOR)
+// PUT: actualizar usuario ruta Protegida
 router.put('/:id', [
     validarJWT,
-    esAdminRole, // <-- Protección de rol de administrador
+    esAdminRole, //Protección de rol de administrador
     check('id', 'No es un ID válido').isNumeric(),
     check('id').custom(existeUsuarioPorId), // Asegurar que el usuario a actualizar existe
     check('rol', 'No es un rol valido').optional().isIn('ADMIN_ROLE', 'USER_ROLE'), // Rol opcional en el body si se quiere actualizar
     validarCampos,
 ], usuariosPut);
 
-// DELETE: eliminar usuario (Ruta Protegida: REQUIERE JWT Y ROL DE ADMINISTRADOR)
+// DELETE: eliminar usuario ruta Protegidas
 router.delete('/:id', [
     validarJWT,
-    esAdminRole, // <-- Protección de rol de administrador
+    esAdminRole, //Protección de rol de administrador
     check('id', 'No es un ID válido').isNumeric(),
     check('id').custom(existeUsuarioPorId), // Asegurar que el usuario a eliminar existe
     validarCampos,

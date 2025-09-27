@@ -1,8 +1,7 @@
 import { DataTypes } from 'sequelize';
-import { bdmysql,bdmysqlNube } from '../database/connection.js';
+import { sequelize } from '../database/connection.js';
 
-//const Heroes = bdmysqlNube.define('heroes',
-export const Heroes = bdmysql.define('heroes_ds',
+export const Heroes = sequelize.define('heroes_ds',
     {
         // Model attributes are defined here
         'id': {

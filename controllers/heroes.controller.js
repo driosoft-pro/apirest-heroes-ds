@@ -1,6 +1,6 @@
 import { response, request } from 'express';
 import { Heroes } from '../models/heroes.model.js';
-import { bdmysql, bdmysqlNube } from '../database/connection.js';
+import { sequelize } from '../database/connection.js';
 
 // GET: listar todas las heroes
 export const heroesGet = async (req, res = response) => {
@@ -49,8 +49,7 @@ export const heroeIdGet = async (req, res = response) => {
 export const heroesComoGet = async (req = request, res = response) => {
     const { termino } = req.params;
     try {
-        //const [results, metadata] = await bdmysqlNube.query(
-        const [results, metadata] = await bdmysql.query(
+        const [results, metadata] = await sequelize.query(
             "SELECT nombre,bio" +
             " FROM heroes" +
             " WHERE nombre LIKE '%" + termino + "%'" +

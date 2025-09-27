@@ -21,7 +21,7 @@ DROP TABLE IF EXISTS heroes_ds;
 
 -- Tabla de héroes
 CREATE TABLE heroes_ds (
-    id INT AUTO_INCREMENT PRIMARY KEY,
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
     nombre VARCHAR(50) NOT NULL,
     bio TEXT,
     img VARCHAR(250),
@@ -32,20 +32,20 @@ CREATE TABLE heroes_ds (
 
 -- Tabla de películas
 CREATE TABLE peliculas_ds (
-    id INT AUTO_INCREMENT PRIMARY KEY,
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
     nombre VARCHAR(50) NOT NULL
 );
 
--- Tabla de usuarios (ajustada con ENUM en rol)
+-- Tabla de usuarios
 CREATE TABLE usuarios_ds (
-    id INT AUTO_INCREMENT PRIMARY KEY,
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
     nombre VARCHAR(150) NOT NULL,
     correo VARCHAR(200) NOT NULL,
     password VARCHAR(200) NOT NULL,
     img VARCHAR(250),
     rol ENUM('ADMIN_ROLE', 'USER_ROLE') NOT NULL,
-    estado CHAR(1) NOT NULL DEFAULT '1',
-    google CHAR(1) NOT NULL DEFAULT '0',
+    estado TINYINT(1) NOT NULL DEFAULT '1',
+    google TINYINT(1) NOT NULL DEFAULT '0',
     fecha_creacion DATE NOT NULL,
     fecha_actualizacion DATE,
     CONSTRAINT usuarios_correo_u UNIQUE (correo)
@@ -61,18 +61,18 @@ CREATE TABLE multimedias_ds (
 
 -- Tabla de protagonistas (relación héroes - películas)
 CREATE TABLE protagonistas_ds (
-    id INT AUTO_INCREMENT PRIMARY KEY,
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
     papel TEXT,
     fecha_participacion DATE,
-    heroes_id INT NOT NULL,
-    peliculas_id INT NOT NULL,
+    heroes_id BIGINT NOT NULL,
+    peliculas_id BIGINT NOT NULL,
     CONSTRAINT protagonistas_heroes_fk FOREIGN KEY (heroes_id) REFERENCES heroes_ds(id),
     CONSTRAINT protagonistas_peliculas_fk FOREIGN KEY (peliculas_id) REFERENCES peliculas_ds(id)
 );
 
 -- Tabla intermedia héroes - multimedias (relación N:M)
 CREATE TABLE multimedias_heroe_ds (
-    heroes_id INT NOT NULL,
+    heroes_id BIGINT NOT NULL,
     idmultimedia INT NOT NULL,
     PRIMARY KEY (heroes_id, idmultimedia),
     CONSTRAINT multimedias_heroe_heroes_fk FOREIGN KEY (heroes_id) REFERENCES heroes_ds(id),
@@ -111,29 +111,33 @@ INSERT INTO peliculas_ds (nombre) VALUES
 
 -- INSERTS PARA usuarios_ds (corregido ENUM rol)
 INSERT INTO usuarios_ds (nombre, correo, password, img, rol, estado, google, fecha_creacion, fecha_actualizacion) VALUES
-('Samuel', 'samuel@mail.com', '1234', 'samuel.png', 'ADMIN_ROLE', '1', '0', '2025-01-01', '2025-02-01'),
-('Ana Torres', 'ana@mail.com', 'pass123', 'ana.png', 'USER_ROLE', '1', '1', '2025-01-05', '2025-02-05'),
-('Carlos Ruiz', 'carlos@mail.com', 'carlospw', 'carlos.png', 'USER_ROLE', '1', '0', '2025-01-07', '2025-02-06'),
-('Lucía Gómez', 'lucia@mail.com', 'luciapw', 'lucia.png', 'USER_ROLE', '1', '0', '2025-01-10', '2025-02-07'),
-('Pedro López', 'pedro@mail.com', 'pedropw', 'pedro.png', 'USER_ROLE', '1', '1', '2025-01-12', '2025-02-08'),
-('Marta Díaz', 'marta@mail.com', 'martapw', 'marta.png', 'USER_ROLE', '1', '0', '2025-01-15', '2025-02-09'),
-('Andrés Mejía', 'andres@mail.com', 'andrespw', 'andres.png', 'USER_ROLE', '1', '0', '2025-01-18', '2025-02-10'),
-('Sofía Ríos', 'sofia@mail.com', 'sofiapw', 'sofia.png', 'USER_ROLE', '1', '1', '2025-01-20', '2025-02-11'),
-('Laura Peña', 'laura@mail.com', 'laurapw', 'laura.png', 'USER_ROLE', '1', '0', '2025-01-22', '2025-02-12'),
-('Diego Castro', 'diego@mail.com', 'diegopw', 'diego.png', 'USER_ROLE', '1', '0', '2025-01-25', '2025-02-13');
+('Samuel','samuel@mail.com','$2b$10$fyGi/SNWEYasSjaLgeuBKe0jbpeTQNMr.iBm8CGXq8EEVVTVO1JDm','samuel.png','ADMIN_ROLE','1','0','2025-01-01','2025-02-01'),
+('Deyton','deyton@mail.com','$2b$10$7lSZnXCESlWbJxdIwPWbEOk.d0sVILy3bkal24I/RtMzGa1FEtMhy','deyton.png','USER_ROLE','1','0','2025-01-05','2025-02-05'),
+('Sofía Ríos','sofia@mail.com','$2b$10$g0QB3VKzG.5mOZxzzqofe.R37/4Mqob7Lmx.3.AqJO5vjXzAHU8PO','sofia.png','ADMIN_ROLE','1','0','2025-01-20','2025-02-11'),
+('Lucía Gómez','lucia@mail.com','$2b$10$Rmm/aWXXON2qSVJDweTxhefraTMsnVecgEU.iZQnYPVekJsxRW.Y6','lucia.png','USER_ROLE','1','0','2025-01-10','2025-02-07');
 
--- INSERTS PARA multimedias_ds
+-- INSERTS PARA multimedias_ds (ampliados para todos los héroes)
 INSERT INTO multimedias_ds (nombre, url, tipo) VALUES
 ('Iron Man Poster', 'ironman_poster.jpg', 'imagen'),
 ('Iron Man Trailer', 'ironman_trailer.mp4', 'video'),
 ('Hulk Poster', 'hulk_poster.jpg', 'imagen'),
 ('Hulk Trailer', 'hulk_trailer.mp4', 'video'),
-('Avengers Poster', 'avengers_poster.jpg', 'imagen'),
-('Avengers Trailer', 'avengers_trailer.mp4', 'video'),
+('Captain America Poster', 'capamerica_poster.jpg', 'imagen'),
+('Captain America Trailer', 'capamerica_trailer.mp4', 'video'),
+('Thor Poster', 'thor_poster.jpg', 'imagen'),
+('Thor Trailer', 'thor_trailer.mp4', 'video'),
+('Black Widow Poster', 'blackwidow_poster.jpg', 'imagen'),
+('Black Widow Trailer', 'blackwidow_trailer.mp4', 'video'),
+('Hawkeye Poster', 'hawkeye_poster.jpg', 'imagen'),
+('Hawkeye Trailer', 'hawkeye_trailer.mp4', 'video'),
+('Spider-Man Poster', 'spiderman_poster.jpg', 'imagen'),
+('Spider-Man Trailer', 'spiderman_trailer.mp4', 'video'),
+('Doctor Strange Poster', 'drstrange_poster.jpg', 'imagen'),
+('Doctor Strange Trailer', 'drstrange_trailer.mp4', 'video'),
 ('Black Panther Poster', 'blackpanther_poster.jpg', 'imagen'),
 ('Black Panther Trailer', 'blackpanther_trailer.mp4', 'video'),
-('Doctor Strange Poster', 'drstrange_poster.jpg', 'imagen'),
-('Doctor Strange Trailer', 'drstrange_trailer.mp4', 'video');
+('Captain Marvel Poster', 'captmarvel_poster.jpg', 'imagen'),
+('Captain Marvel Trailer', 'captmarvel_trailer.mp4', 'video');
 
 -- INSERTS PARA protagonistas_ds
 INSERT INTO protagonistas_ds (papel, fecha_participacion, heroes_id, peliculas_id) VALUES
@@ -148,10 +152,15 @@ INSERT INTO protagonistas_ds (papel, fecha_participacion, heroes_id, peliculas_i
 ('T’Challa / Black Panther', '2018-02-16', 9, 9),
 ('Carol Danvers / Captain Marvel', '2019-03-08', 10, 10);
 
--- INSERTS PARA multimedias_heroe_ds
+-- INSERTS PARA multimedias_heroe_ds (coherentes)
 INSERT INTO multimedias_heroe_ds (heroes_id, idmultimedia) VALUES
-(1, 1), (1, 2),  -- Iron Man
-(4, 3), (4, 4),  -- Hulk
-(2, 5), (2, 6),  -- Captain America aparece en Avengers
-(9, 7), (9, 8),  -- Black Panther
-(8, 9), (8, 10); -- Doctor Strange
+(1, 1), (1, 2),    -- Iron Man
+(2, 5), (2, 6),    -- Captain America
+(3, 7), (3, 8),    -- Thor
+(4, 3), (4, 4),    -- Hulk
+(5, 9), (5, 10),   -- Black Widow
+(6, 11), (6, 12),  -- Hawkeye
+(7, 13), (7, 14),  -- Spider-Man
+(8, 15), (8, 16),  -- Doctor Strange
+(9, 17), (9, 18),  -- Black Panther
+(10, 19), (10, 20); -- Captain Marvel

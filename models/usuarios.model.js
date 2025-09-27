@@ -1,8 +1,8 @@
 import { DataTypes } from 'sequelize';
-import { bdmysql,bdmysqlNube } from '../database/connection.js'; 
+import { sequelize } from '../database/connection.js'; 
 
 // Definición del modelo Usuarios
-export const Usuarios = bdmysql.define('usuarios_ds', 
+export const Usuarios = sequelize.define('usuarios_ds', 
     {
         // Model attributes are defined here
         id: {

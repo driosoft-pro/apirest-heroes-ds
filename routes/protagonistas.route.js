@@ -1,5 +1,4 @@
 import { Router } from 'express';
-import { check } from 'express-validator';
 import { validarJWT } from '../middlewares/validar-jwt.js';
 import { esAdminRole } from '../middlewares/validar-roles.js';
 
@@ -9,21 +8,19 @@ const router = Router();
 
 // END Points
 
-// Rutas de consulta (GET) se mantienen públicas
+// Rutas de consulta mantienen públicas
 router.get('/', protagonistasGet);
 router.get('/:id', protagonistaIdGet);
 
-// Rutas de modificación y creación (POST, PUT, DELETE) se protegen
+// Rutas de modificación y creación se protegen
 router.post('/', [
     validarJWT, // Debe estar autenticado
     esAdminRole, // Debe ser administrador
-    // Se pueden añadir más validaciones con check si son necesarias
 ], protagonistasPost);
 
 router.put('/:id', [
     validarJWT, // Debe estar autenticado
     esAdminRole, // Debe ser administrador
-    // Se pueden añadir más validaciones con check si son necesarias
 ], protagonistaPut);
 
 router.delete('/:id', [

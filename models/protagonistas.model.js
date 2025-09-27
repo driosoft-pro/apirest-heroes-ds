@@ -1,10 +1,10 @@
 import { DataTypes } from 'sequelize';
-import { bdmysql,bdmysqlNube } from '../database/connection.js'; 
+import { sequelize } from '../database/connection.js'; 
 import { Heroes } from './heroes.model.js';
 import { Peliculas } from './peliculas.model.js';
 
 // Definición del modelo Protagonistas
-export const Protagonistas = bdmysql.define('protagonistas_ds', {
+export const Protagonistas = sequelize.define('protagonistas_ds', {
     id: {
         type: DataTypes.INTEGER,
         primaryKey: true,

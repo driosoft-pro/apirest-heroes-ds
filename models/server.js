@@ -1,6 +1,6 @@
 import express from 'express';
 import cors from 'cors';
-import { bdmysql, bdmysqlNube } from '../database/connection.js';
+import { sequelize } from '../database/connection.js';
 
 class Server {
     constructor() {
@@ -23,8 +23,8 @@ class Server {
 
     async dbConnection() {
         try {
-            //await bdmysqlNube.authenticate();
-            await bdmysql.authenticate();
+            //await sequelizeNube.authenticate();
+            await sequelize.authenticate();
             console.log('Connection OK a MySQL.');
         } catch (error) {
             console.error('No se pudo Conectar a la BD MySQL', error);
