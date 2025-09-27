@@ -1,5 +1,6 @@
-const { DataTypes } = require('sequelize');
-const { bdmysql } = require('../database/connection');
+import { DataTypes } from 'sequelize';
+import connection from '../database/connection';
+const { bdmysql } = connection;
 
 const Multimedia = bdmysql.define('multimedias_ds', {
     idmultimedia: {
@@ -25,4 +26,6 @@ const Multimedia = bdmysql.define('multimedias_ds', {
     updatedAt: false,
 });
 
-module.exports = { Multimedia };
+export default {
+    Multimedia
+};

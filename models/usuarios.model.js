@@ -1,5 +1,6 @@
-const { DataTypes } = require('sequelize');
-const { bdmysql,bdmysqlNube } = require('../database/connection');
+import { DataTypes } from 'sequelize';
+import connection from '../database/connection';
+const { bdmysql, bdmysqlNube } = connection;
 
 //const Usuarios = bdmysqlNube.define('usuarios_ds',
 const Usuarios = bdmysql.define('usuarios_ds',
@@ -62,6 +63,6 @@ const Usuarios = bdmysql.define('usuarios_ds',
     }
 );
 
-module.exports = {
+export default {
     Usuarios
-}
+};

@@ -1,5 +1,5 @@
-const { response, request } = require('express');
-const { Peliculas } = require('../models/peliculas.model');
+import { response, request } from 'express';
+import { Peliculas } from '../models/peliculas.model';
 
 const peliculasGet = async (req, res = response) => {
     try {
@@ -71,7 +71,7 @@ const peliculaDelete = async (req, res = response) => {
     }
 };
 
-module.exports = {
+export default {
     peliculasGet,
     peliculaIdGet,
     peliculasPost,

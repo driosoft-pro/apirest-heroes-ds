@@ -1,4 +1,4 @@
-const { Sequelize } = require('sequelize');
+import { Sequelize } from 'sequelize';
 require('dotenv').config();
 
 // Configuración para la BD local
@@ -25,4 +25,7 @@ const bdmysqlNube = new Sequelize(
     }
 );
 
-module.exports = { bdmysql, bdmysqlNube };
+export default {
+    bdmysql,
+    bdmysqlNube
+};

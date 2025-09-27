@@ -1,12 +1,6 @@
-const { Router } = require('express');
+import { Router } from 'express';
 
-const {
-  multimediasHeroesGet,
-  multimediasHeroesIdGet,
-  multimediasHeroesPost,
-  multimediasHeroesPut,
-  multimediasHeroesDelete
-} = require('../controllers/multimediasHeroes.controller');
+import { multimediasHeroesGet, multimediasHeroesIdGet, multimediasHeroesPost, multimediasHeroesPut, multimediasHeroesDelete } from '../controllers/multimediasHeroes.controller';
 
 const router = Router();
 
@@ -21,4 +15,4 @@ router.put('/:id', multimediasHeroesPut);
 
 router.delete('/:id', multimediasHeroesDelete);
 
-module.exports = router;
+export default router;

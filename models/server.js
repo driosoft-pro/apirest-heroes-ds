@@ -1,14 +1,14 @@
-const express = require('express')
-const cors = require('cors')
+import express from 'express';
+import cors from 'cors';
 
-const { bdmysql, bdmysqlNube } = require('../database/connection');
+import { bdmysql, bdmysqlNube } from '../database/connection';
 
 class Server {
     constructor() {
         this.app = express();
         this.port = process.env.PORT;
 
-        this.app.get('/', function (req, res) {
+        this.app.get('/', function(req, res) {
             res.send('Hola Mundo a todos desde la Clase...')
         });
 
@@ -34,7 +34,7 @@ class Server {
 
     routes() {
         // Carga del index de rutas
-        this.app.use('/api', require('../routes/index')); 
+        this.app.use('/api', require('../routes/index').default);
     }
 
     middlewares() {
@@ -42,7 +42,7 @@ class Server {
         this.app.use(express.json());
         this.app.use(express.static('public')); // Directorio público
     }
-    
+
     listen() {
         this.app.listen(this.port, () => {
             console.log('Servidor corriendo en puerto', this.port);
@@ -50,4 +50,4 @@ class Server {
     }
 }
 
-module.exports = Server;
+export default Server;

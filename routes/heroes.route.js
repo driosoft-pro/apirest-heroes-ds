@@ -1,11 +1,12 @@
 const { Router } = require('express');
 
-const { heroesGet,
-        heroeIdGet,
-        heroesComoGet,
-        heroesPost,
-        heroePut,
-        heroeDelete
+const {
+    heroesGet,
+    heroeIdGet,
+    heroesComoGet,
+    heroesPost,
+    heroePut,
+    heroeDelete
 
 } = require('../controllers/heroes.controller');
 

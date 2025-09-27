@@ -1,12 +1,6 @@
-const { Router } = require('express');
+import { Router } from 'express';
 
-const {
-  protagonistasGet,
-  protagonistaIdGet,
-  protagonistasPost,
-  protagonistaPut,
-  protagonistaDelete
-} = require('../controllers/protagonistas.controller');
+import { protagonistasGet, protagonistaIdGet, protagonistasPost, protagonistaPut, protagonistaDelete } from '../controllers/protagonistas.controller';
 
 const router = Router();
 
@@ -21,4 +15,4 @@ router.put('/:id', protagonistaPut);
 
 router.delete('/:id', protagonistaDelete);
 
-module.exports = router;
+export default router;
