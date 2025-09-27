@@ -3,6 +3,15 @@
 ## 📌 Actividad segundo corte Almacenación de Datos  
 **Proyecto:** Ampliación de la API/REST en Node.js + Express — Gestión de Héroes, Películas y Elementos Multimedia
 
+
+### Consultas adicionales (Query Endpoints)
+- Por la película conocer cuales son los protagonistas de la misma, y el papel desempeñado en ella.
+![nixos.png](img/consulta_1.png)
+
+- Por película conocer cuales son los elementos multimedia que tiene la película a través de la asignación de los mismos a través del héroe.
+![nixos.png](img/consulta_2.png)
+
+
 ---
 
 ## 📖 Descripción corta
@@ -34,7 +43,7 @@ También permite consultar el multimedia de las películas a través de sus hér
 │
 ├── middlewares/        
 │   ├── validar-campos.js
-│   ├── validar-jwt.js
+│   ├── validar-jwt.js  
 │   └── validar-roles.js
 │
 ├── models/             
