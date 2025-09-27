@@ -6,10 +6,10 @@
 
 ### Consultas adicionales (Query Endpoints)
 - Por la película conocer cuales son los protagonistas de la misma, y el papel desempeñado en ella.
-![nixos.png](img/consulta_1.png)
+![consulta_1.jpeg](img/consulta_1.jpeg)
 
 - Por película conocer cuales son los elementos multimedia que tiene la película a través de la asignación de los mismos a través del héroe.
-![nixos.png](img/consulta_2.png)
+![consulta_2.jpeg](img/consulta_2.jpeg)
 
 
 ---
