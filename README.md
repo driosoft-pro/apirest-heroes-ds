@@ -218,4 +218,4 @@ Ejemplo de respuesta:
 - ✍️ Desarrollado por: **Samuel Izquierdo Bonilla**  
 📅 **Fecha:** 2025  
 📧 Contacto: driosoftpro@gmail.com  
-📧 Contacto: samuelizquier98@gmail.com  
+📧 Contacto: samuelizquierdo98@gmail.com  
