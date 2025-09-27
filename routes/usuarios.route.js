@@ -1,10 +1,10 @@
 import { Router } from 'express';
-import { validarJWT } from '../middlewares/validar-jwt';
+import { validarJWT } from '../middlewares/validar-jwt.js';
 import { check } from 'express-validator';
-import { validarCampos } from '../middlewares/validar-campos';
-import { usuariosPost, login, usuariosGet } from '../controllers/usuarios.controller';
-import { esAdminRole } from '../middlewares/validar-roles'; //Aqui importamos las validaciones del ROLE y de la existencia de un Usuario x el email.
-import { existeEmail, noExisteEmail } from '../helpers/db-validators';
+import { validarCampos } from '../middlewares/validar-campos.js';
+import { usuariosPost, login, usuariosGet } from '../controllers/usuarios.controller.js';
+import { esAdminRole } from '../middlewares/validar-roles.js'; //Aqui importamos las validaciones del ROLE y de la existencia de un Usuario x el email.
+import { existeEmail, noExisteEmail } from '../helpers/db-validators.js';
 
 const router = Router();
 

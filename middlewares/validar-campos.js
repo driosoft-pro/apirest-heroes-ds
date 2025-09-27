@@ -1,6 +1,6 @@
 import { validationResult } from 'express-validator';
 
-const validarCampos = (req, res, next) => {
+export const validarCampos = (req, res, next) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
         //console.log("llego aqui")
@@ -8,7 +8,3 @@ const validarCampos = (req, res, next) => {
     }
     next();
 }
-
-export default {
-    validarCampos
-};

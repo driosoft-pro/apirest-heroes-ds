@@ -1,9 +1,9 @@
-import { Usuarios } from '../models/usuarios.model';
+import { Usuarios } from '../models/usuarios.model.js';
 import { genSaltSync, hashSync, compareSync } from "bcryptjs";
-import { generarJWT } from "../helpers/generar-jwt";
+import { generarJWT } from "../helpers/generar-jwt.js";
 
 //INSERT - CREATE
-const usuariosPost = async (req, res = response) => {
+export const usuariosPost = async (req, res = response) => {
     //Desestructuracion de los Datos, desde el BODY, que es donde estamos pasando la informacion
     const { nombre, correo, password, img, rol, google } = req.body;
     const usuario = new Usuarios({ nombre, correo, password, img, rol, google });
@@ -47,7 +47,7 @@ const usuariosPost = async (req, res = response) => {
     }
 };
 
-const login = async (req, res = response) => {
+export const login = async (req, res = response) => {
     const { correo, password } = req.body;
 
     try {
@@ -103,7 +103,7 @@ const login = async (req, res = response) => {
     }
 };
 
-const usuariosGet = async (req, res = response) => {
+export const usuariosGet = async (req, res = response) => {
 
     try {
         const unosUsuarios = await Usuarios.findAll();
@@ -122,10 +122,5 @@ const usuariosGet = async (req, res = response) => {
     }
 };
 
-export default {
-    usuariosPost,
-    login,
-    usuariosGet
-};
 
 

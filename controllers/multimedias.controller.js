@@ -1,8 +1,8 @@
 import { response, request } from 'express';
-import { Multimedias } from '../models/multimedias.model';
+import { Multimedias } from '../models/multimedias.model.js';
 
 // GET: listar todas las multimedias
-const multimediasGet = async (req, res = response) => {
+export const multimediasGet = async (req, res = response) => {
     try {
         const multimedias = await Multimedias.findAll();
         res.json({ ok: true, data: multimedias });
@@ -13,7 +13,7 @@ const multimediasGet = async (req, res = response) => {
 };
 
 // GET: una multimedia por id
-const multimediaIdGet = async (req, res = response) => {
+export const multimediaIdGet = async (req, res = response) => {
     const { id } = req.params;
     try {
         const multimedia = await Multimedias.findByPk(id);
@@ -28,7 +28,7 @@ const multimediaIdGet = async (req, res = response) => {
 };
 
 // POST: crear multimedia
-const multimediasPost = async (req, res = response) => {
+export const multimediasPost = async (req, res = response) => {
     const { tipo, url, peliculas_id } = req.body;
     try {
         const multimedia = await Multimedias.create({ tipo, url, peliculas_id });
@@ -40,7 +40,7 @@ const multimediasPost = async (req, res = response) => {
 };
 
 // PUT: actualizar multimedia
-const multimediaPut = async (req, res = response) => {
+export const multimediaPut = async (req, res = response) => {
     const { id } = req.params;
     const { body } = req;
     try {
@@ -57,7 +57,7 @@ const multimediaPut = async (req, res = response) => {
 };
 
 // DELETE: eliminar multimedia
-const multimediaDelete = async (req, res = response) => {
+export const multimediaDelete = async (req, res = response) => {
     const { id } = req.params;
     try {
         const multimedia = await Multimedias.findByPk(id);
@@ -70,12 +70,4 @@ const multimediaDelete = async (req, res = response) => {
         console.log(error);
         res.status(500).json({ ok: false, msg: 'Hable con el Administrador', err: error });
     }
-};
-
-export default {
-    multimediasGet,
-    multimediaIdGet,
-    multimediasPost,
-    multimediaPut,
-    multimediaDelete
 };

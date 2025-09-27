@@ -1,7 +1,7 @@
 import { response, request } from 'express';
-import { Peliculas } from '../models/peliculas.model';
+import { Peliculas } from '../models/peliculas.model.js';
 
-const peliculasGet = async (req, res = response) => {
+export const peliculasGet = async (req, res = response) => {
     try {
         const peliculas = await Peliculas.findAll();
         res.json({ ok: true, data: peliculas });
@@ -11,7 +11,7 @@ const peliculasGet = async (req, res = response) => {
     }
 };
 
-const peliculaIdGet = async (req, res = response) => {
+export const peliculaIdGet = async (req, res = response) => {
     const { id } = req.params;
     try {
         const pelicula = await Peliculas.findByPk(id);
@@ -25,7 +25,7 @@ const peliculaIdGet = async (req, res = response) => {
     }
 };
 
-const peliculasPost = async (req, res = response) => {
+export const peliculasPost = async (req, res = response) => {
     const { nombre } = req.body;
     try {
         const existePelicula = await Peliculas.findOne({ where: { nombre } });
@@ -40,7 +40,7 @@ const peliculasPost = async (req, res = response) => {
     }
 };
 
-const peliculaPut = async (req, res = response) => {
+export const peliculaPut = async (req, res = response) => {
     const { id } = req.params;
     const { body } = req;
     try {
@@ -56,7 +56,7 @@ const peliculaPut = async (req, res = response) => {
     }
 };
 
-const peliculaDelete = async (req, res = response) => {
+export const peliculaDelete = async (req, res = response) => {
     const { id } = req.params;
     try {
         const pelicula = await Peliculas.findByPk(id);
@@ -69,12 +69,4 @@ const peliculaDelete = async (req, res = response) => {
         console.log(error);
         res.status(500).json({ ok: false, msg: 'Hable con el Administrador', err: error });
     }
-};
-
-export default {
-    peliculasGet,
-    peliculaIdGet,
-    peliculasPost,
-    peliculaPut,
-    peliculaDelete
 };

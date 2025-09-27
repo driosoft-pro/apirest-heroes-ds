@@ -1,8 +1,7 @@
 import { DataTypes } from 'sequelize';
-import connection from '../database/connection';
-const { bdmysql } = connection;
+import { bdmysql,bdmysqlNube } from '../database/connection.js'; 
 
-const Multimedia = bdmysql.define('multimedias_ds', {
+export const Multimedias = bdmysql.define('multimedias_ds', {
     idmultimedia: {
         type: DataTypes.INTEGER,
         primaryKey: true,
@@ -26,6 +25,4 @@ const Multimedia = bdmysql.define('multimedias_ds', {
     updatedAt: false,
 });
 
-export default {
-    Multimedia
-};
+

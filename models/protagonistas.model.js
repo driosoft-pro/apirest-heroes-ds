@@ -1,7 +1,7 @@
-const { DataTypes } = require('sequelize');
-const { bdmysql } = require('../database/connection').default;
+import { DataTypes } from 'sequelize';
+import { bdmysql,bdmysqlNube } from '../database/connection.js'; 
 
-const Protagonistas = bdmysql.define('protagonistas_ds', {
+export const Protagonistas = bdmysql.define('protagonistas_ds', {
     id: {
         type: DataTypes.INTEGER,
         primaryKey: true,
@@ -37,6 +37,3 @@ const Protagonistas = bdmysql.define('protagonistas_ds', {
     updatedAt: false,
 });
 
-module.exports = {
-    Protagonistas
-};

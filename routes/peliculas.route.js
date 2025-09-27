@@ -1,6 +1,6 @@
 import { Router } from 'express';
 
-import { peliculasGet, peliculaIdGet, peliculasPost, peliculaPut, peliculaDelete } from '../controllers/peliculas.controller';
+import { peliculasGet, peliculaIdGet, peliculasPost, peliculaPut, peliculaDelete } from '../controllers/peliculas.controller.js';
 
 const router = Router();
 

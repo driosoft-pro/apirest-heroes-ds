@@ -1,6 +1,6 @@
 import { Router } from 'express';
 
-import { protagonistasGet, protagonistaIdGet, protagonistasPost, protagonistaPut, protagonistaDelete } from '../controllers/protagonistas.controller';
+import { protagonistasGet, protagonistaIdGet, protagonistasPost, protagonistaPut, protagonistaDelete } from '../controllers/protagonistas.controller.js';
 
 const router = Router();
 

@@ -1,7 +1,7 @@
 import express from 'express';
 import cors from 'cors';
 
-import { bdmysql, bdmysqlNube } from '../database/connection';
+import { bdmysql, bdmysqlNube } from '../database/connection.js';
 
 class Server {
     constructor() {
@@ -32,9 +32,10 @@ class Server {
         }
     }
 
-    routes() {
+    async routes() {
         // Carga del index de rutas
-        this.app.use('/api', require('../routes/index').default);
+        const routes = (await import('../routes/index.js')).default;
+        this.app.use('/api', routes);
     }
 
     middlewares() {

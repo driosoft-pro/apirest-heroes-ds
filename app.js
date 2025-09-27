@@ -1,6 +1,7 @@
-require('dotenv').config();
+import dotenv from 'dotenv';
+dotenv.config();
 
-import Server from './models/server';
+import Server from './models/server.js';
 
 //Instancio la Clase
 const server = new Server();

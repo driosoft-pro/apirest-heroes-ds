@@ -1,6 +1,6 @@
-import { Usuarios } from "../models/usuarios.model";
+import { Usuarios } from "../models/usuarios.model.js";
 
-const existeEmail = async (correo = "") => {
+export const existeEmail = async (correo = "") => {
 
     const existeEmail = await Usuarios.findOne({ where: { correo: correo } });
 
@@ -9,7 +9,7 @@ const existeEmail = async (correo = "") => {
     }
 };
 
-const noExisteEmail = async (correo = "") => {
+export const noExisteEmail = async (correo = "") => {
 
     const existeEmail = await Usuarios.findOne({ where: { correo: correo } });
 
@@ -18,7 +18,3 @@ const noExisteEmail = async (correo = "") => {
     }
 };
 
-export default {
-    existeEmail,
-    noExisteEmail
-};

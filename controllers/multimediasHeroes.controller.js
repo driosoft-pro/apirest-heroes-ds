@@ -1,8 +1,8 @@
 import { response, request } from 'express';
-import { MultimediasHeroes } from '../models/multimediasHeroes.model';
+import { MultimediasHeroes } from '../models/multimediasHeroes.model.js';
 
 // GET: listar todos
-const multimediasHeroesGet = async (req, res = response) => {
+export const multimediasHeroesGet = async (req, res = response) => {
     try {
         const registros = await MultimediasHeroes.findAll();
         res.json({ ok: true, data: registros });
@@ -13,7 +13,7 @@ const multimediasHeroesGet = async (req, res = response) => {
 };
 
 // GET: un registro por id
-const multimediasHeroesIdGet = async (req, res = response) => {
+export const multimediasHeroesIdGet = async (req, res = response) => {
     const { id } = req.params;
     try {
         const registro = await MultimediasHeroes.findByPk(id);
@@ -28,7 +28,7 @@ const multimediasHeroesIdGet = async (req, res = response) => {
 };
 
 // POST: crear registro
-const multimediasHeroesPost = async (req, res = response) => {
+export const multimediasHeroesPost = async (req, res = response) => {
     const { multimedias_id, heroes_id } = req.body;
     try {
         const registro = await MultimediasHeroes.create({ multimedias_id, heroes_id });
@@ -40,7 +40,7 @@ const multimediasHeroesPost = async (req, res = response) => {
 };
 
 // PUT: actualizar registro
-const multimediasHeroesPut = async (req, res = response) => {
+export const multimediasHeroesPut = async (req, res = response) => {
     const { id } = req.params;
     const { body } = req;
     try {
@@ -57,7 +57,7 @@ const multimediasHeroesPut = async (req, res = response) => {
 };
 
 // DELETE: eliminar registro
-const multimediasHeroesDelete = async (req, res = response) => {
+export const multimediasHeroesDelete = async (req, res = response) => {
     const { id } = req.params;
     try {
         const registro = await MultimediasHeroes.findByPk(id);
@@ -72,10 +72,4 @@ const multimediasHeroesDelete = async (req, res = response) => {
     }
 };
 
-export default {
-    multimediasHeroesGet,
-    multimediasHeroesIdGet,
-    multimediasHeroesPost,
-    multimediasHeroesPut,
-    multimediasHeroesDelete
-};
+

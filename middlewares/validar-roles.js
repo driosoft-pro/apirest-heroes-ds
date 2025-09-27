@@ -1,6 +1,6 @@
 import { response } from 'express';
 
-const esAdminRole = (req, res = response, next) => {
+export const esAdminRole = (req, res = response, next) => {
 
     if (!req.usuario) {
         return res.status(500).json({
@@ -19,7 +19,7 @@ const esAdminRole = (req, res = response, next) => {
     next();
 }
 
-const tieneRole = (...roles) => {
+export const tieneRole = (...roles) => {
     return (req, res = response, next) => {
 
         if (!req.usuario) {
@@ -39,7 +39,3 @@ const tieneRole = (...roles) => {
     }
 }
 
-export default {
-    esAdminRole,
-    tieneRole
-};

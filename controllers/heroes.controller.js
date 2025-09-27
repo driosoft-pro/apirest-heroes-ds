@@ -1,8 +1,8 @@
 import { response, request } from 'express';
-import { Heroes } from '../models/heroes.model';
-import { bdmysql, bdmysqlNube } from '../database/connection';
+import { Heroes } from '../models/heroes.model.js';
+import { bdmysql, bdmysqlNube } from '../database/connection.js';
 
-const heroesGet = async (req, res = response) => {
+export const heroesGet = async (req, res = response) => {
 
     try {
         const unosHeroes = await Heroes.findAll();
@@ -21,7 +21,7 @@ const heroesGet = async (req, res = response) => {
     }
 };
 
-const heroeIdGet = async (req, res = response) => {
+export const heroeIdGet = async (req, res = response) => {
 
     const { id } = req.params;
     try {
@@ -48,7 +48,7 @@ const heroeIdGet = async (req, res = response) => {
     }
 };
 
-const heroesComoGet = async (req = request, res = response) => {
+export const heroesComoGet = async (req = request, res = response) => {
 
     const { termino } = req.params;
     try {
@@ -74,7 +74,7 @@ const heroesComoGet = async (req = request, res = response) => {
     }
 };
 
-const heroesPost = async (req, res = response) => {
+export const heroesPost = async (req, res = response) => {
 
     //Desestructuracion de datos del BODY en variables del programa
     const { nombre, bio, img, aparicion, casa, id } = req.body;
@@ -111,7 +111,7 @@ const heroesPost = async (req, res = response) => {
     }
 };
 
-const heroePut = async (req, res = response) => {
+export const heroePut = async (req, res = response) => {
 
     const { id } = req.params;
     const { body } = req;
@@ -145,7 +145,7 @@ const heroePut = async (req, res = response) => {
     }
 };
 
-const heroeDelete = async (req, res = response) => {
+export const heroeDelete = async (req, res = response) => {
 
     const { id } = req.params;
     console.log(id);
@@ -178,12 +178,4 @@ const heroeDelete = async (req, res = response) => {
     }
 };
 
-export default {
-    heroesGet,
-    heroeIdGet,
-    heroesComoGet,
-    heroesPost,
-    heroePut,
-    heroeDelete
-    //Create Retrieve Update Delete
-}
+

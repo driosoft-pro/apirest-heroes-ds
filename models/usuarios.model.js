@@ -1,9 +1,7 @@
 import { DataTypes } from 'sequelize';
-import connection from '../database/connection';
-const { bdmysql, bdmysqlNube } = connection;
+import { bdmysql,bdmysqlNube } from '../database/connection.js'; 
 
-//const Usuarios = bdmysqlNube.define('usuarios_ds',
-const Usuarios = bdmysql.define('usuarios_ds',
+export const Usuarios = bdmysql.define('usuarios_ds', 
     {
         // Model attributes are defined here
         id: {
@@ -62,7 +60,3 @@ const Usuarios = bdmysql.define('usuarios_ds',
         updatedAt: false
     }
 );
-
-export default {
-    Usuarios
-};

@@ -1,6 +1,7 @@
-import { sign } from 'jsonwebtoken';
+import pkg from 'jsonwebtoken';
+const { sign } = pkg;
 
-const generarJWT = (uid = '') => {
+export const generarJWT = (uid = '') => {
     return new Promise((resolve, reject) => {
 
         const payload = { uid };
@@ -20,7 +21,3 @@ const generarJWT = (uid = '') => {
         })
     })
 }
-
-export default {
-    generarJWT
-};

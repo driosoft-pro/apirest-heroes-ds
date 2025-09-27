@@ -1,6 +1,6 @@
 import { Router } from 'express';
 
-import { multimediasGet, multimediaIdGet, multimediasPost, multimediaPut, multimediaDelete } from '../controllers/multimedias.controller';
+import { multimediasGet, multimediaIdGet, multimediasPost, multimediaPut, multimediaDelete } from '../controllers/multimedias.controller.js';
 
 const router = Router();
 

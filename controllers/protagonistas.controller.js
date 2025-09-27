@@ -1,7 +1,7 @@
 import { response, request } from 'express';
-import { Protagonistas } from '../models/protagonistas.model';
+import { Protagonistas } from '../models/protagonistas.model.js';
 
-const protagonistasGet = async (req, res = response) => {
+export const protagonistasGet = async (req, res = response) => {
     try {
         const protagonistas = await Protagonistas.findAll();
         res.json({ ok: true, data: protagonistas });
@@ -11,7 +11,7 @@ const protagonistasGet = async (req, res = response) => {
     }
 };
 
-const protagonistaIdGet = async (req, res = response) => {
+export const protagonistaIdGet = async (req, res = response) => {
     const { id } = req.params;
     try {
         const protagonista = await Protagonistas.findByPk(id);
@@ -25,7 +25,7 @@ const protagonistaIdGet = async (req, res = response) => {
     }
 };
 
-const protagonistasPost = async (req, res = response) => {
+export const protagonistasPost = async (req, res = response) => {
     const { papel, fecha_participacion, heroes_id, peliculas_id } = req.body;
     try {
         // puedes validar si ya existe ese protagonista en la misma película
@@ -37,7 +37,7 @@ const protagonistasPost = async (req, res = response) => {
     }
 };
 
-const protagonistaPut = async (req, res = response) => {
+export const protagonistaPut = async (req, res = response) => {
     const { id } = req.params;
     const { body } = req;
     try {
@@ -53,7 +53,7 @@ const protagonistaPut = async (req, res = response) => {
     }
 };
 
-const protagonistaDelete = async (req, res = response) => {
+export const protagonistaDelete = async (req, res = response) => {
     const { id } = req.params;
     try {
         const protagonista = await Protagonistas.findByPk(id);
@@ -66,12 +66,4 @@ const protagonistaDelete = async (req, res = response) => {
         console.log(error);
         res.status(500).json({ ok: false, msg: 'Hable con el Administrador', err: error });
     }
-};
-
-export default {
-    protagonistasGet,
-    protagonistaIdGet,
-    protagonistasPost,
-    protagonistaPut,
-    protagonistaDelete
 };
