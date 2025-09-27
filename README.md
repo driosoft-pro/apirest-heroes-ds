@@ -90,7 +90,7 @@ También permite consultar el multimedia de las películas a través de sus hér
    npm install
    ```
 
-3. Configura el archivo `.env` con las credenciales de tu base de datos y la clave secreta para JWT:
+3. Configura el archivo `.env` con las credenciales de tu base de datos y la clave secreta para JWT en el entorno local o nube según tu preferencia. Puedes basarte en `.env.example`:
    ```env
    PORT=4000
    DB_HOST=localhost
@@ -107,6 +107,48 @@ También permite consultar el multimedia de las películas a través de sus hér
    ```
 
 👉 Por defecto se levanta en: `http://localhost:4000/api`
+
+---
+## Usuarios de prueba
+- **Administradores:**
+  - Email: 'samuel@mail.com'
+  - Contraseña: 'samuel123'
+  - Nombre: 'Samuel'
+  - Imagen: 'samuel.png'
+  - Rol: 'ADMIN_ROLE'
+  - Estado: '1'
+  - Fecha de creación: '2025-01-01'
+  - Fecha de actualización: '2025-02-01'
+
+  - Email: 'sofia@mail.com'
+  - Contraseña: 'sofia123'
+  - Nombre: 'Sofía Ríos'
+  - Imagen: 'sofia.png'
+  - Rol: 'ADMIN_ROLE'
+  - Estado: '1'
+  - Fecha de creación: '2025-01-20'
+  - Fecha de actualización: '2025-02-11'
+
+---
+
+- **Usuarios:**
+  - Email: 'deyton@mail.com'
+  - Contraseña: 'deyton123'
+  - Nombre: 'Deyton'
+  - Imagen: 'deyton.png'
+  - Rol: 'USER_ROLE'
+  - Estado: '1'
+  - Fecha de creación: '2025-01-01'
+  - Fecha de actualización: '2025-02-01'
+
+  - Email: 'Lucía@mail.com'
+  - Contraseña: 'lucia123'
+  - Nombre: 'Lucía Gómez'
+  - Imagen: 'lucia.png'
+  - Rol: 'USER_ROLE'
+  - Estado: '1'
+  - Fecha de creación: '2025-01-01'
+  - Fecha de actualización: '2025-02-01'
 
 ---
 

@@ -111,10 +111,10 @@ INSERT INTO peliculas_ds (nombre) VALUES
 
 -- INSERTS PARA usuarios_ds (corregido ENUM rol)
 INSERT INTO usuarios_ds (nombre, correo, password, img, rol, estado, google, fecha_creacion, fecha_actualizacion) VALUES
-('Samuel', 'samuel@mail.com', 'samuel123', 'samuel.png', 'ADMIN_ROLE', '1', '0', '2025-01-01', '2025-02-01'),
-('Deyton', 'deyton@mail.com', 'deyton123', 'deyton.png', 'USER_ROLE', '1', '0', '2025-01-05', '2025-02-05'),
-('Sofía Ríos', 'sofia@mail.com', 'sofia123', 'sofia.png', 'ADMIN_ROLE', '1', '0', '2025-01-20', '2025-02-11'),
-('Lucía Gómez', 'lucia@mail.com', 'lucia123', 'lucia.png', 'USER_ROLE', '1', '0', '2025-01-10', '2025-02-07');
+('Samuel','samuel@mail.com','$2b$10$fyGi/SNWEYasSjaLgeuBKe0jbpeTQNMr.iBm8CGXq8EEVVTVO1JDm','samuel.png','ADMIN_ROLE','1','0','2025-01-01','2025-02-01'),
+('Deyton','deyton@mail.com','$2b$10$7lSZnXCESlWbJxdIwPWbEOk.d0sVILy3bkal24I/RtMzGa1FEtMhy','deyton.png','USER_ROLE','1','0','2025-01-05','2025-02-05'),
+('Sofía Ríos','sofia@mail.com','$2b$10$g0QB3VKzG.5mOZxzzqofe.R37/4Mqob7Lmx.3.AqJO5vjXzAHU8PO','sofia.png','ADMIN_ROLE','1','0','2025-01-20','2025-02-11'),
+('Lucía Gómez','lucia@mail.com','$2b$10$Rmm/aWXXON2qSVJDweTxhefraTMsnVecgEU.iZQnYPVekJsxRW.Y6','lucia.png','USER_ROLE','1','0','2025-01-10','2025-02-07');
 
 -- INSERTS PARA multimedias_ds (ampliados para todos los héroes)
 INSERT INTO multimedias_ds (nombre, url, tipo) VALUES

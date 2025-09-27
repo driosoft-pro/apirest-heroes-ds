@@ -1,8 +1,8 @@
 import { DataTypes } from 'sequelize';
-import { bdmysql,bdmysqlNube } from '../database/connection.js'; 
+import { sequelize } from '../database/connection.js'; 
 
 // Definición del modelo Multimedias
-export const Multimedias = bdmysql.define('multimedias_ds', {
+export const Multimedias = sequelize.define('multimedias_ds', {
     idmultimedia: {
         type: DataTypes.INTEGER,
         primaryKey: true,
