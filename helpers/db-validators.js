@@ -10,7 +10,7 @@ export const existeEmail = async (correo = "") => {
     }
 };
 
-// Validar si el usuario existe por id
+// Validar si el usuario existe por email (cuando se espera que no exista para POST)
 export const noExisteEmail = async (correo = "") => {
 
     const existeEmail = await Usuarios.findOne({ where: { correo: correo } });
@@ -20,3 +20,11 @@ export const noExisteEmail = async (correo = "") => {
     }
 };
 
+// Validar si el usuario existe por ID (Nuevo)
+export const existeUsuarioPorId = async (id) => {
+    const existeUsuario = await Usuarios.findByPk(id);
+
+    if (!existeUsuario) {
+        throw new Error(`El id ${id} no existe`);
+    }
+}
