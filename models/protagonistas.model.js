@@ -3,6 +3,7 @@ import { bdmysql,bdmysqlNube } from '../database/connection.js';
 import { Heroes } from './hero.model.js';
 import { Peliculas } from './peliculas.model.js';
 
+// Definición del modelo Protagonistas
 export const Protagonistas = bdmysql.define('protagonistas_ds', {
     id: {
         type: DataTypes.INTEGER,

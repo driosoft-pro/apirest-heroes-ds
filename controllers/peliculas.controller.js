@@ -4,6 +4,7 @@ import { Protagonistas } from '../models/protagonistas.model.js';
 import { Heroes } from '../models/heroes.model.js';
 import { Multimedias } from '../models/multimedias.model.js';
 
+// GET: listar todas las peliculas
 export const peliculasGet = async (req, res = response) => {
     try {
         const peliculas = await Peliculas.findAll();
@@ -14,6 +15,7 @@ export const peliculasGet = async (req, res = response) => {
     }
 };
 
+// GET: una pelicula por id
 export const peliculaIdGet = async (req, res = response) => {
     const { id } = req.params;
     try {
@@ -28,6 +30,7 @@ export const peliculaIdGet = async (req, res = response) => {
     }
 };
 
+// POST: crear pelicula
 export const peliculasPost = async (req, res = response) => {
     const { nombre } = req.body;
     try {
@@ -43,6 +46,7 @@ export const peliculasPost = async (req, res = response) => {
     }
 };
 
+// PUT: actualizar pelicula
 export const peliculaPut = async (req, res = response) => {
     const { id } = req.params;
     const { body } = req;
@@ -59,6 +63,7 @@ export const peliculaPut = async (req, res = response) => {
     }
 };
 
+// DELETE: eliminar pelicula
 export const peliculaDelete = async (req, res = response) => {
     const { id } = req.params;
     try {

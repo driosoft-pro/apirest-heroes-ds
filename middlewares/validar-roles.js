@@ -1,5 +1,6 @@
 import { response } from 'express';
 
+// Middleware para validar los roles de los usuarios
 export const esAdminRole = (req, res = response, next) => {
 
     if (!req.usuario) {
@@ -19,6 +20,7 @@ export const esAdminRole = (req, res = response, next) => {
     next();
 }
 
+// Middleware para validar varios roles
 export const tieneRole = (...roles) => {
     return (req, res = response, next) => {
 

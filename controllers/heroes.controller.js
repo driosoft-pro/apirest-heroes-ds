@@ -2,15 +2,14 @@ import { response, request } from 'express';
 import { Heroes } from '../models/heroes.model.js';
 import { bdmysql, bdmysqlNube } from '../database/connection.js';
 
+// GET: listar todas las heroes
 export const heroesGet = async (req, res = response) => {
-
     try {
         const unosHeroes = await Heroes.findAll();
         res.json({
             ok: true,
             data: unosHeroes
         });
-
     } catch (error) {
         console.log(error);
         res.status(500).json({
@@ -21,8 +20,8 @@ export const heroesGet = async (req, res = response) => {
     }
 };
 
+// GET: una heroes por id
 export const heroeIdGet = async (req, res = response) => {
-
     const { id } = req.params;
     try {
         const unHeroe = await Heroes.findByPk(id);
@@ -32,12 +31,10 @@ export const heroeIdGet = async (req, res = response) => {
                 msg: 'No existe un heroe con el id: ' + id
             })
         }
-
         res.json({
             ok: true,
             data: unHeroe
         });
-
     } catch (error) {
         console.log(error);
         res.status(500).json({
@@ -48,8 +45,8 @@ export const heroeIdGet = async (req, res = response) => {
     }
 };
 
+// GET: una heroes por id
 export const heroesComoGet = async (req = request, res = response) => {
-
     const { termino } = req.params;
     try {
         //const [results, metadata] = await bdmysqlNube.query(
@@ -59,7 +56,6 @@ export const heroesComoGet = async (req = request, res = response) => {
             " WHERE nombre LIKE '%" + termino + "%'" +
             " ORDER BY nombre"
         );
-
         res.json({
             ok: true,
             data: results,
@@ -74,8 +70,8 @@ export const heroesComoGet = async (req = request, res = response) => {
     }
 };
 
+// POST: crear heroes
 export const heroesPost = async (req, res = response) => {
-
     //Desestructuracion de datos del BODY en variables del programa
     const { nombre, bio, img, aparicion, casa, id } = req.body;
     const heroe = new Heroes({ nombre, bio, img, aparicion, casa });
@@ -88,10 +84,8 @@ export const heroesPost = async (req, res = response) => {
                 msg: 'Ya existe un Heroe llamado: ' + nombre
             })
         }
-
         // Guardar en BD
         newHeroe = await heroe.save();
-
         //console.log(newHeroe.null);
         //Ajusta el Id del nuevo registro al Heroe
         heroe.id = newHeroe.null;
@@ -100,7 +94,6 @@ export const heroesPost = async (req, res = response) => {
             msg: 'Heroe INSERTADO',
             data: heroe
         });
-
     } catch (error) {
         console.log(error);
         res.status(500).json({
@@ -111,11 +104,10 @@ export const heroesPost = async (req, res = response) => {
     }
 };
 
+// PUT: actualizar heroes
 export const heroePut = async (req, res = response) => {
-
     const { id } = req.params;
     const { body } = req;
-
     console.log(id);
     console.log(body);
     try {
@@ -145,11 +137,10 @@ export const heroePut = async (req, res = response) => {
     }
 };
 
+// DELETE: eliminar heroes
 export const heroeDelete = async (req, res = response) => {
-
     const { id } = req.params;
     console.log(id);
-
     try {
         const heroe = await Heroes.findByPk(id);
         if (!heroe) {
@@ -158,7 +149,6 @@ export const heroeDelete = async (req, res = response) => {
                 msg: 'No existe un heroe con el id: ' + id
             })
         }
-
         //Borrado de la BD
         await heroe.destroy();
         res.json({
@@ -166,8 +156,6 @@ export const heroeDelete = async (req, res = response) => {
             msg: "Heroe ELIMINADO",
             data: heroe,
         });
-
-
     } catch (error) {
         console.log(error);
         res.status(500).json({
@@ -177,5 +165,3 @@ export const heroeDelete = async (req, res = response) => {
         })
     }
 };
-
-

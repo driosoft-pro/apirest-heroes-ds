@@ -1,6 +1,7 @@
 import { response, request } from 'express';
 import { Protagonistas } from '../models/protagonistas.model.js';
 
+// GET: listar todas las protagonistas
 export const protagonistasGet = async (req, res = response) => {
     try {
         const protagonistas = await Protagonistas.findAll();
@@ -11,6 +12,7 @@ export const protagonistasGet = async (req, res = response) => {
     }
 };
 
+// GET: una protagonista por id
 export const protagonistaIdGet = async (req, res = response) => {
     const { id } = req.params;
     try {
@@ -25,6 +27,7 @@ export const protagonistaIdGet = async (req, res = response) => {
     }
 };
 
+// POST: crear protagonista
 export const protagonistasPost = async (req, res = response) => {
     const { papel, fecha_participacion, heroes_id, peliculas_id } = req.body;
     try {
@@ -37,6 +40,7 @@ export const protagonistasPost = async (req, res = response) => {
     }
 };
 
+// PUT: actualizar protagonista
 export const protagonistaPut = async (req, res = response) => {
     const { id } = req.params;
     const { body } = req;
@@ -53,6 +57,7 @@ export const protagonistaPut = async (req, res = response) => {
     }
 };
 
+// DELETE: eliminar protagonista
 export const protagonistaDelete = async (req, res = response) => {
     const { id } = req.params;
     try {

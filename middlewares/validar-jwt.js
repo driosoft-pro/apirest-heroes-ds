@@ -3,6 +3,7 @@ const { verify } = pkg;
 import { request, response } from "express";
 import { Usuarios } from '../models/usuarios.model.js';
 
+// Middleware para validar el JWT
 export const validarJWT = async (req = request, res = response, next) => {
     const token = req.header('x-token');
 

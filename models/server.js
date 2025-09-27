@@ -1,6 +1,5 @@
 import express from 'express';
 import cors from 'cors';
-
 import { bdmysql, bdmysqlNube } from '../database/connection.js';
 
 class Server {
