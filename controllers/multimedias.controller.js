@@ -16,10 +16,8 @@ export const multimediasGet = async (req, res = response) => {
 export const multimediaIdGet = async (req, res = response) => {
     const { id } = req.params;
     try {
-        const multimedia = await Multimedias.findByPk(id);
-        if (!multimedia) {
-            return res.status(404).json({ ok: false, msg: `No existe multimedia con id: ${id}` });
-        }
+        // La validación de existencia por ID se hace en la ruta
+        const multimedia = await Multimedias.findByPk(id); 
         res.json({ ok: true, data: multimedia });
     } catch (error) {
         console.log(error);
@@ -29,10 +27,11 @@ export const multimediaIdGet = async (req, res = response) => {
 
 // POST: crear multimedia
 export const multimediasPost = async (req, res = response) => {
-    const { tipo, url, peliculas_id } = req.body;
+    const { nombre, url, tipo } = req.body;
     try {
-        const multimedia = await Multimedias.create({ tipo, url, peliculas_id });
-        res.json({ ok: true, msg: 'Multimedia INSERTADA', data: multimedia });
+        // Las validaciones de campos se hacen en la ruta
+        const multimedia = await Multimedias.create({ nombre, url, tipo });
+        res.status(201).json({ ok: true, msg: 'Multimedia INSERTADA', data: multimedia });
     } catch (error) {
         console.log(error);
         res.status(500).json({ ok: false, msg: 'Hable con el Administrador', err: error });
@@ -43,12 +42,15 @@ export const multimediasPost = async (req, res = response) => {
 export const multimediaPut = async (req, res = response) => {
     const { id } = req.params;
     const { body } = req;
+    
+    // Evitar la actualización de campos no deseados
+    const { id: _, ...resto } = body;
+
     try {
         const multimedia = await Multimedias.findByPk(id);
-        if (!multimedia) {
-            return res.status(404).json({ ok: false, msg: `No existe multimedia con id: ${id}` });
-        }
-        await multimedia.update(body);
+        // La validación de existencia por ID se hace en la ruta
+        
+        await multimedia.update(resto);
         res.json({ ok: true, msg: 'Multimedia ACTUALIZADA', data: multimedia });
     } catch (error) {
         console.log(error);
@@ -60,10 +62,9 @@ export const multimediaPut = async (req, res = response) => {
 export const multimediaDelete = async (req, res = response) => {
     const { id } = req.params;
     try {
+        // La validación de existencia por ID se hace en la ruta
         const multimedia = await Multimedias.findByPk(id);
-        if (!multimedia) {
-            return res.status(404).json({ ok: false, msg: `No existe multimedia con id: ${id}` });
-        }
+        
         await multimedia.destroy();
         res.json({ ok: true, msg: 'Multimedia ELIMINADA', data: multimedia });
     } catch (error) {

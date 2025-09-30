@@ -16,10 +16,8 @@ export const protagonistasGet = async (req, res = response) => {
 export const protagonistaIdGet = async (req, res = response) => {
     const { id } = req.params;
     try {
+        // La validación de existencia por ID se hace en la ruta
         const protagonista = await Protagonistas.findByPk(id);
-        if (!protagonista) {
-            return res.status(404).json({ ok: false, msg: `No existe protagonista con id: ${id}` });
-        }
         res.json({ ok: true, data: protagonista });
     } catch (error) {
         console.log(error);
@@ -31,9 +29,9 @@ export const protagonistaIdGet = async (req, res = response) => {
 export const protagonistasPost = async (req, res = response) => {
     const { papel, fecha_participacion, heroes_id, peliculas_id } = req.body;
     try {
-        // puedes validar si ya existe ese protagonista en la misma película
+        // Las validaciones de campos y FKs se hacen en la ruta
         const protagonista = await Protagonistas.create({ papel, fecha_participacion, heroes_id, peliculas_id });
-        res.json({ ok: true, msg: 'Protagonista INSERTADO', data: protagonista });
+        res.status(201).json({ ok: true, msg: 'Protagonista INSERTADO', data: protagonista });
     } catch (error) {
         console.log(error);
         res.status(500).json({ ok: false, msg: 'Hable con el Administrador', err: error });
@@ -44,12 +42,15 @@ export const protagonistasPost = async (req, res = response) => {
 export const protagonistaPut = async (req, res = response) => {
     const { id } = req.params;
     const { body } = req;
+    
+    // Evitar la actualización de campos no deseados
+    const { id: _, ...resto } = body;
+    
     try {
         const protagonista = await Protagonistas.findByPk(id);
-        if (!protagonista) {
-            return res.status(404).json({ ok: false, msg: `No existe protagonista con id: ${id}` });
-        }
-        await protagonista.update(body);
+        // La validación de existencia por ID se hace en la ruta
+        
+        await protagonista.update(resto);
         res.json({ ok: true, msg: 'Protagonista ACTUALIZADO', data: protagonista });
     } catch (error) {
         console.log(error);
@@ -57,14 +58,13 @@ export const protagonistaPut = async (req, res = response) => {
     }
 };
 
-// DELETE: eliminar protagonista
+// DELETE: eliminar protagonista (borrado físico)
 export const protagonistaDelete = async (req, res = response) => {
     const { id } = req.params;
     try {
+        // La validación de existencia por ID se hace en la ruta
         const protagonista = await Protagonistas.findByPk(id);
-        if (!protagonista) {
-            return res.status(404).json({ ok: false, msg: `No existe protagonista con id: ${id}` });
-        }
+        
         await protagonista.destroy();
         res.json({ ok: true, msg: 'Protagonista ELIMINADO', data: protagonista });
     } catch (error) {

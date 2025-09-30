@@ -81,9 +81,17 @@ export const peliculaDelete = async (req, res = response) => {
 
 // =============================================================================
 // CONSULTAS EXTRAS ACTIVIDAD
+
 export const peliculaProtagonistasGet = async (req, res = response) => {
   const { id } = req.params;
   try {
+    // 1. Verificar si la película existe
+    const pelicula = await Peliculas.findByPk(id);
+    if (!pelicula) {
+        return res.status(404).json({ ok: false, msg: `No existe película con id: ${id}` });
+    }
+
+    // 2. Traer los protagonistas
     const protagonistas = await Protagonistas.findAll({
       where: { peliculas_id: id },
       include: [
@@ -109,7 +117,13 @@ export const peliculaProtagonistasGet = async (req, res = response) => {
 export const peliculaMultimediasGet = async (req, res = response) => {
   const { id } = req.params;
   try {
-    // Traemos los protagonistas con su héroe y multimedia
+    // 1. Verificar si la película existe
+    const pelicula = await Peliculas.findByPk(id);
+    if (!pelicula) {
+        return res.status(404).json({ ok: false, msg: `No existe película con id: ${id}` });
+    }
+    
+    // 2. Traemos los protagonistas con su héroe y multimedia
     const protagonistas = await Protagonistas.findAll({
       where: { peliculas_id: id },
       include: [

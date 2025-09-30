@@ -20,7 +20,6 @@ export const validarJWT = async (req = request, res = response, next) => {
         console.log(uid);
 
         const usuario = await Usuarios.findByPk(uid);
-        //const usuario = await Usuarios.findByPk(uid);
 
         if (!usuario) {
             return res.status(401).json({
