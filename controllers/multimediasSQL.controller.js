@@ -1,5 +1,5 @@
 import { response, request } from 'express';
-import { Multimedias } from '../models/multimedias.model.js';
+import { Multimedias } from '../models/multimediasSQL.model.js';
 
 // GET: listar todas las multimedias
 export const multimediasGet = async (req, res = response) => {

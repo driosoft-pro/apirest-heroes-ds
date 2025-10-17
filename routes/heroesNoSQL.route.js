@@ -1,7 +1,7 @@
 const { Router } = require('express');
 
 const { obtenerHeroes,
-} = require('../controllers/heroes.mongo.controller');
+} = require('../controllers/heroesNoSQL.controller');
 
 
 const router = Router();

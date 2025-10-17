@@ -1,8 +1,8 @@
 import { response, request } from 'express';
-import { Peliculas } from '../models/peliculas.model.js';
-import { Protagonistas } from '../models/protagonistas.model.js';
-import { Heroes } from '../models/heroes.model.js';
-import { Multimedias } from '../models/multimedias.model.js';
+import { Peliculas } from '../models/peliculasSQL.model.js';
+import { Protagonistas } from '../models/protagonistasSQL.model.js';
+import { Heroes } from '../models/heroesSQL.model.js';
+import { Multimedias } from '../models/multimediasSQL.model.js';
 
 // GET: listar todas las peliculas
 export const peliculasGet = async (req, res = response) => {

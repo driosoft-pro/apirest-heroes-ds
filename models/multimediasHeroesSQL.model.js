@@ -1,7 +1,7 @@
 import { DataTypes } from 'sequelize';
-import { sequelize } from '../database/connection.js';
-import { Heroes } from './heroes.model.js';
-import { Multimedias } from './multimedias.model.js';
+import { sequelize } from '../database/connectionSQL.js';
+import { Heroes } from './heroesSQL.model.js';
+import { Multimedias } from './multimediasSQL.model.js';
 
 // Definición del modelo MultimediasHeroes
 export const MultimediasHeroes = sequelize.define('multimedias_heroe_ds', {

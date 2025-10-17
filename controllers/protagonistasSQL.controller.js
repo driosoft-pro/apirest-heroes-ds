@@ -1,5 +1,5 @@
 import { response, request } from 'express';
-import { Protagonistas } from '../models/protagonistas.model.js';
+import { Protagonistas } from '../models/protagonistasSQL.model.js';
 
 // GET: listar todas las protagonistas
 export const protagonistasGet = async (req, res = response) => {

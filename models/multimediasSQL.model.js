@@ -1,5 +1,5 @@
 import { DataTypes } from 'sequelize';
-import { sequelize } from '../database/connection.js'; 
+import { sequelize } from '../database/connectionSQL.js'; 
 
 // Definición del modelo Multimedias
 export const Multimedias = sequelize.define('multimedias_ds', {

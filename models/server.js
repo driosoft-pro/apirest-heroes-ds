@@ -8,7 +8,7 @@ class Server {
         this.port = process.env.PORT;
 
         this.app.get('/', function(req, res) {
-            res.send('Hola Mundo a todos desde la Clase...')
+            res.send('Hola Mundo desde javascript..')
         });
 
         // Conexión BD

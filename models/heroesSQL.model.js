@@ -1,5 +1,5 @@
 import { DataTypes } from 'sequelize';
-import { sequelize } from '../database/connection.js';
+import { sequelize } from '../database/connectionSQL.js';
 
 export const Heroes = sequelize.define('heroes_ds',
     {

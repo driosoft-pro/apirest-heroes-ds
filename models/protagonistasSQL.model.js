@@ -1,7 +1,7 @@
 import { DataTypes } from 'sequelize';
-import { sequelize } from '../database/connection.js'; 
-import { Heroes } from './heroes.model.js';
-import { Peliculas } from './peliculas.model.js';
+import { sequelize } from '../database/connectionSQL.js'; 
+import { Heroes } from './heroesSQL.model.js';
+import { Peliculas } from './peliculasSQL.model.js';
 
 // Definición del modelo Protagonistas
 export const Protagonistas = sequelize.define('protagonistas_ds', {
