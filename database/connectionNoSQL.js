@@ -1,17 +1,13 @@
-const mongoose = require('mongoose')
+import { connect } from 'mongoose'
 
-const dbConnectionMongo = async() => {
+export const dbConnectionMongo = async() => {
     try {
-
-
-        await mongoose.connect(process.env.MONGODB_CNN,{
+        await connect(process.env.MONGODB_CNN,{
             //useNewUrlParser: true,
             //useUnifiedTopology: true
             //useCreateIndex: true,
             //useFindAndModify: false
         })
-
-
         console.log('Base de Datos de Mongo online...')
        
     } catch (error) {
@@ -20,9 +16,4 @@ const dbConnectionMongo = async() => {
        
     }
    
-}
-
-
-module.exports  = {
-    dbConnectionMongo
 }

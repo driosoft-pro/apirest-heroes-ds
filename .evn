@@ -1,0 +1,29 @@
+# Puerto de la API
+PORT=8082
+
+# JWT Secret
+SECRETORPRIVATEKEY=Est03sLa11av3PubliKDeAlmacenamiento2025@02
+
+# Selección de entorno de BD: local | remote
+DB_ENV=remote
+
+# SQL
+# Base de datos local
+DB_LOCAL_NAME=heroes
+DB_LOCAL_USER=root
+DB_LOCAL_PASSWORD=
+DB_LOCAL_HOST=localhost
+DB_LOCAL_PORT=3306
+DB_LOCAL_DIALECT=mysql
+
+# Base de datos nube
+DB_REMOTE_NAME=myDb
+DB_REMOTE_USER=mydb
+DB_REMOTE_PASSWORD=mariadb
+DB_REMOTE_HOST=monorail.proxy.rlwy.net
+DB_REMOTE_PORT=23251
+DB_REMOTE_DIALECT=mysql
+
+# NoSQL
+#Base de datos Nube
+MONGODB_CNN=mongodb+srv://ZantaCruz:<Zantacruzten1>@zantacruz.3je2x60.mongodb.net/?retryWrites=true&w=majority&appName=ZantaCruz

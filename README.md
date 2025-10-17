@@ -1,263 +1,290 @@
-# API REST con Node.js + Express — Gestión de Héroes, Películas y Multimedia
-
-## 📌 Actividad segundo corte Almacenación de Datos  
-**Proyecto:** Ampliación de la API/REST en Node.js + Express — Gestión de Héroes, Películas y Elementos Multimedia
-
-
-### Consultas adicionales (Query Endpoints)
-- Por la película conocer cuales son los protagonistas de la misma, y el papel desempeñado en ella.
-![consulta_1.jpeg](img/consulta_1.jpeg)
-
-- Por película conocer cuales son los elementos multimedia que tiene la película a través de la asignación de los mismos a través del héroe.
-![consulta_2.jpeg](img/consulta_2.jpeg)
-
+# 🌐 API REST — SQL + NoSQL + Python Utils
+**Gestión de Héroes, Películas y Multimedia con Node.js/Express + MySQL/MongoDB + utilidades Python para migraciones**
 
 ---
 
-## 📖 Descripción corta
-Este repositorio contiene una API REST construida con Node.js y Express, conectada a MySQL (usando Sequelize), que gestiona héroes, películas y elementos multimedia relacionados.  
-La ampliación incluye relaciones muchos-a-muchos entre:
-- **Héroes y Películas** (a través de la tabla Protagonistas, especificando un rol).
-- **Héroes y Multimedia** (asociando elementos como fotos/videos a héroes específicos).
+## 📌 Descripción general
+Este proyecto expone una **API REST en Node.js + Express** que puede operar contra **SQL (MySQL)** o **NoSQL (MongoDB)**.  
+Además incorpora **utilidades en Python** para facilitar **migraciones de datos, validaciones y análisis** (exportar/importar JSON, comparar datasets y generar visualizaciones).
 
-También permite consultar el multimedia de las películas a través de sus héroes protagonistas, facilitando consultas complejas sobre las relaciones establecidas.
+> Puedes elegir el motor de base de datos en tiempo de ejecución con la variable `DB_DRIVER`:
+> - `DB_DRIVER=sql` → usa MySQL (Sequelize).
+> - `DB_DRIVER=nosql` → usa MongoDB (Mongoose / PyMongo).
+>
+> El API expone los mismos endpoints funcionales independientemente del backend activo.
+
+---
+
+## 🧩 Tecnologías
+
+| Capa | Tecnología | Descripción |
+|------|-------------|-------------|
+| Backend | Node.js 18+ + Express | API principal |
+| SQL | MySQL 8+ (Sequelize) | Gestión relacional |
+| NoSQL | MongoDB 6+ (Mongoose / PyMongo) | Gestión documental |
+| Migración / Data | Python 3.11+ | Scripts CLI y Notebook |
+| Librerías Py | pandas, polars, numpy, pymongo, matplotlib, seaborn, tabulate | Herramientas de análisis y migración |
 
 ---
 
 ## 📂 Estructura del proyecto
+
 ```
-├── controllers/        
-│   ├── heroes.controller.js
-│   ├── multimedias.controller.js
-│   ├── multimediasHeroes.controller.js  
-│   ├── peliculas.controller.js
-│   ├── protagonistas.controller.js
+├── controllers/
+│   ├── heroesSQL.controller.js
+│   ├── heroesNoSQL.controller.js
+│   ├── peliculasSQL.controller.js
+│   ├── peliculasNoSQL.controller.js
+│   ├── multimediasSQL.controller.js
+│   ├── multimediasNoSQL.controller.js
+│   ├── protagonistasSQL.controller.js
+│   ├── protagonistasNoSQL.controller.js
 │   └── usuarios.controller.js
 │
-├── database/           
-│   └── connection.js
+├── database/
+│   ├── connectionSQL.js        # Sequelize (MySQL)
+│   └── connectionNoSQL.js      # Mongoose (MongoDB)
 │
-├── helpers/            
+├── helpers/
 │   ├── db-validators.js
 │   └── generar-jwt.js
 │
-├── middlewares/        
-│   ├── validar-campos.js
-│   ├── validar-jwt.js  
-│   └── validar-roles.js
+├── migracion_sql_nosql/        # Nuevo módulo Python para migraciones SQL↔NoSQL
+│   ├── migracion.ipynb         # Notebook principal
+│   ├── export_sql_to_json.py   # Exporta tablas SQL a JSON
+│   ├── import_json_to_mongo.py # Importa JSON a MongoDB
+│   ├── compare_datasets.py     # Compara estructuras/datos
+│   └── visualize_data.py       # Visualizaciones y reportes
 │
-├── models/             
-│   ├── heroes.model.js
-│   ├── multimediasHeroes.model.js      
-│   ├── multimedias.model.js
-│   ├── peliculas.model.js
-│   ├── protagonistas.model.js          
-│   └── usuarios.model.js
+├── models/
+│   ├── SQL/...
+│   └── NoSQL/...
 │
-├── routes/             
+├── routes/
 │   ├── heroes.route.js
-│   ├── multimedias.route.js
-│   ├── multimediasHeroes.route.js
 │   ├── peliculas.route.js
+│   ├── multimedias.route.js
 │   ├── protagonistas.route.js
 │   └── usuarios.route.js
 │
-├── app.js              
-├── .env                
-├── package.json        
-└── README.md           
+├── app.js
+├── package.json
+├── requirements.txt
+├── .env.example
+└── README.md
 ```
+> Si aún no existe la carpeta `migrations/`, créala y coloca allí los scripts Python (ver ejemplos de uso más abajo).
 
 ---
 
 ## ⚙️ Requisitos
+
+### 🔹 Node.js
 - Node.js >= 18  
+- npm >= 9  
 - MySQL >= 8  
+- MongoDB >= 6  
+
+### 🔹 Python
+- Python >= 3.11  
+- pip >= 23  
+
+Instala las dependencias:
+```bash
+pip install -r requirements.txt
+```
+---
+
+## 🚀 Instalación (Node.js + API)
+1) Clonar e instalar dependencias:
+```bash
+git clone https://github.com/driosoft-pro/apirest-heroes-ds.git
+cd apirest-heroes-ds
+npm install
+```
+
+2) Configurar variables de entorno en `.env` (puedes copiar desde `.env.example`):
+```env
+# Core
+PORT=4000
+DB_DRIVER=sql        # sql | nosql
+
+# ===== SQL (MySQL) =====
+DB_HOST=localhost
+DB_USER=root
+DB_PASSWORD=tu_password
+DB_NAME=heroesdb
+
+# ===== NoSQL (MongoDB) =====
+MONGO_URI=mongodb://localhost:27017/heroesdb
+MONGO_USER=
+MONGO_PASS=
+
+# ===== JWT =====
+JWT_SECRET=mi_secret_key
+```
+
+3) Levantar el servidor:
+```bash
+# Desarrollo (con nodemon si está configurado):
+npm run dev
+
+# Producción:
+npm start
+```
+
+Por defecto: `http://localhost:4000/api`
+
+> **Tip:** Cambia dinámicamente el backend con `DB_DRIVER` sin modificar el código:
+> - `DB_DRIVER=sql npm run dev`
+> - `DB_DRIVER=nosql npm run dev`
 
 ---
 
-## 🚀 Instalación y configuración
-1. Clona el repositorio:
-   ```bash
-   git clone https://github.com/driosoft-pro/apirest-heroes-ds.git
-   ```
-   ```bash
-   cd nombre-del-proyecto
-   ```
-
-2. Instala dependencias:
-   ```bash
-   npm install
-   ```
-
-3. Configura el archivo `.env` con las credenciales de tu base de datos y la clave secreta para JWT en el entorno local o nube según tu preferencia. Puedes basarte en `.env.example`:
-   ```env
-   PORT=4000
-   DB_HOST=localhost
-   DB_USER=root
-   DB_PASSWORD=tu_password
-   DB_NAME=heroesdb
-   JWT_SECRET=mi_secret_key
-   # Agrega las variables para la BD en la nube si las usas (DB_REMOTE_...)
-   ```
-
-4. Inicia el servidor:
-   ```bash
-   npm start
-   ```
-
-👉 Por defecto se levanta en: `http://localhost:4000/api`
-
----
-## Usuarios de prueba
-- **Administradores:**
-  - Email: 'samuel@mail.com'
-  - Contraseña: 'samuel123'
-  - Nombre: 'Samuel'
-  - Imagen: 'samuel.png'
-  - Rol: 'ADMIN_ROLE'
-  - Estado: '1'
-  - Fecha de creación: '2025-01-01'
-  - Fecha de actualización: '2025-02-01'
-
-  - Email: 'sofia@mail.com'
-  - Contraseña: 'sofia123'
-  - Nombre: 'Sofía Ríos'
-  - Imagen: 'sofia.png'
-  - Rol: 'ADMIN_ROLE'
-  - Estado: '1'
-  - Fecha de creación: '2025-01-20'
-  - Fecha de actualización: '2025-02-11'
+## 📦 Scripts npm
+*(Si no existen en tu `package.json`, añádelos como ejemplo)*
+```json
+{
+  "scripts": {
+    "start": "node app.js",
+    "dev": "NODE_ENV=development node app.js",
+    "dev:sql": "cross-env DB_DRIVER=sql npm run dev",
+    "dev:nosql": "cross-env DB_DRIVER=nosql npm run dev",
+    "lint": "eslint .",
+    "test": "node --test"
+  }
+}
+```
+> En Windows puedes usar `cross-env` para inyectar variables de entorno (`npm i -D cross-env`).
 
 ---
 
-- **Usuarios:**
-  - Email: 'deyton@mail.com'
-  - Contraseña: 'deyton123'
-  - Nombre: 'Deyton'
-  - Imagen: 'deyton.png'
-  - Rol: 'USER_ROLE'
-  - Estado: '1'
-  - Fecha de creación: '2025-01-01'
-  - Fecha de actualización: '2025-02-01'
-
-  - Email: 'Lucía@mail.com'
-  - Contraseña: 'lucia123'
-  - Nombre: 'Lucía Gómez'
-  - Imagen: 'lucia.png'
-  - Rol: 'USER_ROLE'
-  - Estado: '1'
-  - Fecha de creación: '2025-01-01'
-  - Fecha de actualización: '2025-02-01'
+## 🔑 Autenticación, roles y seguridad
+- **JWT** para autenticación (`/api/usuarios/login`).
+- **Roles**: `ADMIN_ROLE`, `USER_ROLE`.
+- **Validaciones** con `express-validator`.
+- CORS y sanitización de entrada recomendados.
 
 ---
 
-## 📌 Endpoints principales
+## 🧠 Endpoints principales (resumen)
 
 ### 👤 Usuarios
-- `POST /api/usuarios` — crear un nuevo usuario.  
-- `POST /api/usuarios/login` — autenticación y generación de JWT.  
-- `GET /api/usuarios` — listar todos los usuarios (Ruta protegida por JWT y Rol ADMIN_ROLE).  
+- `POST /api/usuarios` — crear usuario
+- `POST /api/usuarios/login` — login + JWT
+- `GET /api/usuarios` — listar (requiere JWT + ADMIN_ROLE)
 
-### 🦸‍♂️ Héroes
-- `GET /api/heroes` — listar héroes  
-- `GET /api/heroes/:id` — obtener héroe por ID  
-- `GET /api/heroes/como/:termino` — buscar héroes por término  
-- `POST /api/heroes` — crear héroe  
-- `PUT /api/heroes/:id` — actualizar héroe  
-- `DELETE /api/heroes/:id` — eliminar héroe  
+### 🦸 Héroes
+- `GET /api/heroes` — listar
+- `GET /api/heroes/:id` — detalle
+- `GET /api/heroes/como/:termino` — búsqueda
+- `POST /api/heroes` — crear
+- `PUT /api/heroes/:id` — actualizar
+- `DELETE /api/heroes/:id` — eliminar
 
 ### 🎬 Películas
-- `GET /api/peliculas` — listar películas  
-- `GET /api/peliculas/:id` — obtener película por ID  
-- `POST /api/peliculas` — crear película  
-- `PUT /api/peliculas/:id` — actualizar película  
-- `DELETE /api/peliculas/:id` — eliminar película  
+- `GET /api/peliculas`
+- `GET /api/peliculas/:id`
+- `POST /api/peliculas`
+- `PUT /api/peliculas/:id`
+- `DELETE /api/peliculas/:id`
 
-### 🎭 Protagonistas (Relación Héroe-Película M:M)
-- `POST /api/protagonistas` — asignar héroe a película con rol (papel)  
-- `GET /api/protagonistas` — listar todas las relaciones (Protagonistas)  
-- `GET /api/protagonistas/:id` — obtener una relación por ID  
-- `PUT /api/protagonistas/:id` — actualizar rol de la relación  
-- `DELETE /api/protagonistas/:id` — eliminar relación  
+### 🎭 Protagonistas (Héroe↔Película M:M)
+- `POST /api/protagonistas` — asignar héroe + rol
+- `GET /api/protagonistas`
+- `GET /api/protagonistas/:id`
+- `PUT /api/protagonistas/:id`
+- `DELETE /api/protagonistas/:id`
 
 ### 🖼 Multimedia
-- `GET /api/multimedias` — listar todo el multimedia  
-- `GET /api/multimedias/:id` — detalle de un multimedia por ID  
-- `POST /api/multimedias` — crear un nuevo elemento multimedia  
-- `PUT /api/multimedias/:id` — actualizar multimedia  
-- `DELETE /api/multimedias/:id` — eliminar multimedia  
+- `GET /api/multimedias`
+- `GET /api/multimedias/:id`
+- `POST /api/multimedias`
+- `PUT /api/multimedias/:id`
+- `DELETE /api/multimedias/:id`
 
-### 🎞 Multimedia-Héroes (Relación M:M)
-- `POST /api/multimediasHeroes` — asociar multimedia a un héroe  
-- `GET /api/multimediasHeroes` — listar todas las asociaciones  
-- `GET /api/multimediasHeroes/:id` — obtener una asociación por ID  
-- `PUT /api/multimediasHeroes/:id` — actualizar asociación  
-- `DELETE /api/multimediasHeroes/:id` — eliminar asociación  
+### 🎞 Multimedia↔Héroes (M:M)
+- `POST /api/multimediasHeroes`
+- `GET /api/multimediasHeroes`
+- `GET /api/multimediasHeroes/:id`
+- `PUT /api/multimediasHeroes/:id`
+- `DELETE /api/multimediasHeroes/:id`
+
+### 🔍 Consultas adicionales
+- `GET /api/peliculas/:id/protagonistas` — protagonistas y su rol
+- `GET /api/heroes/:id/multimedia` — multimedia de un héroe
+- `GET /api/peliculas/:id/multimedia` — multimedia agregado vía héroes protagonistas
 
 ---
 
-## 🔍 Consultas adicionales (Query Endpoints)
-### 📌 Por película obtener protagonistas y su rol
-**GET** `/api/peliculas/:id/protagonistas`  
+## 🧰 Utilidades Python (migraciones y análisis)
 
-Ejemplo de respuesta:
-```json
-[
-  { "hero_id": 1, "name": "Superman", "role": "Protagonista" },
-  { "hero_id": 2, "name": "Batman", "role": "Secundario" }
-]
+Instalar dependencias:
+```bash
+pip install -r requirements.txt
 ```
 
-### 📌 Por héroe obtener su multimedia asociado
-**GET** `/api/heroes/:id/multimedia`  
+> Todos los scripts leen variables desde `.env` cuando aplica, o puedes pasar argumentos por CLI.
 
-Ejemplo de respuesta:
-```json
-[
-  { "idmultimedia": 10, "nombre": "Foto promocional", "url": "https://cdn/.../superman.jpg", "tipo": "photo" },
-  { "idmultimedia": 12, "nombre": "Clip de la película", "url": "https://cdn/.../superman-clip.mp4", "tipo": "video" }
-]
+### 1) Exportar SQL → JSON
+Convierte tablas MySQL a archivos JSON para migrar fácilmente a MongoDB.
+```bash
+python migrations/export_sql_to_json.py   --host "$DB_HOST" --user "$DB_USER" --password "$DB_PASSWORD" --database "$DB_NAME"   --tables heroes,peliculas,protagonistas,multimedias,multimedias_heroes,usuarios   --out ./migrations/export/
 ```
+**Argumentos comunes:**
+- `--tables` coma-separado o `--all` para todas
+- `--out` carpeta de salida
 
-### 📌 Por película obtener multimedia de sus héroes protagonistas
-**GET** `/api/peliculas/:id/multimedia`  
-
-Ejemplo de respuesta:
-```json
-[
-  { "idmultimedia": 10, "tipo": "photo", "url": "https://cdn/.../superman.jpg", "hero_name": "Superman" },
-  { "idmultimedia": 12, "tipo": "video", "url": "https://cdn/.../batman.mp4", "hero_name": "Batman" }
-]
+### 2) Importar JSON → MongoDB
+Carga los JSON exportados dentro de colecciones de `heroesdb`.
+```bash
+python migrations/import_json_to_mongo.py   --mongo-uri "$MONGO_URI"   --in ./migrations/export/   --map heroes:heroes peliculas:peliculas protagonistas:protagonistas multimedias:multimedias usuarios:usuarios
 ```
+**Opciones útiles:** `--drop` (vacía colecciones antes de importar), `--upsert`.
+
+### 3) Comparar datasets SQL vs NoSQL
+Chequeos rápidos de conteos y campos clave.
+```bash
+python migrations/compare_datasets.py   --sql-host "$DB_HOST" --sql-user "$DB_USER" --sql-password "$DB_PASSWORD" --sql-db "$DB_NAME"   --mongo-uri "$MONGO_URI"   --collections heroes,peliculas,usuarios
+```
+Salida tabulada en consola (usa `tabulate`).
+
+### 4) Visualizar datos (gráficas)
+Genera gráficos de distribución, top-N, etc. (PNG).
+```bash
+python migrations/visualize_data.py   --mongo-uri "$MONGO_URI"   --collection heroes   --field rol   --out ./migrations/reports/roles_heroes.png
+```
+> Usa `matplotlib` y `seaborn`. No requiere GUI (guarda a archivo).
 
 ---
 
-## 🔒 Validaciones y Seguridad
-- **Validaciones BD:** Uso de Sequelize para claves foráneas, campos obligatorios y relaciones M:M.  
-- **Validaciones API:**  
-  - `express-validator` para validar datos de entrada.  
-  - JWT para autenticación en rutas protegidas.  
-  - Manejo de Roles para restringir acceso (ADMIN_ROLE).  
+## 👤 Usuarios de prueba
+**Administradores**
+- `samuel@mail.com` / `samuel123` (ADMIN_ROLE)
+- `sofia@mail.com` / `sofia123` (ADMIN_ROLE)
+
+**Usuarios**
+- `deyton@mail.com` / `deyton123` (USER_ROLE)
+- `lucia@mail.com` / `lucia123` (USER_ROLE)
+
+> Recuerda cambiar contraseñas y poblar la BD según tu entorno de desarrollo.
 
 ---
 
-## 📜 Scripts disponibles
-- `npm start` — inicia el servidor en modo producción.  
-- `npm run dev` — inicia con nodemon en modo desarrollo.  
-
----
-
-## 📝 Notas finales
-- Documentar la API con Swagger en `docs/`.  
-- Usar variables de entorno (.env) para credenciales sensibles.  
-- Considerar paginación y filtros en endpoints de listado.  
+## 📝 Notas y buenas prácticas
+- Mantén separado el **código de acceso a datos** para SQL y NoSQL (ya lo hace la carpeta `database/` + controladores por backend).
+- Usa `.env` para credenciales y `JWT_SECRET`.
+- Añade **Swagger/OpenAPI** en `docs/` para documentación viva.
+- Considera **Docker Compose** (MySQL + MongoDB + API + scripts).
 
 ---
 
 ## ✍️ Autores
-- ✍️ Desarrollado por: **Deyton Riasco Ortiz**  
-- ✍️ Desarrollado por: **Samuel Izquierdo Bonilla**  
-📅 **Fecha:** 2025  
-📧 Contacto: driosoftpro@gmail.com  
-📧 Contacto: samuelizquierdo98@gmail.com  
+- **Deyton Riasco Ortiz** — driosoftpro@gmail.com  
+- **Samuel Izquierdo Bonilla** — samuelizquierdo98@gmail.com  
+**Año:** 2025
+
+---
+
+## 📄 Licencia
+Este proyecto se distribuye con fines académicos. Ajusta la licencia según tus necesidades.
