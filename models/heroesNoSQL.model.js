@@ -1,6 +1,6 @@
-const { Schema, model, Collection } = require('mongoose');
+import { Schema, model, Collection } from 'mongoose';
 
-const HeroeSchema = Schema({
+export const HeroeSchema = Schema({
     nombre: {
         type: String,
         required: [true, 'El nombre es obligatorio'],
@@ -34,4 +34,4 @@ HeroeSchema.methods.toJSON = function() {
     return data;
 }
 
-module.exports = model( 'Heroe', HeroeSchema );
+export default model( 'Heroe', HeroeSchema );
