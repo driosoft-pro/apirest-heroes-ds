@@ -4,7 +4,7 @@ import { check } from 'express-validator';
 import { validarCampos } from '../middlewares/validar-campos.js';
 import { usuariosPost, login, usuariosGet, usuariosPut, usuariosDelete } from '../controllers/usuariosSQL.controller.js'; 
 import { esAdminRole } from '../middlewares/validar-roles.js';
-import { existeEmail, noExisteEmail, existeUsuarioPorId } from '../helpers/db-validators.js';
+import { existeEmail, noExisteEmail, existeUsuarioPorId } from '../helpers/db-validatorsSQL.js';
 
 const router = Router();
 

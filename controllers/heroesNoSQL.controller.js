@@ -1,7 +1,8 @@
 const { response } = require("express");
-const  {Heroe} = require("../models");
 
+const  {Heroe} = require("../models");
 //const  Heroe = require("../models/mongoHeroes.model");
+
 
 //const { isValidObjectId } = require("../helpers/mongo-verify");
 const { now } = require("mongoose");
@@ -15,12 +16,143 @@ const obtenerHeroes = async (req, res = response) => {
       Heroe.countDocuments(),
       Heroe.find({})
         .skip(Number(desde))
-        .sort({nombre:1})
+        .sort({id:1})
+        .limit(Number(limite)),
+    ]);
+
+    res.json({ 
+      Ok: true, 
+      total: total, 
+      resp: heroes });
+  } catch (error) {
+    res.json({ Ok: false, resp: error });
+  }
+};
+
+const obtenerHeroe = async (req, res = response) => {
+
+  //Mongo ID
+  const { id } = req.params;
+
+  try {
+    const heroe = await Heroe.findById(id);
+      
+    res.json({ Ok: true, resp: heroe });
+  } catch (error) {
+    res.json({ Ok: false, resp: error });
+  }
+};
+
+
+const crearHeroe = async (req, res = response) => {
+
+  const body = req.body;
+ 
+  try {
+
+    const heroeDB = await Heroe.findOne({ nombre: body.nombre });
+
+    if (heroeDB) {
+      return res
+      //.status(400)
+      .json({
+        Ok: false,
+        msg: `El Heroe ${body.nombre}, ya existe`,
+      });
+    }
+
+   
+    const heroe = new Heroe(body);
+
+    //console.log(heroe);
+
+    // Guardar DB
+    await heroe.save();
+
+    //console.log("CREADA",heroe);
+
+    res
+    //.status(201)
+    .json({ Ok: true, msg: 'Heroe Insertado', resp: heroe});
+  } catch (error) {
+    console.log("ERROR:INSERTAR",error);
+
+    res.json({ Ok: false, msg:'Error al Insertar Heroe', resp: error });
+  }
+};
+
+const actualizarHeroe = async (req, res = response) => {
+  const { id } = req.params;
+
+  const data  = req.body;
+
+  console.log(data)
+
+  try {
+
+    /*
+    if (data.nombre) {
+        const heroeDB = await Heroe.findOne({ nombre: data.nombre });
+
+        if (heroeDB) {
+          return res.status(400).json({
+            msg: `El Heroe ${data.nombre}, ya existe`,
+          });
+        }
+    }
+    */
+    
+    const heroe = await Heroe.findByIdAndUpdate(id, data, {
+      new: true,
+    });
+
+    res.json({ Ok: true, msg: 'Heroe Actualizado', resp: heroe });
+  } catch (error) {
+    console.log("ERROR_MODIFICAR",error);
+    res.json({ Ok: false, resp: error });
+  }
+};
+
+const borrarHeroe = async (req, res = response) => {
+  const { id } = req.params;
+  try {
+
+    /*
+    const [total, multimediaheroe] = await Promise.all([
+      MultimediaHeroe.countDocuments({ IdHeroe: id }),
+      MultimediaHeroe.find({ IdHeroe: id})
         //.limit(Number(limite)),
     ]);
 
-    res.json({ Ok: true, total: total, resp: heroes });
+    if (total > 0){
+      return res
+      //.status(400)
+      .json({
+        Ok: false,
+        msg: `El Heroe tiene (${total}) multimedias asignadas y no puede ser borrado....`,
+      });
+    }
+      
+    else{
+    */
+      const heroeBorrado = await Heroe.findByIdAndDelete(id);
+
+      res.json({ Ok: true, 
+        msg: 'Heroe Borrado',        
+        resp: heroeBorrado });
+
+    //}
+
+    /*
+    const opcionBorrada = await Option.findByIdAndUpdate(
+      id,
+      { estado: false, fecha_actualizacion: now() },
+      { new: true }
+    );
+    */
+
   } catch (error) {
+    console.log("ERROR_BORRADO",error);
     res.json({ Ok: false, resp: error });
   }
 };
@@ -28,4 +160,10 @@ const obtenerHeroes = async (req, res = response) => {
 
 module.exports = {
   obtenerHeroes,
+  obtenerHeroe,
+
+  crearHeroe,
+  actualizarHeroe,
+  borrarHeroe
+
 };
