@@ -2,7 +2,7 @@ import { response } from 'express';
 import Protagonistas from '../models/protagonistasNoSQL.model.js';
 
 // GET: listar protagonistas
-export const obtenerProtagonistas = async (req, res = response) => {
+export const protagonistasGet = async (req, res = response) => {
   const { limite = 5, desde = 0 } = req.query;
   try {
     const [total, protagonistas] = await Promise.all([
@@ -22,7 +22,7 @@ export const obtenerProtagonistas = async (req, res = response) => {
 };
 
 // GET: protagonista por id
-export const obtenerProtagonista = async (req, res = response) => {
+export const protagonistaIdGet = async (req, res = response) => {
   const { id } = req.params;
   try {
     const protagonista = await Protagonistas.findById(id)
@@ -36,7 +36,7 @@ export const obtenerProtagonista = async (req, res = response) => {
 };
 
 // POST: crear protagonista
-export const crearProtagonista = async (req, res = response) => {
+export const protagonistasPost = async (req, res = response) => {
   const body = req.body;
   try {
     const protagonista = new Protagonistas(body);
@@ -48,7 +48,7 @@ export const crearProtagonista = async (req, res = response) => {
 };
 
 // PUT: actualizar protagonista
-export const actualizarProtagonista = async (req, res = response) => {
+export const protagonistaPut = async (req, res = response) => {
   const { id } = req.params;
   const data = req.body;
   try {
@@ -61,7 +61,7 @@ export const actualizarProtagonista = async (req, res = response) => {
 };
 
 // DELETE: eliminar protagonista
-export const borrarProtagonista = async (req, res = response) => {
+export const protagonistaDelete = async (req, res = response) => {
   const { id } = req.params;
   try {
     const protagonista = await Protagonistas.findByIdAndDelete(id);

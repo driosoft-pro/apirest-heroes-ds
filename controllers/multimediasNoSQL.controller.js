@@ -2,7 +2,7 @@ import { response } from 'express';
 import Multimedias from '../models/multimediasNoSQL.model.js';
 
 // GET: listar multimedias con paginación
-export const obtenerMultimedias = async (req, res = response) => {
+export const multimediasGet = async (req, res = response) => {
   const { limite = 5, desde = 0 } = req.query;
   try {
     const [total, multimedias] = await Promise.all([
@@ -20,7 +20,7 @@ export const obtenerMultimedias = async (req, res = response) => {
 };
 
 // GET: una multimedia por MongoID
-export const obtenerMultimedia = async (req, res = response) => {
+export const multimediaIdGet = async (req, res = response) => {
   const { id } = req.params;
   try {
     const multimedia = await Multimedias.findById(id);
@@ -32,7 +32,7 @@ export const obtenerMultimedia = async (req, res = response) => {
 };
 
 // POST: crear multimedia (evitar duplicados por nombre + url)
-export const crearMultimedia = async (req, res = response) => {
+export const multimediasPost = async (req, res = response) => {
   const body = req.body;
   try {
     const existe = await Multimedias.findOne({ nombre: body.nombre, url: body.url });
@@ -48,7 +48,7 @@ export const crearMultimedia = async (req, res = response) => {
 };
 
 // PUT: actualizar multimedia
-export const actualizarMultimedia = async (req, res = response) => {
+export const multimediaPut = async (req, res = response) => {
   const { id } = req.params;
   const data = req.body;
   try {
@@ -61,7 +61,7 @@ export const actualizarMultimedia = async (req, res = response) => {
 };
 
 // DELETE: eliminar multimedia
-export const borrarMultimedia = async (req, res = response) => {
+export const multimediaDelete = async (req, res = response) => {
   const { id } = req.params;
   try {
     const multimediaBorrada = await Multimedias.findByIdAndDelete(id);

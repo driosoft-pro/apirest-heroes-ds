@@ -5,7 +5,7 @@ import Heroes from '../models/heroesNoSQL.model.js';
 import Multimedias from '../models/multimediasNoSQL.model.js';
 
 // GET: listar películas
-export const obtenerPeliculas = async (req, res = response) => {
+export const peliculasGet = async (req, res = response) => {
   const { limite = 5, desde = 0 } = req.query;
   try {
     const [total, peliculas] = await Promise.all([
@@ -23,7 +23,7 @@ export const obtenerPeliculas = async (req, res = response) => {
 };
 
 // GET: película por id
-export const obtenerPelicula = async (req, res = response) => {
+export const peliculaIdGet = async (req, res = response) => {
   const { id } = req.params;
   try {
     const pelicula = await Peliculas.findById(id);
@@ -35,7 +35,7 @@ export const obtenerPelicula = async (req, res = response) => {
 };
 
 // POST: crear película (única por nombre)
-export const crearPelicula = async (req, res = response) => {
+export const peliculasPost = async (req, res = response) => {
   const body = req.body;
   try {
     const existe = await Peliculas.findOne({ nombre: body.nombre });
@@ -50,7 +50,7 @@ export const crearPelicula = async (req, res = response) => {
 };
 
 // PUT: actualizar película
-export const actualizarPelicula = async (req, res = response) => {
+export const peliculaPut = async (req, res = response) => {
   const { id } = req.params;
   const data = req.body;
   try {
@@ -63,7 +63,7 @@ export const actualizarPelicula = async (req, res = response) => {
 };
 
 // DELETE: eliminar película
-export const borrarPelicula = async (req, res = response) => {
+export const peliculaDelete = async (req, res = response) => {
   const { id } = req.params;
   try {
     const pelicula = await Peliculas.findByIdAndDelete(id);

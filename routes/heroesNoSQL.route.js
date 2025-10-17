@@ -4,34 +4,34 @@ import { validarCampos } from '../middlewares/validar-campos.js';
 import { existeHeroePorId } from '../helpers/db-validatorsNoSQL.js';
 
 import {
-  obtenerHeroes,
-  obtenerHeroe,
-  crearHeroe,
-  actualizarHeroe,
-  borrarHeroe,
+  heroesGet,
+  heroeIdGet,
+  heroesPost,
+  heroePut,
+  heroeDelete,
 } from '../controllers/heroesNoSQL.controller.js';
 
 const router = Router();
 
 // END Points
-router.get('/', obtenerHeroes);
+router.get('/', heroesGet);
 
 router.get(
   '/:id',
   check('id', 'No es un id de Mongo válido').isMongoId(),
   check('id').custom(existeHeroePorId),
   validarCampos,
-  obtenerHeroe
+  heroeIdGet
 );
 
-router.post('/', crearHeroe);
+router.post('/', heroesPost);
 
 router.put(
   '/:id',
   check('id', 'No es un id de Mongo válido').isMongoId(),
   check('id').custom(existeHeroePorId),
   validarCampos,
-  actualizarHeroe
+  heroePut
 );
 
 router.delete(
@@ -39,7 +39,7 @@ router.delete(
   check('id', 'No es un id de Mongo válido').isMongoId(),
   check('id').custom(existeHeroePorId),
   validarCampos,
-  borrarHeroe
+  heroeDelete
 );
 
 export default router;

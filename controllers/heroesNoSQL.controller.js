@@ -1,7 +1,7 @@
 import { response } from 'express';
 import Heroes from '../models/heroesNoSQL.model.js';
 
-export const obtenerHeroes = async (req, res = response) => {
+export const heroesGet = async (req, res = response) => {
   const { limite = 5, desde = 0 } = req.query;
   try {
     const [total, heroes] = await Promise.all([
@@ -18,7 +18,7 @@ export const obtenerHeroes = async (req, res = response) => {
   }
 };
 
-export const obtenerHeroe = async (req, res = response) => {
+export const heroeIdGet = async (req, res = response) => {
   const { id } = req.params; // MongoID
   try {
     const heroe = await Heroes.findById(id);
@@ -28,7 +28,7 @@ export const obtenerHeroe = async (req, res = response) => {
   }
 };
 
-export const crearHeroe = async (req, res = response) => {
+export const heroesPost = async (req, res = response) => {
   const body = req.body;
   try {
     const heroeDB = await Heroes.findOne({ nombre: body.nombre });
@@ -49,7 +49,7 @@ export const crearHeroe = async (req, res = response) => {
   }
 };
 
-export const actualizarHeroe = async (req, res = response) => {
+export const heroePut = async (req, res = response) => {
   const { id } = req.params;
   const data = req.body;
 
@@ -62,7 +62,7 @@ export const actualizarHeroe = async (req, res = response) => {
   }
 };
 
-export const borrarHeroe = async (req, res = response) => {
+export const heroeDelete = async (req, res = response) => {
   const { id } = req.params;
   try {
     const heroeBorrado = await Heroes.findByIdAndDelete(id);

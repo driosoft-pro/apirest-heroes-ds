@@ -2,7 +2,7 @@ import { response } from 'express';
 import MultimediasHeroes from '../models/multimediasHeroesNoSQL.model.js';
 
 // GET: listar relaciones con paginación
-export const obtenerRelacionesMultimediasHeroes = async (req, res = response) => {
+export const multimediasHeroesGet = async (req, res = response) => {
   const { limite = 5, desde = 0 } = req.query;
   try {
     const [total, registros] = await Promise.all([
@@ -22,7 +22,7 @@ export const obtenerRelacionesMultimediasHeroes = async (req, res = response) =>
 };
 
 // GET: una relación por id
-export const obtenerRelacionMultimediaHeroe = async (req, res = response) => {
+export const multimediasHeroesIdGet = async (req, res = response) => {
   const { id } = req.params;
   try {
     const registro = await MultimediasHeroes.findById(id)
@@ -37,7 +37,7 @@ export const obtenerRelacionMultimediaHeroe = async (req, res = response) => {
 };
 
 // POST: crear relación (evitar duplicados)
-export const crearRelacionMultimediaHeroe = async (req, res = response) => {
+export const multimediasHeroesPost = async (req, res = response) => {
   const { idmultimedia, heroes_id } = req.body;
   try {
     const existe = await MultimediasHeroes.findOne({ idmultimedia, heroes_id });
@@ -53,7 +53,7 @@ export const crearRelacionMultimediaHeroe = async (req, res = response) => {
 };
 
 // PUT: actualizar relación
-export const actualizarRelacionMultimediaHeroe = async (req, res = response) => {
+export const multimediasHeroesPut = async (req, res = response) => {
   const { id } = req.params;
   const data = req.body;
   try {
@@ -66,7 +66,7 @@ export const actualizarRelacionMultimediaHeroe = async (req, res = response) => 
 };
 
 // DELETE: eliminar relación
-export const borrarRelacionMultimediaHeroe = async (req, res = response) => {
+export const multimediasHeroesDelete = async (req, res = response) => {
   const { id } = req.params;
   try {
     const registro = await MultimediasHeroes.findByIdAndDelete(id);
