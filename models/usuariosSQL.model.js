@@ -1,71 +1,63 @@
-import { Router } from 'express';
-import { check } from 'express-validator';
+import { DataTypes } from 'sequelize';
+import { sequelize } from '../database/connection.js'; 
 
-import { validarCampos } from '../middlewares/validar-campos.js';
-import { validarJWT } from '../middlewares/validar-jwt.js';
-import { esAdminRole } from '../middlewares/validar-roles.js';
+// Definición del modelo Usuarios
+export const Usuarios = sequelize.define('usuarios_ds', 
+    {
+        // Model attributes are defined here
+        id: {
+            type: DataTypes.BIGINT,
+            allowNull: false,
+            primaryKey: true,
+            autoIncrement: true,
+        },
+        nombre: {
+            type: DataTypes.STRING(150),
+            allowNull: false,
+        },
+        correo: {
+            type: DataTypes.STRING(50),
+            allowNull: false,
+            unique: true,
+        },
+        password: {
+            type: DataTypes.STRING(250),
+            allowNull: false,
+        },
+        img: {
+            type: DataTypes.STRING(150),
+            allowNull: false,
+        },
+        rol: {
+            type: DataTypes.ENUM('ADMIN_ROLE', 'USER_ROLE'),
+            allowNull: true,
+        },
+        estado: {
+            type: DataTypes.BOOLEAN,
+            allowNull: false,
+            defaultValue: true,
+        },
+        google: {
+            type: DataTypes.BOOLEAN,
+            allowNull: false,
+        },
+        fecha_creacion: {
+            type: DataTypes.DATE,
+            allowNull: false,
+            defaultValue: DataTypes.NOW,
+        },
+        fecha_actualizacion: {
+            type: DataTypes.DATE,
+            allowNull: true,
+        },
+    },
 
-import {
-  usuariosPost,
-  login,
-  usuariosGet,
-  usuariosPut,
-  usuariosDelete,
-} from '../controllers/usuariosNoSQL.controller.js';
-
-import {
-  existeUsuarioPorId,
-  existeEmail,
-  noExisteEmail,
-} from '../helpers/db-validatorsNoSQL.js';
-
-const router = Router();
-
-// ===== Inserts / Auth =====
-router.post(
-  '/',
-  check('nombre', 'El nombre es obligatorio').not().isEmpty(),
-  check('password', 'El password debe de ser mas de 6 letras').isLength({ min: 6 }),
-  check('correo', 'El correo es obligatorio').isEmail(),
-  check('correo').custom(existeEmail),
-  check('rol', 'No es un rol valido').isIn('ADMIN_ROLE', 'USER_ROLE'),
-  validarCampos,
-  usuariosPost
+    {
+        //Maintain table name don't plurilize
+        freezeTableName: true,
+        // I don't want createdAt
+        createdAt: false,
+        // I don't want updatedAt
+        updatedAt: false
+    }
 );
-
-router.post(
-  '/login',
-  check('correo', 'El correo es obligatorio').isEmail(),
-  check('correo').custom(noExisteEmail),
-  check('password', 'La contraseña es obligatoria').not().isEmpty(),
-  check('password', 'El password debe de ser mas de 6 letras').isLength({ min: 6 }),
-  validarCampos,
-  login
-);
-
-// ===== Gets =====
-router.get('/', usuariosGet);
-
-// ===== PUT / DELETE (protegidos) =====
-router.put(
-  '/:id',
-  validarJWT,
-  esAdminRole,
-  check('id', 'No es un id de Mongo válido').isMongoId(),
-  check('id').custom(existeUsuarioPorId),
-  check('rol', 'No es un rol valido').optional().isIn('ADMIN_ROLE', 'USER_ROLE'),
-  validarCampos,
-  usuariosPut
-);
-
-router.delete(
-  '/:id',
-  validarJWT,
-  esAdminRole,
-  check('id', 'No es un id de Mongo válido').isMongoId(),
-  check('id').custom(existeUsuarioPorId),
-  validarCampos,
-  usuariosDelete
-);
-
-export default router;
