@@ -1,4 +1,3 @@
-// routes/heroesNoSQL.route.js
 import { Router } from 'express';
 import { check } from 'express-validator';
 import { validarCampos } from '../middlewares/validar-campos.js';

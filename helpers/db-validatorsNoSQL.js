@@ -1,16 +1,10 @@
-const {Heroe} = require("../models");
+import Heroes from '../models/heroesNoSQL.model.js';
 
-/**
- * Heroe
- */
-const existeHeroePorId = async (id) => {
+export const existeHeroePorId = async (id) => {
   // Verificar si el correo existe
-  const existeHeroe = await Heroe.findById(id);
+  const existeHeroe = await Heroes.findById(id);
   if (!existeHeroe) {
     throw new Error(`El id no existe ${id}`);
   }
 };
 
-module.exports = {
-  existeHeroePorId,
-};

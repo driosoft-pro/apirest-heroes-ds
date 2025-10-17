@@ -1,6 +1,7 @@
-import { Schema, model, Collection} from 'mongoose';
+import mongoose from 'mongoose';
+const { Schema, model } = mongoose;
 
-export const HeroeSchema = Schema({
+export const HeroeSchema = new Schema({
     nombre: {
         type: String,
         required: [true, 'El nombre es obligatorio'],
@@ -8,7 +9,7 @@ export const HeroeSchema = Schema({
     },
     bio: {
         type: String,
-        required: [true, 'La biografia es obligatoria'],
+        required: [true, 'La biografía es obligatoria'],
     },
     img: {
         type: String,
@@ -16,22 +17,19 @@ export const HeroeSchema = Schema({
     },
     aparicion: {
         type: Date,
-		required: 'Debe tener una fecha de Aparicion'
+        required: [true, 'Debe tener una fecha de aparición']
     },
     casa: {
         type: String,
         required: [true, 'La casa es obligatoria'],
     }
-},
-{
-    collection: 'Heroesnuevos' 
-}
-);
-
+}, {
+    collection: 'heroes'
+});
 
 HeroeSchema.methods.toJSON = function() {
-    const { __v, ...data  } = this.toObject();
+    const { __v, ...data } = this.toObject();
     return data;
 }
 
-export default model( 'Heroe', HeroeSchema );
+export default model('Heroes', HeroeSchema);
