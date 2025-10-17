@@ -2,7 +2,7 @@ import { Router } from 'express';
 import { validarJWT } from '../middlewares/validar-jwt.js';
 import { esAdminRole } from '../middlewares/validar-roles.js';
 
-import { protagonistasGet, protagonistaIdGet, protagonistasPost, protagonistaPut, protagonistaDelete } from '../controllers/protagonistas.controller.js';
+import { protagonistasGet, protagonistaIdGet, protagonistasPost, protagonistaPut, protagonistaDelete } from '../controllers/protagonistasSQL.controller.js';
 
 const router = Router();
 

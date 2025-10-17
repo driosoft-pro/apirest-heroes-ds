@@ -1,7 +1,7 @@
 import pkg from 'jsonwebtoken';
 const { verify } = pkg;
 import { request, response } from "express";
-import { Usuarios } from '../models/usuarios.model.js';
+import { Usuarios } from '../models/usuariosSQL.model.js';
 
 // Middleware para validar el JWT
 export const validarJWT = async (req = request, res = response, next) => {

@@ -2,7 +2,7 @@ import { Router } from 'express';
 import { validarJWT } from '../middlewares/validar-jwt.js'; 
 import { esAdminRole } from '../middlewares/validar-roles.js';
 
-import { multimediasGet, multimediaIdGet, multimediasPost, multimediaPut, multimediaDelete } from '../controllers/multimedias.controller.js';
+import { multimediasGet, multimediaIdGet, multimediasPost, multimediaPut, multimediaDelete } from '../controllers/multimediasSQL.controller.js';
 
 const router = Router();
 

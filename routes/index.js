@@ -1,12 +1,12 @@
 import { Router } from 'express';
 
 // Importamos todas las rutas
-import heroesRoutes from './heroes.route.js';
-import usuariosRoutes from './usuarios.route.js';
-import peliculasRoutes from './peliculas.route.js';
-import protagonistasRoutes from './protagonistas.route.js';
-import multimediasRoutes from './multimedias.route.js';
-import multimediasHeroesRoutes from './multimediasHeroes.route.js';
+import heroesRoutes from './heroesSQL.route.js';
+import usuariosRoutes from './usuariosSQL.route.js';
+import peliculasRoutes from './peliculasSQL.route.js';
+import protagonistasRoutes from './protagonistasSQL.route.js';
+import multimediasRoutes from './multimediasSQL.route.js';
+import multimediasHeroesRoutes from './multimediasHeroesSQL.route.js';
 
 const router = Router();
 

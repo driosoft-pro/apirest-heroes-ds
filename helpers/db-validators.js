@@ -1,8 +1,8 @@
-import { Usuarios } from "../models/usuarios.model.js";
-import { Heroes } from "../models/heroes.model.js";
-import { Peliculas } from "../models/peliculas.model.js";
-import { Multimedias } from "../models/multimedias.model.js";
-import { Protagonistas } from "../models/protagonistas.model.js";
+import { Usuarios } from "../models/usuariosSQL.model.js";
+import { Heroes } from "../models/heroesSQL.model.js";
+import { Peliculas } from "../models/peliculasSQL.model.js";
+import { Multimedias } from "../models/multimediasSQL.model.js";
+import { Protagonistas } from "../models/protagonistasSQL.model.js";
 
 // === Validaciones de Usuario ===
 
