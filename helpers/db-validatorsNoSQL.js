@@ -89,3 +89,19 @@ export const existeProtagonistaPorId = async (id = "") => {
     throw new Error(`El ID ${id} de protagonista no existe en la Base de Datos.`);
   }
 };
+
+
+export const existeMultimediaHeroePorId = async (multimediaId = "", heroeId = "") => {
+  const multimedia = await Multimedias.findById(multimediaId);
+  if (!multimedia) {
+    throw new Error(`El ID ${multimediaId} de multimedia no existe en la Base de Datos.`);
+  }
+
+  const heroe = await Heroes.findById(heroeId);
+  if (!heroe) {
+    throw new Error(`El ID ${heroeId} de héroe no existe en la Base de Datos.`);
+  }
+  if (String(multimedia.heroe_id) !== String(heroeId)) {
+    throw new Error(`La multimedia con ID ${multimediaId} no pertenece al héroe con ID ${heroeId}.`);
+  }
+};

@@ -1,5 +1,5 @@
 import mongoose from 'mongoose';
-const { Schema, model } = mongoose;
+const { Schema, model, Collection } = mongoose;
 
 export const HeroeSchema = new Schema({
     nombre: {
@@ -32,4 +32,4 @@ HeroeSchema.methods.toJSON = function() {
     return data;
 }
 
-export default model('Heroes', HeroeSchema);
+export default model('heroes', HeroeSchema);
