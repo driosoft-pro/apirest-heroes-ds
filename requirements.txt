@@ -1,0 +1,7 @@
+pymongo
+numpy
+matplotlib
+pandas
+polars
+tabulate
+seaborn
