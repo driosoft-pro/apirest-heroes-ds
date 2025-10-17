@@ -1,33 +1,53 @@
-import mongoose from 'mongoose';
-const { Schema, model, Types } = mongoose;
+import { Router } from 'express';
+import { check } from 'express-validator';
 
-/**
- * Colección puente (many-to-many) entre Heroes y Multimedias,
- * equivalente a multimedias_heroe_ds en SQL.
- */
-const MultimediaHeroeSchema = new Schema({
-  heroes_id: {
-    type: Types.ObjectId,
-    ref: 'Heroes',
-    required: [true, 'El heroe es obligatorio'],
-    index: true,
-  },
-  idmultimedia: {
-    type: Types.ObjectId,
-    ref: 'Multimedias',
-    required: [true, 'La multimedia es obligatoria'],
-    index: true,
-  },
-}, {
-  collection: 'multimedias_heroes',
-});
+import { validarCampos } from '../middlewares/validar-campos.js';
+import { validarJWT } from '../middlewares/validar-jwt.js';
+import { esAdminRole } from '../middlewares/validar-roles.js';
 
-/** Previene duplicados (un mismo par héroe-multimedia solo una vez). */
-MultimediaHeroeSchema.index({ heroes_id: 1, idmultimedia: 1 }, { unique: true });
+import {
+  multimediasGet,
+  multimediaIdGet,
+  multimediasPost,
+  multimediaPut,
+  multimediaDelete,
+} from '../controllers/multimediasNoSQL.controller.js';
 
-MultimediaHeroeSchema.methods.toJSON = function () {
-  const { __v, ...data } = this.toObject();
-  return data;
-};
+import { existeMultimediaPorId } from '../helpers/db-validatorsNoSQL.js';
 
-export default model('MultimediasHeroes', MultimediaHeroeSchema);
+const router = Router();
+
+// GET públicos
+router.get('/', multimediasGet);
+router.get(
+  '/:id',
+  check('id', 'No es un id de Mongo válido').isMongoId(),
+  check('id').custom(existeMultimediaPorId),
+  validarCampos,
+  multimediaIdGet
+);
+
+// Mutaciones protegidas
+router.post('/', [validarJWT, esAdminRole], multimediasPost);
+
+router.put(
+  '/:id',
+  validarJWT,
+  esAdminRole,
+  check('id', 'No es un id de Mongo válido').isMongoId(),
+  check('id').custom(existeMultimediaPorId),
+  validarCampos,
+  multimediaPut
+);
+
+router.delete(
+  '/:id',
+  validarJWT,
+  esAdminRole,
+  check('id', 'No es un id de Mongo válido').isMongoId(),
+  check('id').custom(existeMultimediaPorId),
+  validarCampos,
+  multimediaDelete
+);
+
+export default router;

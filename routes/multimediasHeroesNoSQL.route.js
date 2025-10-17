@@ -1,32 +1,53 @@
-import mongoose from 'mongoose';
-const { Schema, model } = mongoose;
+import { Router } from 'express';
+import { check } from 'express-validator';
 
-const MultimediaSchema = new Schema({
-  nombre: {
-    type: String,
-    required: [true, 'El nombre es obligatorio'],
-    trim: true,
-    maxlength: 50,
-  },
-  url: {
-    type: String,
-    required: false,
-    trim: true,
-    maxlength: 250,
-  },
-  tipo: {
-    type: String,
-    required: [true, 'El tipo es obligatorio'],
-    trim: true,
-    maxlength: 15,
-  },
-}, {
-  collection: 'multimedias',
-});
+import { validarCampos } from '../middlewares/validar-campos.js';
+import { validarJWT } from '../middlewares/validar-jwt.js';
+import { esAdminRole } from '../middlewares/validar-roles.js';
 
-MultimediaSchema.methods.toJSON = function () {
-  const { __v, ...data } = this.toObject();
-  return data;
-};
+import {
+  multimediasHeroesGet,
+  multimediasHeroesIdGet,
+  multimediasHeroesPost,
+  multimediasHeroesPut,
+  multimediasHeroesDelete,
+} from '../controllers/multimediasHeroesNoSQL.controller.js';
 
-export default model('Multimedias', MultimediaSchema);
+import { existeMultimediaHeroePorId } from '../helpers/db-validatorsNoSQL.js';
+
+const router = Router();
+
+// GET públicos
+router.get('/', multimediasHeroesGet);
+router.get(
+  '/:id',
+  check('id', 'No es un id de Mongo válido').isMongoId(),
+  check('id').custom(existeMultimediaHeroePorId),
+  validarCampos,
+  multimediasHeroesIdGet
+);
+
+// Mutaciones protegidas
+router.post('/', [validarJWT, esAdminRole], multimediasHeroesPost);
+
+router.put(
+  '/:id',
+  validarJWT,
+  esAdminRole,
+  check('id', 'No es un id de Mongo válido').isMongoId(),
+  check('id').custom(existeMultimediaHeroePorId),
+  validarCampos,
+  multimediasHeroesPut
+);
+
+router.delete(
+  '/:id',
+  validarJWT,
+  esAdminRole,
+  check('id', 'No es un id de Mongo válido').isMongoId(),
+  check('id').custom(existeMultimediaHeroePorId),
+  validarCampos,
+  multimediasHeroesDelete
+);
+
+export default router;

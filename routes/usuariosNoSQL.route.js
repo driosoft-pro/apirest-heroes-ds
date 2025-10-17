@@ -1,65 +1,71 @@
-import mongoose from 'mongoose';
-const { Schema, model } = mongoose;
+import { Router } from 'express';
+import { check } from 'express-validator';
 
-const UsuarioSchema = new Schema({
-  nombre: {
-    type: String,
-    required: [true, 'El nombre es obligatorio'],
-    trim: true,
-    maxlength: 150,
-  },
-  correo: {
-    type: String,
-    required: [true, 'El correo es obligatorio'],
-    unique: true,
-    lowercase: true,
-    trim: true,
-    maxlength: 50,
-  },
-  password: {
-    type: String,
-    required: [true, 'La contraseña es obligatoria'],
-    minlength: 6,
-    maxlength: 250,
-    // Opcionalmente podrías usar select:false y exponerla manualmente cuando sea necesario
-    select: false,
-  },
-  img: {
-    type: String,
-    required: [true, 'La imagen es obligatoria'],
-    trim: true,
-    maxlength: 150,
-  },
-  rol: {
-    type: String,
-    enum: ['ADMIN_ROLE', 'USER_ROLE'],
-    required: false,
-  },
-  estado: {
-    type: Boolean,
-    default: true,
-    required: [true, 'El estado es obligatorio'],
-  },
-  google: {
-    type: Boolean,
-    required: [true, 'El indicador de Google es obligatorio'],
-  },
-  fecha_creacion: {
-    type: Date,
-    default: Date.now,
-    required: [true, 'La fecha de creación es obligatoria'],
-  },
-  fecha_actualizacion: {
-    type: Date,
-    required: false,
-  },
-}, {
-  collection: 'usuarios',
-});
+import { validarCampos } from '../middlewares/validar-campos.js';
+import { validarJWT } from '../middlewares/validar-jwt.js';
+import { esAdminRole } from '../middlewares/validar-roles.js';
 
-UsuarioSchema.methods.toJSON = function () {
-  const { __v, password, ...data } = this.toObject();
-  return data;
-};
+import {
+  usuariosPost,
+  login,
+  usuariosGet,
+  usuariosPut,
+  usuariosDelete,
+} from '../controllers/usuariosNoSQL.controller.js';
 
-export default model('Usuarios', UsuarioSchema);
+import {
+  existeUsuarioPorId,
+  existeEmail,
+  noExisteEmail,
+} from '../helpers/db-validatorsNoSQL.js';
+
+const router = Router();
+
+// ===== Inserts / Auth =====
+router.post(
+  '/',
+  check('nombre', 'El nombre es obligatorio').not().isEmpty(),
+  check('password', 'El password debe de ser mas de 6 letras').isLength({ min: 6 }),
+  check('correo', 'El correo es obligatorio').isEmail(),
+  check('correo').custom(existeEmail),
+  check('rol', 'No es un rol valido').isIn('ADMIN_ROLE', 'USER_ROLE'),
+  validarCampos,
+  usuariosPost
+);
+
+router.post(
+  '/login',
+  check('correo', 'El correo es obligatorio').isEmail(),
+  check('correo').custom(noExisteEmail),
+  check('password', 'La contraseña es obligatoria').not().isEmpty(),
+  check('password', 'El password debe de ser mas de 6 letras').isLength({ min: 6 }),
+  validarCampos,
+  login
+);
+
+// ===== Gets =====
+router.get('/', usuariosGet);
+
+// ===== PUT / DELETE (protegidos) =====
+router.put(
+  '/:id',
+  validarJWT,
+  esAdminRole,
+  check('id', 'No es un id de Mongo válido').isMongoId(),
+  check('id').custom(existeUsuarioPorId),
+  check('rol', 'No es un rol valido').optional().isIn('ADMIN_ROLE', 'USER_ROLE'),
+  validarCampos,
+  usuariosPut
+);
+
+router.delete(
+  '/:id',
+  validarJWT,
+  esAdminRole,
+  check('id', 'No es un id de Mongo válido').isMongoId(),
+  check('id').custom(existeUsuarioPorId),
+  validarCampos,
+  usuariosDelete
+);
+
+export default router;
