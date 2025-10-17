@@ -1,6 +1,6 @@
 import express from 'express';
 import cors from 'cors';
-import { sequelize } from '../database/connection.js';
+import { sequelize } from '../database/connectionSQL.js';
 
 class Server {
     constructor() {

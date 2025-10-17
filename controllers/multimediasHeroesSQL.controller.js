@@ -1,5 +1,5 @@
 import { response, request } from 'express';
-import { MultimediasHeroes } from '../models/multimediasHeroes.model.js';
+import { MultimediasHeroes } from '../models/multimediasHeroesSQL.model.js';
 
 // GET: listar todos los registros
 export const multimediasHeroesGet = async (req, res = response) => {

@@ -2,7 +2,7 @@ import { Router } from 'express';
 import { validarJWT } from '../middlewares/validar-jwt.js';
 import { check } from 'express-validator';
 import { validarCampos } from '../middlewares/validar-campos.js';
-import { usuariosPost, login, usuariosGet, usuariosPut, usuariosDelete } from '../controllers/usuarios.controller.js'; 
+import { usuariosPost, login, usuariosGet, usuariosPut, usuariosDelete } from '../controllers/usuariosSQL.controller.js'; 
 import { esAdminRole } from '../middlewares/validar-roles.js';
 import { existeEmail, noExisteEmail, existeUsuarioPorId } from '../helpers/db-validators.js';
 
