@@ -16,7 +16,7 @@ export const connectionNoSQL = async () => {
     if (!mongoURI) {
       throw new Error('Mongo URI no definido. Revisa MONGODB_LOCAL_URI/MONGODB_REMOTE_URI en .env');
     }
-    await mongoose.connect(mongoURI /* , opciones si usas Mongoose <7 */);
+    await mongoose.connect(mongoURI);
     console.log('Base de datos MongoDB conectada correctamente...');
   } catch (error) {
     console.error('Error al conectar con MongoDB:', error.message);
