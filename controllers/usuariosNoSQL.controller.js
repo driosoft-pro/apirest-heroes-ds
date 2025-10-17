@@ -4,7 +4,7 @@ import { generarJWT } from '../helpers/generar-jwt.js';
 import Usuarios from '../models/usuariosNoSQL.model.js';
 
 // POST: crear usuario (registro)
-export const crearUsuario = async (req, res = response) => {
+export const usuariosPost = async (req, res = response) => {
   const { nombre, correo, password, img, rol, google } = req.body;
 
   try {
@@ -59,7 +59,7 @@ export const login = async (req, res = response) => {
 };
 
 // GET: listar usuarios
-export const obtenerUsuarios = async (req, res = response) => {
+export const usuariosGet = async (req, res = response) => {
   const { limite = 5, desde = 0 } = req.query;
   try {
     const [total, usuarios] = await Promise.all([
@@ -77,7 +77,7 @@ export const obtenerUsuarios = async (req, res = response) => {
 };
 
 // PUT: actualizar usuario (sin permitir actualizar correo/google directamente)
-export const actualizarUsuario = async (req, res = response) => {
+export const usuariosPut = async (req, res = response) => {
   const { id } = req.params;
   const { password, google, correo, ...resto } = req.body;
 
@@ -97,7 +97,7 @@ export const actualizarUsuario = async (req, res = response) => {
 };
 
 // DELETE: eliminar usuario (físico o soft delete)
-export const borrarUsuario = async (req, res = response) => {
+export const usuariosDelete = async (req, res = response) => {
   const { id } = req.params;
   const { modo = 'fisico' } = req.query; // ?modo=soft para soft delete
   try {
