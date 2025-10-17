@@ -7,7 +7,6 @@ SECRETORPRIVATEKEY=Est03sLa11av3PubliKDeAlmacenamiento2025@02
 # Selección de entorno de BD: local | remote
 DB_ENV=remote
 
-# SQL
 # Base de datos local
 DB_LOCAL_NAME=heroes
 DB_LOCAL_USER=root
@@ -24,6 +23,8 @@ DB_REMOTE_HOST=monorail.proxy.rlwy.net
 DB_REMOTE_PORT=23251
 DB_REMOTE_DIALECT=mysql
 
-# NoSQL
-#Base de datos Nube
-MONGODB_CNN=mongodb+srv://ZantaCruz:<Zantacruzten1>@zantacruz.3je2x60.mongodb.net/?retryWrites=true&w=majority&appName=ZantaCruz
+# Local Mongo
+MONGODB_LOCAL_URI=mongodb://localhost:27017/mi_basedatos
+
+# Remoto Mongo
+MONGODB_REMOTE_URI=mongodb+srv://ZantaCruz:<Zantacruzten1>@zantacruz.3je2x60.mongodb.net/?retryWrites=true&w=majority&appName=ZantaCruz
