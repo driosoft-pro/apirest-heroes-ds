@@ -1,6 +1,5 @@
-// controllers/heroesNoSQL.controller.js
 import { response } from 'express';
-import { Heroe } from '../models/index.js';
+import { Heroe } from '../models/heroesNoSQL.model.js';
 
 export const obtenerHeroes = async (req, res = response) => {
   const { limite = 5, desde = 0 } = req.query;

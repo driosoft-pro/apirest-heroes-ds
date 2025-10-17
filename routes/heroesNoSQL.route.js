@@ -2,7 +2,7 @@
 import { Router } from 'express';
 import { check } from 'express-validator';
 import { validarCampos } from '../middlewares/validar-campos.js';
-import { existeHeroePorId } from '../helpers/db-validators.mongo.js';
+import { existeHeroePorId } from '../helpers/db-validatorsNoSQL.js';
 
 import {
   obtenerHeroes,

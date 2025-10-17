@@ -1,4 +1,4 @@
-import { Schema, model, Collection } from 'mongoose';
+import { Schema, model, Collection} from 'mongoose';
 
 export const HeroeSchema = Schema({
     nombre: {
