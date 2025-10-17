@@ -4,15 +4,15 @@ import { Router } from 'express';
 import heroesSQLRoutes from './heroesSQL.route.js';
 import heroesNoSQLRoutes from './heroesNoSQL.route.js';
 import usuariosSQLRoutes from './usuariosSQL.route.js';
-//import usuariosNoSQLRoutes from './usuariosNoSQL.route.js';
+import usuariosNoSQLRoutes from './usuariosNoSQL.route.js';
 import peliculasSQLRoutes from './peliculasSQL.route.js';
-//import peliculasNoSQLRoutes from './peliculasNoSQL.route.js';
+import peliculasNoSQLRoutes from './peliculasNoSQL.route.js';
 import protagonistasSQLRoutes from './protagonistasSQL.route.js';
-//import protagonistasNoSQLRoutes from './protagonistasNoSQL.route.js';
+import protagonistasNoSQLRoutes from './protagonistasNoSQL.route.js';
 import multimediasSQLRoutes from './multimediasSQL.route.js';
-//import multimediasNoSQLRoutes from './multimediasNoSQL.route.js';
+import multimediasNoSQLRoutes from './multimediasNoSQL.route.js';
 import multimediasHeroesSQLRoutes from './multimediasHeroesSQL.route.js';
-//import multimediasHeroesNoSQLRoutes from './multimediasHeroesNoSQL.route.js';
+import multimediasHeroesNoSQLRoutes from './multimediasHeroesNoSQL.route.js';
 
 const router = Router();
 
