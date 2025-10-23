@@ -3,7 +3,7 @@ import Multimedias from '../models/multimediasNoSQL.model.js';
 
 // GET: listar multimedias con paginación
 export const multimediasGet = async (req, res = response) => {
-  const { limite = 5, desde = 0 } = req.query;
+  const { limite = 50, desde = 0 } = req.query;
   try {
     const [total, multimedias] = await Promise.all([
       Multimedias.countDocuments(),

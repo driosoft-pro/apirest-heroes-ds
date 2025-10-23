@@ -21,14 +21,14 @@ const router = Router();
 router.get('/', protagonistasGet);
 router.get(
   '/:id',
-  check('id', 'No es un id de Mongo válido').isMongoId(),
-  check('id').custom(existeProtagonistaPorId),
-  validarCampos,
+ // check('id', 'No es un id de Mongo válido').isMongoId(),
+  //check('id').custom(existeProtagonistaPorId),
+  //validarCampos,
   protagonistaIdGet
 );
 
 // Mutaciones protegidas
-router.post('/', [validarJWT, esAdminRole], protagonistasPost);
+router.post('/',  protagonistasPost);
 
 router.put(
   '/:id',
