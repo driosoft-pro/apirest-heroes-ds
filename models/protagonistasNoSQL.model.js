@@ -12,12 +12,12 @@ const ProtagonistasSchema = new Schema({
   },
   heroes_id: {
     type: Types.ObjectId,
-    ref: 'Heroes',
+    ref: 'heroes',
     required: [true, 'El id del héroe es obligatorio'],
   },
   peliculas_id: {
     type: Types.ObjectId,
-    ref: 'Peliculas',
+    ref: 'peliculas',
     required: [true, 'El id de la película es obligatorio'],
   },
 }, {
@@ -32,4 +32,4 @@ ProtagonistasSchema.methods.toJSON = function () {
   return data;
 };
 
-export default model('Protagonistas', ProtagonistasSchema);
+export default model('protagonistas', ProtagonistasSchema);
