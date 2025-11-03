@@ -657,6 +657,36 @@ CREATE (u)-[:VISITO {fecha:'2025-10-28', hora:'09:15'}]->(s);
 MATCH (u:Usuario {nombre:'Benjamín'}), (s:Sitio {sitio:'Cataratas del Iguazú'})
 CREATE (u)-[:VISITO {fecha:'2025-10-29', hora:'10:30'}]->(s);
 
+MATCH (u:Usuario {nombre:'Hiroshi Tanaka'}), (s:Sitio {sitio:'Torre de Tokio'})
+CREATE (u)-[:VISITO {fecha:'2025-10-15', hora:'14:30'}]->(s);
+
+MATCH (u:Usuario {nombre:'Hiroshi Tanaka'}), (s:Sitio {sitio:'Restaurante Sukiyabashi Jiro'})
+CREATE (u)-[:VISITO {fecha:'2025-10-20', hora:'19:00'}]->(s);
+
+MATCH (u:Usuario {nombre:'Yumi Nakamura'}), (s:Sitio {sitio:'Templo Kinkaku-ji'})
+CREATE (u)-[:VISITO {fecha:'2025-10-16', hora:'10:00'}]->(s);
+
+MATCH (u:Usuario {nombre:'Yumi Nakamura'}), (s:Sitio {sitio:'Museo Nacional de Kioto'})
+CREATE (u)-[:VISITO {fecha:'2025-10-22', hora:'11:30'}]->(s);
+
+MATCH (u:Usuario {nombre:'Kenji Sato'}), (s:Sitio {sitio:'Castillo de Osaka'})
+CREATE (u)-[:VISITO {fecha:'2025-10-18', hora:'09:45'}]->(s);
+
+MATCH (u:Usuario {nombre:'Kenji Sato'}), (s:Sitio {sitio:'Restaurante Sukiyabashi Jiro'})
+CREATE (u)-[:VISITO {fecha:'2025-10-25', hora:'20:30'}]->(s);
+
+MATCH (u:Usuario {nombre:'Aiko Suzuki'}), (s:Sitio {sitio:'Santuario Meiji'})
+CREATE (u)-[:VISITO {fecha:'2025-10-19', hora:'08:30'}]->(s);
+
+MATCH (u:Usuario {nombre:'Aiko Suzuki'}), (s:Sitio {sitio:'Hotel Park Hyatt Tokio'})
+CREATE (u)-[:VISITO {fecha:'2025-10-28', hora:'18:00'}]->(s);
+
+MATCH (u:Usuario {nombre:'Taro Yamamoto'}), (s:Sitio {sitio:'Monte Fuji'})
+CREATE (u)-[:VISITO {fecha:'2025-10-17', hora:'07:00'}]->(s);
+
+MATCH (u:Usuario {nombre:'Taro Yamamoto'}), (s:Sitio {sitio:'Restaurante Sukiyabashi Jiro'})
+CREATE (u)-[:VISITO {fecha:'2025-10-30', hora:'21:00'}]->(s);
+
 // ============================================
 // REGISTRO DE CONSUMOS
 // ============================================
@@ -754,6 +784,56 @@ CREATE (u)-[:CONSUMIO {fecha:'2025-11-07'}]->(p);
 
 MATCH (u:Usuario {nombre:'Benjamín'}), (p:Plato {plato:'Asado'})
 CREATE (u)-[:CONSUMIO {fecha:'2025-11-12'}]->(p);
+
+// Hiroshi Tanaka
+MATCH (u:Usuario {nombre:'Hiroshi Tanaka'}), (p:Plato {plato:'Sushi'})
+CREATE (u)-[:CONSUMIO {fecha:'2025-10-20'}]->(p);
+
+MATCH (u:Usuario {nombre:'Hiroshi Tanaka'}), (p:Plato {plato:'Tempura'})
+CREATE (u)-[:CONSUMIO {fecha:'2025-11-01'}]->(p);
+
+MATCH (u:Usuario {nombre:'Hiroshi Tanaka'}), (p:Plato {plato:'Sashimi'})
+CREATE (u)-[:CONSUMIO {fecha:'2025-11-08'}]->(p);
+
+// Yumi Nakamura
+MATCH (u:Usuario {nombre:'Yumi Nakamura'}), (p:Plato {plato:'Ramen'})
+CREATE (u)-[:CONSUMIO {fecha:'2025-10-22'}]->(p);
+
+MATCH (u:Usuario {nombre:'Yumi Nakamura'}), (p:Plato {plato:'Mochi'})
+CREATE (u)-[:CONSUMIO {fecha:'2025-11-03'}]->(p);
+
+MATCH (u:Usuario {nombre:'Yumi Nakamura'}), (p:Plato {plato:'Udon'})
+CREATE (u)-[:CONSUMIO {fecha:'2025-11-10'}]->(p);
+
+// Kenji Sato
+MATCH (u:Usuario {nombre:'Kenji Sato'}), (p:Plato {plato:'Yakitori'})
+CREATE (u)-[:CONSUMIO {fecha:'2025-10-25'}]->(p);
+
+MATCH (u:Usuario {nombre:'Kenji Sato'}), (p:Plato {plato:'Okonomiyaki'})
+CREATE (u)-[:CONSUMIO {fecha:'2025-11-05'}]->(p);
+
+MATCH (u:Usuario {nombre:'Kenji Sato'}), (p:Plato {plato:'Ramen'})
+CREATE (u)-[:CONSUMIO {fecha:'2025-11-12'}]->(p);
+
+// Aiko Suzuki
+MATCH (u:Usuario {nombre:'Aiko Suzuki'}), (p:Plato {plato:'Onigiri'})
+CREATE (u)-[:CONSUMIO {fecha:'2025-10-28'}]->(p);
+
+MATCH (u:Usuario {nombre:'Aiko Suzuki'}), (p:Plato {plato:'Tonkatsu'})
+CREATE (u)-[:CONSUMIO {fecha:'2025-11-06'}]->(p);
+
+MATCH (u:Usuario {nombre:'Aiko Suzuki'}), (p:Plato {plato:'Mochi'})
+CREATE (u)-[:CONSUMIO {fecha:'2025-11-14'}]->(p);
+
+// Taro Yamamoto
+MATCH (u:Usuario {nombre:'Taro Yamamoto'}), (p:Plato {plato:'Sushi'})
+CREATE (u)-[:CONSUMIO {fecha:'2025-10-30'}]->(p);
+
+MATCH (u:Usuario {nombre:'Taro Yamamoto'}), (p:Plato {plato:'Tempura'})
+CREATE (u)-[:CONSUMIO {fecha:'2025-11-07'}]->(p);
+
+MATCH (u:Usuario {nombre:'Taro Yamamoto'}), (p:Plato {plato:'Sashimi'})
+CREATE (u)-[:CONSUMIO {fecha:'2025-11-13'}]->(p);
 
 // ============================================
 // CONSULTAS DE EJEMPLO
