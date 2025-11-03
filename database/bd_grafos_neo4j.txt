@@ -836,7 +836,7 @@ MATCH (u:Usuario {nombre:'Taro Yamamoto'}), (p:Plato {plato:'Sashimi'})
 CREATE (u)-[:CONSUMIO {fecha:'2025-11-13'}]->(p);
 
 // ============================================
-// CONSULTAS DE EJEMPLO
+// CONSULTAS
 // ============================================
 
 // CONSULTA 1: De las personas famosas cuales son deportistas hombres, indicando su procedencia
