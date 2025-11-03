@@ -1,0 +1,771 @@
+// LIMPIAR TODO
+MATCH (n) DETACH DELETE n;
+
+// ============================================
+// CREAR PAÍSES Y CIUDADES COLOMBIA
+// ============================================
+CREATE
+(:Pais {pais:'Colombia'}),
+(:Ciudad {ciudad:'Bogotá'}),
+(:Ciudad {ciudad:'Medellín'}),
+(:Ciudad {ciudad:'Cali'}),
+(:Ciudad {ciudad:'Cartagena'}),
+(:Ciudad {ciudad:'Barranquilla'}),
+(:Ciudad {ciudad:'Bucaramanga'}),
+(:Ciudad {ciudad:'Pereira'}),
+(:Ciudad {ciudad:'Boyacá'}),
+(:Ciudad {ciudad:'Santa Marta'}),
+(:Ciudad {ciudad:'Cúcuta'});
+
+// ============================================
+// CREAR PAÍSES Y CIUDADES ARGENTINA
+// ============================================
+CREATE
+(:Pais {pais:'Argentina'}),
+(:Ciudad {ciudad:'Buenos Aires'}),
+(:Ciudad {ciudad:'Córdoba'}),
+(:Ciudad {ciudad:'Rosario'}),
+(:Ciudad {ciudad:'Mendoza'}),
+(:Ciudad {ciudad:'La Plata'}),
+(:Ciudad {ciudad:'San Miguel de Tucumán'}),
+(:Ciudad {ciudad:'Mar del Plata'}),
+(:Ciudad {ciudad:'Salta'}),
+(:Ciudad {ciudad:'San Juan'}),
+(:Ciudad {ciudad:'Neuquén'}),
+(:Ciudad {ciudad:'Bahía Blanca'}),
+(:Ciudad {ciudad:'Tandil'});
+
+// ============================================
+// CREAR PAÍS Y CIUDADES JAPÓN
+// ============================================
+CREATE 
+(:Pais {pais:'Japón'}),
+(:Ciudad {ciudad:'Tokio'}),
+(:Ciudad {ciudad:'Kioto'}),
+(:Ciudad {ciudad:'Osaka'}),
+(:Ciudad {ciudad:'Hiroshima'}),
+(:Ciudad {ciudad:'Nagoya'}),
+(:Ciudad {ciudad:'Sapporo'}),
+(:Ciudad {ciudad:'Fukuoka'}),
+(:Ciudad {ciudad:'Nara'}),
+(:Ciudad {ciudad:'Kobe'}),
+(:Ciudad {ciudad:'Yokohama'});
+
+// ============================================
+// RELACIONAR CIUDADES CON PAÍSES
+// ============================================
+
+// Colombia
+MATCH (p:Pais {pais:'Colombia'})
+MATCH (c:Ciudad)
+WHERE c.ciudad IN ['Bogotá','Medellín','Cali','Cartagena','Barranquilla','Bucaramanga','Pereira','Boyacá','Santa Marta','Cúcuta']
+CREATE (c)-[:PERTENECE_A]->(p);
+
+// Argentina
+MATCH (p:Pais {pais:'Argentina'})
+MATCH (c:Ciudad)
+WHERE c.ciudad IN [
+  'Buenos Aires','Córdoba','Rosario','Mendoza','La Plata',
+  'San Miguel de Tucumán','Mar del Plata','Salta','San Juan','Neuquén','Bahía Blanca','Tandil'
+]
+CREATE (c)-[:PERTENECE_A]->(p);
+
+// Japón
+MATCH (p:Pais {pais:'Japón'})
+MATCH (c:Ciudad)
+WHERE c.ciudad IN ['Tokio','Kioto','Osaka','Hiroshima','Nagoya','Sapporo','Fukuoka','Nara','Kobe','Yokohama']
+CREATE (c)-[:PERTENECE_A]->(p);
+
+// ============================================
+// PERSONAS FAMOSAS DE COLOMBIA
+// ============================================
+CREATE
+(:Persona {nombre:'Shakira', profesion:'Cantante', genero:'Femenino'}),
+(:Persona {nombre:'James Rodríguez', profesion:'Deportista', genero:'Masculino'}),
+(:Persona {nombre:'Sofía Vergara', profesion:'Actriz', genero:'Femenino'}),
+(:Persona {nombre:'Juanes', profesion:'Cantante', genero:'Masculino'}),
+(:Persona {nombre:'Fernando Botero', profesion:'Pintor', genero:'Masculino'}),
+(:Persona {nombre:'Petro', profesion:'Político', genero:'Masculino'}),
+(:Persona {nombre:'Karol G', profesion:'Cantante', genero:'Femenino'}),
+(:Persona {nombre:'Falcao García', profesion:'Deportista', genero:'Masculino'}),
+(:Persona {nombre:'Carlos Vives', profesion:'Cantante', genero:'Masculino'}),
+(:Persona {nombre:'Nairo Quintana', profesion:'Deportista', genero:'Masculino'});
+
+// ============================================
+// PERSONAS FAMOSAS DE ARGENTINA
+// ============================================
+CREATE
+(:Persona {nombre:'Lionel Messi', profesion:'Deportista', genero:'Masculino'}),
+(:Persona {nombre:'Diego Maradona', profesion:'Deportista', genero:'Masculino'}),
+(:Persona {nombre:'Ricardo Darín', profesion:'Actor', genero:'Masculino'}),
+(:Persona {nombre:'Cristina Fernández de Kirchner', profesion:'Política', genero:'Femenino'}),
+(:Persona {nombre:'Jorge Luis Borges', profesion:'Escritor', genero:'Masculino'}),
+(:Persona {nombre:'Gustavo Cerati', profesion:'Cantante', genero:'Masculino'}),
+(:Persona {nombre:'Lali Espósito', profesion:'Cantante', genero:'Femenino'}),
+(:Persona {nombre:'Nicki Nicole', profesion:'Cantante', genero:'Femenino'}),
+(:Persona {nombre:'Juan Martín del Potro', profesion:'Deportista', genero:'Masculino'}),
+(:Persona {nombre:'René Favaloro', profesion:'Médico', genero:'Masculino'});
+
+// ============================================
+// PERSONAS FAMOSAS JAPÓN
+// ============================================
+CREATE 
+(:Persona {nombre:'Hayao Miyazaki', profesion:'Director de Cine', genero:'Masculino'}),
+(:Persona {nombre:'Naomi Osaka', profesion:'Deportista', genero:'Femenino'}),
+(:Persona {nombre:'Yoko Ono', profesion:'Artista', genero:'Femenino'}),
+(:Persona {nombre:'Shinzō Abe', profesion:'Político', genero:'Masculino'}),
+(:Persona {nombre:'Haruki Murakami', profesion:'Escritor', genero:'Masculino'}),
+(:Persona {nombre:'Ken Watanabe', profesion:'Actor', genero:'Masculino'}),
+(:Persona {nombre:'Rinko Kikuchi', profesion:'Actriz', genero:'Femenino'}),
+(:Persona {nombre:'Takeshi Kitano', profesion:'Director y Actor', genero:'Masculino'}),
+(:Persona {nombre:'Yuzuru Hanyu', profesion:'Deportista', genero:'Masculino'}),
+(:Persona {nombre:'Hikaru Utada', profesion:'Cantante', genero:'Femenino'});
+
+// ============================================
+// RELACIONAR PERSONAS CON CIUDADES - COLOMBIA
+// ============================================
+MATCH (s:Persona {nombre:'Shakira'}), (c:Ciudad {ciudad:'Barranquilla'})
+CREATE (s)-[:NACIO_EN]->(c);
+
+MATCH (j:Persona {nombre:'James Rodríguez'}), (c:Ciudad {ciudad:'Cúcuta'})
+CREATE (j)-[:NACIO_EN]->(c);
+
+MATCH (s:Persona {nombre:'Sofía Vergara'}), (c:Ciudad {ciudad:'Barranquilla'})
+CREATE (s)-[:NACIO_EN]->(c);
+
+MATCH (j:Persona {nombre:'Juanes'}), (c:Ciudad {ciudad:'Medellín'})
+CREATE (j)-[:NACIO_EN]->(c);
+
+MATCH (k:Persona {nombre:'Karol G'}), (c:Ciudad {ciudad:'Medellín'})
+CREATE (k)-[:NACIO_EN]->(c);
+
+MATCH (p:Persona {nombre:'Petro'}), (c:Ciudad {ciudad:'Bogotá'})
+CREATE (p)-[:NACIO_EN]->(c);
+
+MATCH (cv:Persona {nombre:'Carlos Vives'}), (c:Ciudad {ciudad:'Santa Marta'})
+CREATE (cv)-[:NACIO_EN]->(c);
+
+MATCH (fb:Persona {nombre:'Fernando Botero'}), (c:Ciudad {ciudad:'Medellín'})
+CREATE (fb)-[:NACIO_EN]->(c);
+
+MATCH (fg:Persona {nombre:'Falcao García'}), (c:Ciudad {ciudad:'Santa Marta'})
+CREATE (fg)-[:NACIO_EN]->(c);
+
+MATCH (n:Persona {nombre:'Nairo Quintana'}), (c:Ciudad {ciudad:'Boyacá'})
+CREATE (n)-[:NACIO_EN]->(c);
+
+// ============================================
+// RELACIONAR PERSONAS CON CIUDADES - ARGENTINA
+// ============================================
+MATCH (p:Persona {nombre:'Lionel Messi'}), (c:Ciudad {ciudad:'Rosario'})
+CREATE (p)-[:NACIO_EN]->(c);
+
+MATCH (p:Persona {nombre:'Diego Maradona'}), (c:Ciudad {ciudad:'Buenos Aires'})
+CREATE (p)-[:NACIO_EN]->(c);
+
+MATCH (p:Persona {nombre:'Ricardo Darín'}), (c:Ciudad {ciudad:'Buenos Aires'})
+CREATE (p)-[:NACIO_EN]->(c);
+
+MATCH (p:Persona {nombre:'Cristina Fernández de Kirchner'}), (c:Ciudad {ciudad:'La Plata'})
+CREATE (p)-[:NACIO_EN]->(c);
+
+MATCH (p:Persona {nombre:'Jorge Luis Borges'}), (c:Ciudad {ciudad:'Buenos Aires'})
+CREATE (p)-[:NACIO_EN]->(c);
+
+MATCH (p:Persona {nombre:'Gustavo Cerati'}), (c:Ciudad {ciudad:'Buenos Aires'})
+CREATE (p)-[:NACIO_EN]->(c);
+
+MATCH (p:Persona {nombre:'Lali Espósito'}), (c:Ciudad {ciudad:'Buenos Aires'})
+CREATE (p)-[:NACIO_EN]->(c);
+
+MATCH (p:Persona {nombre:'Nicki Nicole'}), (c:Ciudad {ciudad:'Rosario'})
+CREATE (p)-[:NACIO_EN]->(c);
+
+MATCH (p:Persona {nombre:'Juan Martín del Potro'}), (c:Ciudad {ciudad:'Tandil'})
+CREATE (p)-[:NACIO_EN]->(c);
+
+MATCH (p:Persona {nombre:'René Favaloro'}), (c:Ciudad {ciudad:'La Plata'})
+CREATE (p)-[:NACIO_EN]->(c);
+
+// ============================================
+// RELACIONAR PERSONAS CON CIUDADES - JAPÓN
+// ============================================
+MATCH (p:Persona {nombre:'Hayao Miyazaki'}), (c:Ciudad {ciudad:'Tokio'})
+CREATE (p)-[:NACIO_EN]->(c);
+
+MATCH (p:Persona {nombre:'Naomi Osaka'}), (c:Ciudad {ciudad:'Osaka'})
+CREATE (p)-[:NACIO_EN]->(c);
+
+MATCH (p:Persona {nombre:'Yoko Ono'}), (c:Ciudad {ciudad:'Tokio'})
+CREATE (p)-[:NACIO_EN]->(c);
+
+MATCH (p:Persona {nombre:'Shinzō Abe'}), (c:Ciudad {ciudad:'Nagoya'})
+CREATE (p)-[:NACIO_EN]->(c);
+
+MATCH (p:Persona {nombre:'Haruki Murakami'}), (c:Ciudad {ciudad:'Kioto'})
+CREATE (p)-[:NACIO_EN]->(c);
+
+MATCH (p:Persona {nombre:'Ken Watanabe'}), (c:Ciudad {ciudad:'Kobe'})
+CREATE (p)-[:NACIO_EN]->(c);
+
+MATCH (p:Persona {nombre:'Rinko Kikuchi'}), (c:Ciudad {ciudad:'Yokohama'})
+CREATE (p)-[:NACIO_EN]->(c);
+
+MATCH (p:Persona {nombre:'Takeshi Kitano'}), (c:Ciudad {ciudad:'Tokio'})
+CREATE (p)-[:NACIO_EN]->(c);
+
+MATCH (p:Persona {nombre:'Yuzuru Hanyu'}), (c:Ciudad {ciudad:'Sapporo'})
+CREATE (p)-[:NACIO_EN]->(c);
+
+MATCH (p:Persona {nombre:'Hikaru Utada'}), (c:Ciudad {ciudad:'Tokio'})
+CREATE (p)-[:NACIO_EN]->(c);
+
+// ============================================
+// SITIOS DE COLOMBIA
+// ============================================
+CREATE
+(:Sitio {sitio:'Museo del Oro', tipo:'Museo'}),
+(:Sitio {sitio:'Parque Tayrona', tipo:'Parque'}),
+(:Sitio {sitio:'Cerro Monserrate', tipo:'Turístico'}),
+(:Sitio {sitio:'Restaurante Andrés Carne de Res', tipo:'Restaurante'}),
+(:Sitio {sitio:'Hotel Caribe', tipo:'Hotel'}),
+(:Sitio {sitio:'Castillo de San Felipe', tipo:'Histórico'}),
+(:Sitio {sitio:'Parque del Café', tipo:'Parque'}),
+(:Sitio {sitio:'Museo de Antioquia', tipo:'Museo'}),
+(:Sitio {sitio:'Catedral de Sal', tipo:'Iglesia'}),
+(:Sitio {sitio:'Malecón de Barranquilla', tipo:'Turístico'});
+
+// ============================================
+// SITIOS DE ARGENTINA
+// ============================================
+CREATE
+(:Sitio {sitio:'Obelisco de Buenos Aires', tipo:'Monumento'}),
+(:Sitio {sitio:'Teatro Colón', tipo:'Teatro'}),
+(:Sitio {sitio:'La Bombonera', tipo:'Estadio'}),
+(:Sitio {sitio:'Cataratas del Iguazú', tipo:'Parque Natural'}),
+(:Sitio {sitio:'Museo Nacional de Bellas Artes', tipo:'Museo'}),
+(:Sitio {sitio:'Cerro de la Gloria', tipo:'Turístico'}),
+(:Sitio {sitio:'Parque San Martín', tipo:'Parque'}),
+(:Sitio {sitio:'Restaurante Don Julio', tipo:'Restaurante'}),
+(:Sitio {sitio:'Hotel Alvear Palace', tipo:'Hotel'}),
+(:Sitio {sitio:'Iglesia Catedral de Córdoba', tipo:'Iglesia'});
+
+// ============================================
+// SITIOS DE JAPÓN
+// ============================================
+CREATE 
+(:Sitio {sitio:'Templo Kinkaku-ji', tipo:'Templo'}),
+(:Sitio {sitio:'Monte Fuji', tipo:'Montaña'}),
+(:Sitio {sitio:'Santuario Meiji', tipo:'Santuario'}),
+(:Sitio {sitio:'Castillo de Osaka', tipo:'Histórico'}),
+(:Sitio {sitio:'Parque de la Paz de Hiroshima', tipo:'Memorial'}),
+(:Sitio {sitio:'Torre de Tokio', tipo:'Monumento'}),
+(:Sitio {sitio:'Acuario de Okinawa', tipo:'Acuario'}),
+(:Sitio {sitio:'Museo Nacional de Kioto', tipo:'Museo'}),
+(:Sitio {sitio:'Restaurante Sukiyabashi Jiro', tipo:'Restaurante'}),
+(:Sitio {sitio:'Hotel Park Hyatt Tokio', tipo:'Hotel'});
+
+// ============================================
+// RELACIONAR SITIOS CON CIUDADES - COLOMBIA
+// ============================================
+MATCH (s:Sitio {sitio:'Museo del Oro'}), (c:Ciudad {ciudad:'Bogotá'})
+CREATE (s)-[:UBICADO_EN]->(c);
+
+MATCH (s:Sitio {sitio:'Cerro Monserrate'}), (c:Ciudad {ciudad:'Bogotá'})
+CREATE (s)-[:UBICADO_EN]->(c);
+
+MATCH (s:Sitio {sitio:'Restaurante Andrés Carne de Res'}), (c:Ciudad {ciudad:'Bogotá'})
+CREATE (s)-[:UBICADO_EN]->(c);
+
+MATCH (s:Sitio {sitio:'Catedral de Sal'}), (c:Ciudad {ciudad:'Bogotá'})
+CREATE (s)-[:UBICADO_EN]->(c);
+
+MATCH (s:Sitio {sitio:'Museo de Antioquia'}), (c:Ciudad {ciudad:'Medellín'})
+CREATE (s)-[:UBICADO_EN]->(c);
+
+MATCH (s:Sitio {sitio:'Parque del Café'}), (c:Ciudad {ciudad:'Pereira'})
+CREATE (s)-[:UBICADO_EN]->(c);
+
+MATCH (s:Sitio {sitio:'Parque Tayrona'}), (c:Ciudad {ciudad:'Santa Marta'})
+CREATE (s)-[:UBICADO_EN]->(c);
+
+MATCH (s:Sitio {sitio:'Hotel Caribe'}), (c:Ciudad {ciudad:'Cartagena'})
+CREATE (s)-[:UBICADO_EN]->(c);
+
+MATCH (s:Sitio {sitio:'Castillo de San Felipe'}), (c:Ciudad {ciudad:'Cartagena'})
+CREATE (s)-[:UBICADO_EN]->(c);
+
+MATCH (s:Sitio {sitio:'Malecón de Barranquilla'}), (c:Ciudad {ciudad:'Barranquilla'})
+CREATE (s)-[:UBICADO_EN]->(c);
+
+// ============================================
+// RELACIONAR SITIOS CON CIUDADES - ARGENTINA
+// ============================================
+MATCH (s:Sitio {sitio:'Obelisco de Buenos Aires'}), (c:Ciudad {ciudad:'Buenos Aires'})
+CREATE (s)-[:UBICADO_EN]->(c);
+
+MATCH (s:Sitio {sitio:'Teatro Colón'}), (c:Ciudad {ciudad:'Buenos Aires'})
+CREATE (s)-[:UBICADO_EN]->(c);
+
+MATCH (s:Sitio {sitio:'La Bombonera'}), (c:Ciudad {ciudad:'Buenos Aires'})
+CREATE (s)-[:UBICADO_EN]->(c);
+
+MATCH (s:Sitio {sitio:'Museo Nacional de Bellas Artes'}), (c:Ciudad {ciudad:'Buenos Aires'})
+CREATE (s)-[:UBICADO_EN]->(c);
+
+MATCH (s:Sitio {sitio:'Restaurante Don Julio'}), (c:Ciudad {ciudad:'Buenos Aires'})
+CREATE (s)-[:UBICADO_EN]->(c);
+
+MATCH (s:Sitio {sitio:'Hotel Alvear Palace'}), (c:Ciudad {ciudad:'Buenos Aires'})
+CREATE (s)-[:UBICADO_EN]->(c);
+
+MATCH (s:Sitio {sitio:'Cerro de la Gloria'}), (c:Ciudad {ciudad:'Mendoza'})
+CREATE (s)-[:UBICADO_EN]->(c);
+
+MATCH (s:Sitio {sitio:'Parque San Martín'}), (c:Ciudad {ciudad:'Mendoza'})
+CREATE (s)-[:UBICADO_EN]->(c);
+
+MATCH (s:Sitio {sitio:'Iglesia Catedral de Córdoba'}), (c:Ciudad {ciudad:'Córdoba'})
+CREATE (s)-[:UBICADO_EN]->(c);
+
+MATCH (s:Sitio {sitio:'Cataratas del Iguazú'}), (c:Ciudad {ciudad:'Rosario'})
+CREATE (s)-[:UBICADO_EN]->(c);
+
+// ============================================
+// RELACIONAR SITIOS CON CIUDADES - JAPÓN
+// ============================================
+MATCH (s:Sitio {sitio:'Templo Kinkaku-ji'}), (c:Ciudad {ciudad:'Kioto'})
+CREATE (s)-[:UBICADO_EN]->(c);
+
+MATCH (s:Sitio {sitio:'Monte Fuji'}), (c:Ciudad {ciudad:'Tokio'})
+CREATE (s)-[:UBICADO_EN]->(c);
+
+MATCH (s:Sitio {sitio:'Santuario Meiji'}), (c:Ciudad {ciudad:'Tokio'})
+CREATE (s)-[:UBICADO_EN]->(c);
+
+MATCH (s:Sitio {sitio:'Castillo de Osaka'}), (c:Ciudad {ciudad:'Osaka'})
+CREATE (s)-[:UBICADO_EN]->(c);
+
+MATCH (s:Sitio {sitio:'Parque de la Paz de Hiroshima'}), (c:Ciudad {ciudad:'Hiroshima'})
+CREATE (s)-[:UBICADO_EN]->(c);
+
+MATCH (s:Sitio {sitio:'Torre de Tokio'}), (c:Ciudad {ciudad:'Tokio'})
+CREATE (s)-[:UBICADO_EN]->(c);
+
+MATCH (s:Sitio {sitio:'Acuario de Okinawa'}), (c:Ciudad {ciudad:'Fukuoka'})
+CREATE (s)-[:UBICADO_EN]->(c);
+
+MATCH (s:Sitio {sitio:'Museo Nacional de Kioto'}), (c:Ciudad {ciudad:'Kioto'})
+CREATE (s)-[:UBICADO_EN]->(c);
+
+MATCH (s:Sitio {sitio:'Restaurante Sukiyabashi Jiro'}), (c:Ciudad {ciudad:'Tokio'})
+CREATE (s)-[:UBICADO_EN]->(c);
+
+MATCH (s:Sitio {sitio:'Hotel Park Hyatt Tokio'}), (c:Ciudad {ciudad:'Tokio'})
+CREATE (s)-[:UBICADO_EN]->(c);
+
+// ============================================
+// CREACIÓN DE PLATOS - COLOMBIA
+// ============================================
+CREATE
+(:Plato {plato:'Bandeja Paisa', precio:35000}),
+(:Plato {plato:'Ajiaco', precio:28000}),
+(:Plato {plato:'Sancocho', precio:25000}),
+(:Plato {plato:'Arepa Antioqueña', precio:5000}),
+(:Plato {plato:'Lechona', precio:30000}),
+(:Plato {plato:'Empanadas', precio:3000}),
+(:Plato {plato:'Tamales', precio:10000}),
+(:Plato {plato:'Pandebono', precio:4000}),
+(:Plato {plato:'Arroz con Coco', precio:20000}),
+(:Plato {plato:'Changua', precio:8000});
+
+// ============================================
+// CREACIÓN DE PLATOS - ARGENTINA
+// ============================================
+CREATE
+(:Plato {plato:'Asado', precio:30000}),
+(:Plato {plato:'Empanadas Argentinas', precio:8000}),
+(:Plato {plato:'Milanesa Napolitana', precio:20000}),
+(:Plato {plato:'Locro', precio:18000}),
+(:Plato {plato:'Choripán', precio:7000}),
+(:Plato {plato:'Provoleta', precio:12000}),
+(:Plato {plato:'Dulce de Leche', precio:5000}),
+(:Plato {plato:'Matambre a la pizza', precio:25000}),
+(:Plato {plato:'Carbonada', precio:19000}),
+(:Plato {plato:'Helado Artesanal', precio:10000});
+
+// ============================================
+// CREACIÓN DE PLATOS - JAPÓN
+// ============================================
+CREATE
+(:Plato {plato:'Sushi', precio:25000}),
+(:Plato {plato:'Ramen', precio:18000}),
+(:Plato {plato:'Tempura', precio:22000}),
+(:Plato {plato:'Okonomiyaki', precio:20000}),
+(:Plato {plato:'Yakitori', precio:15000}),
+(:Plato {plato:'Onigiri', precio:8000}),
+(:Plato {plato:'Tonkatsu', precio:21000}),
+(:Plato {plato:'Mochi', precio:7000}),
+(:Plato {plato:'Udon', precio:17000}),
+(:Plato {plato:'Sashimi', precio:24000});
+
+// ============================================
+// RELACIONAR PLATOS CON SITIOS - COLOMBIA
+// ============================================
+MATCH (r:Sitio {sitio:'Restaurante Andrés Carne de Res'}), (p:Plato {plato:'Bandeja Paisa'})
+CREATE (p)-[:SE_VENDE_EN]->(r);
+
+MATCH (r:Sitio {sitio:'Restaurante Andrés Carne de Res'}), (p:Plato {plato:'Ajiaco'})
+CREATE (p)-[:SE_VENDE_EN]->(r);
+
+MATCH (r:Sitio {sitio:'Restaurante Andrés Carne de Res'}), (p:Plato {plato:'Empanadas'})
+CREATE (p)-[:SE_VENDE_EN]->(r);
+
+MATCH (r:Sitio {sitio:'Restaurante Andrés Carne de Res'}), (p:Plato {plato:'Tamales'})
+CREATE (p)-[:SE_VENDE_EN]->(r);
+
+MATCH (r:Sitio {sitio:'Restaurante Andrés Carne de Res'}), (p:Plato {plato:'Changua'})
+CREATE (p)-[:SE_VENDE_EN]->(r);
+
+MATCH (h:Sitio {sitio:'Hotel Caribe'}), (p:Plato {plato:'Arroz con Coco'})
+CREATE (p)-[:SE_VENDE_EN]->(h);
+
+MATCH (h:Sitio {sitio:'Hotel Caribe'}), (p:Plato {plato:'Sancocho'})
+CREATE (p)-[:SE_VENDE_EN]->(h);
+
+MATCH (m:Sitio {sitio:'Museo de Antioquia'}), (p:Plato {plato:'Arepa Antioqueña'})
+CREATE (p)-[:SE_VENDE_EN]->(m);
+
+MATCH (m:Sitio {sitio:'Museo de Antioquia'}), (p:Plato {plato:'Pandebono'})
+CREATE (p)-[:SE_VENDE_EN]->(m);
+
+MATCH (h:Sitio {sitio:'Hotel Caribe'}), (p:Plato {plato:'Lechona'})
+CREATE (p)-[:SE_VENDE_EN]->(h);
+
+// ============================================
+// RELACIONAR PLATOS CON SITIOS - ARGENTINA
+// ============================================
+MATCH (r:Sitio {sitio:'Restaurante Don Julio'}), (p:Plato {plato:'Asado'})
+CREATE (p)-[:SE_VENDE_EN]->(r);
+
+MATCH (r:Sitio {sitio:'Restaurante Don Julio'}), (p:Plato {plato:'Choripán'})
+CREATE (p)-[:SE_VENDE_EN]->(r);
+
+MATCH (r:Sitio {sitio:'Restaurante Don Julio'}), (p:Plato {plato:'Provoleta'})
+CREATE (p)-[:SE_VENDE_EN]->(r);
+
+MATCH (r:Sitio {sitio:'Restaurante Don Julio'}), (p:Plato {plato:'Locro'})
+CREATE (p)-[:SE_VENDE_EN]->(r);
+
+MATCH (r:Sitio {sitio:'Restaurante Don Julio'}), (p:Plato {plato:'Carbonada'})
+CREATE (p)-[:SE_VENDE_EN]->(r);
+
+MATCH (h:Sitio {sitio:'Hotel Alvear Palace'}), (p:Plato {plato:'Milanesa Napolitana'})
+CREATE (p)-[:SE_VENDE_EN]->(h);
+
+MATCH (h:Sitio {sitio:'Hotel Alvear Palace'}), (p:Plato {plato:'Dulce de Leche'})
+CREATE (p)-[:SE_VENDE_EN]->(h);
+
+MATCH (h:Sitio {sitio:'Hotel Alvear Palace'}), (p:Plato {plato:'Helado Artesanal'})
+CREATE (p)-[:SE_VENDE_EN]->(h);
+
+MATCH (m:Sitio {sitio:'Museo Nacional de Bellas Artes'}), (p:Plato {plato:'Empanadas Argentinas'})
+CREATE (p)-[:SE_VENDE_EN]->(m);
+
+MATCH (m:Sitio {sitio:'Museo Nacional de Bellas Artes'}), (p:Plato {plato:'Matambre a la pizza'})
+CREATE (p)-[:SE_VENDE_EN]->(m);
+
+// ============================================
+// RELACIONAR PLATOS CON SITIOS - JAPÓN
+// ============================================
+MATCH (r:Sitio {sitio:'Restaurante Sukiyabashi Jiro'}), (p:Plato {plato:'Sushi'})
+CREATE (p)-[:SE_VENDE_EN]->(r);
+
+MATCH (r:Sitio {sitio:'Restaurante Sukiyabashi Jiro'}), (p:Plato {plato:'Ramen'})
+CREATE (p)-[:SE_VENDE_EN]->(r);
+
+MATCH (r:Sitio {sitio:'Restaurante Sukiyabashi Jiro'}), (p:Plato {plato:'Tempura'})
+CREATE (p)-[:SE_VENDE_EN]->(r);
+
+MATCH (r:Sitio {sitio:'Restaurante Sukiyabashi Jiro'}), (p:Plato {plato:'Sashimi'})
+CREATE (p)-[:SE_VENDE_EN]->(r);
+
+MATCH (r:Sitio {sitio:'Restaurante Sukiyabashi Jiro'}), (p:Plato {plato:'Yakitori'})
+CREATE (p)-[:SE_VENDE_EN]->(r);
+
+MATCH (h:Sitio {sitio:'Hotel Park Hyatt Tokio'}), (p:Plato {plato:'Onigiri'})
+CREATE (p)-[:SE_VENDE_EN]->(h);
+
+MATCH (h:Sitio {sitio:'Hotel Park Hyatt Tokio'}), (p:Plato {plato:'Tonkatsu'})
+CREATE (p)-[:SE_VENDE_EN]->(h);
+
+MATCH (h:Sitio {sitio:'Hotel Park Hyatt Tokio'}), (p:Plato {plato:'Mochi'})
+CREATE (p)-[:SE_VENDE_EN]->(h);
+
+MATCH (h:Sitio {sitio:'Hotel Park Hyatt Tokio'}), (p:Plato {plato:'Udon'})
+CREATE (p)-[:SE_VENDE_EN]->(h);
+
+MATCH (h:Sitio {sitio:'Hotel Park Hyatt Tokio'}), (p:Plato {plato:'Okonomiyaki'})
+CREATE (p)-[:SE_VENDE_EN]->(h);
+
+// ============================================
+// CREAR USUARIOS
+// ============================================
+CREATE
+(:Usuario {nombre:'Sam', email:'sam@gmail.com', genero:'Masculino'}),
+(:Usuario {nombre:'Deyton', email:'deyton@gmail.com', genero:'Masculino'}),
+(:Usuario {nombre:'Carlos', email:'carlos@hotmail.com', genero:'Masculino'}),
+(:Usuario {nombre:'Diana', email:'diana@gmail.com', genero:'Femenino'}),
+(:Usuario {nombre:'Andrés', email:'andres@gmail.com', genero:'Masculino'}),
+(:Usuario {nombre:'Lucía', email:'lucia@gmail.com', genero:'Femenino'}),
+(:Usuario {nombre:'Martín', email:'martin@gmail.com', genero:'Masculino'}),
+(:Usuario {nombre:'Valentina', email:'valentina@gmail.com', genero:'Femenino'}),
+(:Usuario {nombre:'Nicolás', email:'nicolas@gmail.com', genero:'Masculino'}),
+(:Usuario {nombre:'Camila', email:'camila@gmail.com', genero:'Femenino'}),
+(:Usuario {nombre:'Agustín', email:'agustin@gmail.com', genero:'Masculino'}),
+(:Usuario {nombre:'Florencia', email:'florencia@gmail.com', genero:'Femenino'}),
+(:Usuario {nombre:'Mateo', email:'mateo@gmail.com', genero:'Masculino'}),
+(:Usuario {nombre:'Sofía', email:'sofia@gmail.com', genero:'Femenino'}),
+(:Usuario {nombre:'Benjamín', email:'benjamin@gmail.com', genero:'Masculino'}),
+(:Usuario {nombre:'Hiroshi Tanaka', email:'hiroshi@gmail.com', genero:'Masculino'}),
+(:Usuario {nombre:'Yumi Nakamura', email:'yumi@gmail.com', genero:'Femenino'}),
+(:Usuario {nombre:'Kenji Sato', email:'kenji@gmail.com', genero:'Masculino'}),
+(:Usuario {nombre:'Aiko Suzuki', email:'aiko@gmail.com', genero:'Femenino'}),
+(:Usuario {nombre:'Taro Yamamoto', email:'taro@gmail.com', genero:'Masculino'}),
+(:Usuario {nombre:'Isabella', email:'isabella@gmail.com', genero:'Femenino'});
+
+// ============================================
+// RELACIONAR USUARIOS CON CIUDADES - COLOMBIA
+// ============================================
+MATCH (u:Usuario {nombre:'Sam'}), (c:Ciudad {ciudad:'Cali'})
+CREATE (u)-[:VIVE_EN]->(c);
+
+MATCH (u:Usuario {nombre:'Deyton'}), (c:Ciudad {ciudad:'Cali'})
+CREATE (u)-[:VIVE_EN]->(c);
+
+MATCH (u:Usuario {nombre:'Carlos'}), (c:Ciudad {ciudad:'Medellín'})
+CREATE (u)-[:VIVE_EN]->(c);
+
+MATCH (u:Usuario {nombre:'Diana'}), (c:Ciudad {ciudad:'Cartagena'})
+CREATE (u)-[:VIVE_EN]->(c);
+
+MATCH (u:Usuario {nombre:'Andrés'}), (c:Ciudad {ciudad:'Barranquilla'})
+CREATE (u)-[:VIVE_EN]->(c);
+
+MATCH (u:Usuario {nombre:'Isabella'}), (c:Ciudad {ciudad:'Cali'})
+CREATE (u)-[:VIVE_EN]->(c);
+
+// ============================================
+// RELACIONAR USUARIOS CON CIUDADES - ARGENTINA
+// ============================================
+MATCH (u:Usuario {nombre:'Lucía'}), (c:Ciudad {ciudad:'Buenos Aires'})
+CREATE (u)-[:VIVE_EN]->(c);
+
+MATCH (u:Usuario {nombre:'Martín'}), (c:Ciudad {ciudad:'Córdoba'})
+CREATE (u)-[:VIVE_EN]->(c);
+
+MATCH (u:Usuario {nombre:'Valentina'}), (c:Ciudad {ciudad:'Mendoza'})
+CREATE (u)-[:VIVE_EN]->(c);
+
+MATCH (u:Usuario {nombre:'Nicolás'}), (c:Ciudad {ciudad:'Rosario'})
+CREATE (u)-[:VIVE_EN]->(c);
+
+MATCH (u:Usuario {nombre:'Camila'}), (c:Ciudad {ciudad:'La Plata'})
+CREATE (u)-[:VIVE_EN]->(c);
+
+MATCH (u:Usuario {nombre:'Agustín'}), (c:Ciudad {ciudad:'Buenos Aires'})
+CREATE (u)-[:VIVE_EN]->(c);
+
+MATCH (u:Usuario {nombre:'Florencia'}), (c:Ciudad {ciudad:'Mar del Plata'})
+CREATE (u)-[:VIVE_EN]->(c);
+
+MATCH (u:Usuario {nombre:'Mateo'}), (c:Ciudad {ciudad:'Salta'})
+CREATE (u)-[:VIVE_EN]->(c);
+
+MATCH (u:Usuario {nombre:'Sofía'}), (c:Ciudad {ciudad:'Neuquén'})
+CREATE (u)-[:VIVE_EN]->(c);
+
+MATCH (u:Usuario {nombre:'Benjamín'}), (c:Ciudad {ciudad:'San Juan'})
+CREATE (u)-[:VIVE_EN]->(c);
+
+// ============================================
+// RELACIONAR USUARIOS CON CIUDADES - JAPÓN
+// ============================================
+MATCH (u:Usuario {nombre:'Hiroshi Tanaka'}), (c:Ciudad {ciudad:'Tokio'})
+CREATE (u)-[:VIVE_EN]->(c);
+
+MATCH (u:Usuario {nombre:'Yumi Nakamura'}), (c:Ciudad {ciudad:'Kioto'})
+CREATE (u)-[:VIVE_EN]->(c);
+
+MATCH (u:Usuario {nombre:'Kenji Sato'}), (c:Ciudad {ciudad:'Osaka'})
+CREATE (u)-[:VIVE_EN]->(c);
+
+MATCH (u:Usuario {nombre:'Aiko Suzuki'}), (c:Ciudad {ciudad:'Yokohama'})
+CREATE (u)-[:VIVE_EN]->(c);
+
+MATCH (u:Usuario {nombre:'Taro Yamamoto'}), (c:Ciudad {ciudad:'Nagoya'})
+CREATE (u)-[:VIVE_EN]->(c);
+
+// ============================================
+// VISITAS DE USUARIOS A SITIOS
+// ============================================
+MATCH (u:Usuario {nombre:'Sam'}), (s:Sitio {sitio:'Museo del Oro'})
+CREATE (u)-[:VISITO {fecha:'2025-10-15', hora:'10:30'}]->(s);
+
+MATCH (u:Usuario {nombre:'Deyton'}), (s:Sitio {sitio:'Restaurante Andrés Carne de Res'})
+CREATE (u)-[:VISITO {fecha:'2025-10-16', hora:'13:00'}]->(s);
+
+MATCH (u:Usuario {nombre:'Carlos'}), (s:Sitio {sitio:'Parque Tayrona'})
+CREATE (u)-[:VISITO {fecha:'2025-10-17', hora:'09:00'}]->(s);
+
+MATCH (u:Usuario {nombre:'Diana'}), (s:Sitio {sitio:'Hotel Caribe'})
+CREATE (u)-[:VISITO {fecha:'2025-10-18', hora:'11:15'}]->(s);
+
+MATCH (u:Usuario {nombre:'Andrés'}), (s:Sitio {sitio:'Catedral de Sal'})
+CREATE (u)-[:VISITO {fecha:'2025-10-19', hora:'14:45'}]->(s);
+
+MATCH (u:Usuario {nombre:'Isabella'}), (s:Sitio {sitio:'Museo del Oro'})
+CREATE (u)-[:VISITO {fecha:'2025-10-20', hora:'18:00'}]->(s);
+
+MATCH (u:Usuario {nombre:'Lucía'}), (s:Sitio {sitio:'Teatro Colón'})
+CREATE (u)-[:VISITO {fecha:'2025-10-20', hora:'18:00'}]->(s);
+
+MATCH (u:Usuario {nombre:'Martín'}), (s:Sitio {sitio:'Obelisco de Buenos Aires'})
+CREATE (u)-[:VISITO {fecha:'2025-10-21', hora:'09:30'}]->(s);
+
+MATCH (u:Usuario {nombre:'Valentina'}), (s:Sitio {sitio:'Parque San Martín'})
+CREATE (u)-[:VISITO {fecha:'2025-10-22', hora:'10:00'}]->(s);
+
+MATCH (u:Usuario {nombre:'Nicolás'}), (s:Sitio {sitio:'La Bombonera'})
+CREATE (u)-[:VISITO {fecha:'2025-10-23', hora:'15:00'}]->(s);
+
+MATCH (u:Usuario {nombre:'Camila'}), (s:Sitio {sitio:'Museo Nacional de Bellas Artes'})
+CREATE (u)-[:VISITO {fecha:'2025-10-24', hora:'11:15'}]->(s);
+
+MATCH (u:Usuario {nombre:'Agustín'}), (s:Sitio {sitio:'Restaurante Don Julio'})
+CREATE (u)-[:VISITO {fecha:'2025-10-25', hora:'13:00'}]->(s);
+
+MATCH (u:Usuario {nombre:'Florencia'}), (s:Sitio {sitio:'Hotel Alvear Palace'})
+CREATE (u)-[:VISITO {fecha:'2025-10-26', hora:'20:00'}]->(s);
+
+MATCH (u:Usuario {nombre:'Mateo'}), (s:Sitio {sitio:'Iglesia Catedral de Córdoba'})
+CREATE (u)-[:VISITO {fecha:'2025-10-27', hora:'08:45'}]->(s);
+
+MATCH (u:Usuario {nombre:'Sofía'}), (s:Sitio {sitio:'Cerro de la Gloria'})
+CREATE (u)-[:VISITO {fecha:'2025-10-28', hora:'09:15'}]->(s);
+
+MATCH (u:Usuario {nombre:'Benjamín'}), (s:Sitio {sitio:'Cataratas del Iguazú'})
+CREATE (u)-[:VISITO {fecha:'2025-10-29', hora:'10:30'}]->(s);
+
+// ============================================
+// REGISTRO DE CONSUMOS
+// ============================================
+
+// Sam
+MATCH (u:Usuario {nombre:'Sam'}), (p:Plato {plato:'Sancocho'})
+CREATE (u)-[:CONSUMIO {fecha:'2025-10-30'}]->(p);
+
+MATCH (u:Usuario {nombre:'Sam'}), (p:Plato {plato:'Bandeja Paisa'})
+CREATE (u)-[:CONSUMIO {fecha:'2025-11-05'}]->(p);
+
+MATCH (u:Usuario {nombre:'Sam'}), (p:Plato {plato:'Ajiaco'})
+CREATE (u)-[:CONSUMIO {fecha:'2025-11-10'}]->(p);
+
+// Deyton
+MATCH (u:Usuario {nombre:'Deyton'}), (p:Plato {plato:'Arroz con Coco'})
+CREATE (u)-[:CONSUMIO {fecha:'2025-10-31'}]->(p);
+
+MATCH (u:Usuario {nombre:'Deyton'}), (p:Plato {plato:'Sancocho'})
+CREATE (u)-[:CONSUMIO {fecha:'2025-11-06'}]->(p);
+
+MATCH (u:Usuario {nombre:'Deyton'}), (p:Plato {plato:'Provoleta'})
+CREATE (u)-[:CONSUMIO {fecha:'2025-11-13'}]->(p);
+
+// Carlos
+MATCH (u:Usuario {nombre:'Carlos'}), (p:Plato {plato:'Empanadas Argentinas'})
+CREATE (u)-[:CONSUMIO {fecha:'2025-10-30'}]->(p);
+
+MATCH (u:Usuario {nombre:'Carlos'}), (p:Plato {plato:'Milanesa Napolitana'})
+CREATE (u)-[:CONSUMIO {fecha:'2025-11-08'}]->(p);
+
+MATCH (u:Usuario {nombre:'Carlos'}), (p:Plato {plato:'Asado'})
+CREATE (u)-[:CONSUMIO {fecha:'2025-11-14'}]->(p);
+
+// Diana
+MATCH (u:Usuario {nombre:'Diana'}), (p:Plato {plato:'Matambre a la pizza'})
+CREATE (u)-[:CONSUMIO {fecha:'2025-11-01'}]->(p);
+
+MATCH (u:Usuario {nombre:'Diana'}), (p:Plato {plato:'Carbonada'})
+CREATE (u)-[:CONSUMIO {fecha:'2025-11-09'}]->(p);
+
+MATCH (u:Usuario {nombre:'Diana'}), (p:Plato {plato:'Ajiaco'})
+CREATE (u)-[:CONSUMIO {fecha:'2025-11-15'}]->(p);
+
+// Isabella
+MATCH (u:Usuario {nombre:'Isabella'}), (p:Plato {plato:'Sancocho'})
+CREATE (u)-[:CONSUMIO {fecha:'2025-10-20'}]->(p);
+
+// Lucía
+MATCH (u:Usuario {nombre:'Lucía'}), (p:Plato {plato:'Helado Artesanal'})
+CREATE (u)-[:CONSUMIO {fecha:'2025-10-31'}]->(p);
+
+MATCH (u:Usuario {nombre:'Lucía'}), (p:Plato {plato:'Asado'})
+CREATE (u)-[:CONSUMIO {fecha:'2025-11-06'}]->(p);
+
+MATCH (u:Usuario {nombre:'Lucía'}), (p:Plato {plato:'Sancocho'})
+CREATE (u)-[:CONSUMIO {fecha:'2025-11-12'}]->(p);
+
+// Valentina
+MATCH (u:Usuario {nombre:'Valentina'}), (p:Plato {plato:'Dulce de Leche'})
+CREATE (u)-[:CONSUMIO {fecha:'2025-11-02'}]->(p);
+
+MATCH (u:Usuario {nombre:'Valentina'}), (p:Plato {plato:'Milanesa Napolitana'})
+CREATE (u)-[:CONSUMIO {fecha:'2025-11-07'}]->(p);
+
+MATCH (u:Usuario {nombre:'Valentina'}), (p:Plato {plato:'Provoleta'})
+CREATE (u)-[:CONSUMIO {fecha:'2025-11-13'}]->(p);
+
+// Mateo
+MATCH (u:Usuario {nombre:'Mateo'}), (p:Plato {plato:'Empanadas Argentinas'})
+CREATE (u)-[:CONSUMIO {fecha:'2025-10-30'}]->(p);
+
+MATCH (u:Usuario {nombre:'Mateo'}), (p:Plato {plato:'Sancocho'})
+CREATE (u)-[:CONSUMIO {fecha:'2025-11-05'}]->(p);
+
+MATCH (u:Usuario {nombre:'Mateo'}), (p:Plato {plato:'Asado'})
+CREATE (u)-[:CONSUMIO {fecha:'2025-11-11'}]->(p);
+
+// Sofía
+MATCH (u:Usuario {nombre:'Sofía'}), (p:Plato {plato:'Carbonada'})
+CREATE (u)-[:CONSUMIO {fecha:'2025-11-03'}]->(p);
+
+MATCH (u:Usuario {nombre:'Sofía'}), (p:Plato {plato:'Locro'})
+CREATE (u)-[:CONSUMIO {fecha:'2025-11-08'}]->(p);
+
+MATCH (u:Usuario {nombre:'Sofía'}), (p:Plato {plato:'Choripán'})
+CREATE (u)-[:CONSUMIO {fecha:'2025-11-14'}]->(p);
+
+// Benjamín
+MATCH (u:Usuario {nombre:'Benjamín'}), (p:Plato {plato:'Ajiaco'})
+CREATE (u)-[:CONSUMIO {fecha:'2025-11-01'}]->(p);
+
+MATCH (u:Usuario {nombre:'Benjamín'}), (p:Plato {plato:'Empanadas Argentinas'})
+CREATE (u)-[:CONSUMIO {fecha:'2025-11-07'}]->(p);
+
+MATCH (u:Usuario {nombre:'Benjamín'}), (p:Plato {plato:'Asado'})
+CREATE (u)-[:CONSUMIO {fecha:'2025-11-12'}]->(p);
+
+// ============================================
+// CONSULTAS DE EJEMPLO
+// ============================================
+
+// CONSULTA 1: De las personas famosas cuales son deportistas hombres, indicando su procedencia
+// MATCH (p:Persona {profesion:'Deportista'})-[:NACIO_EN]->(c:Ciudad)
+// WHERE p.genero = 'Masculino'
+// RETURN p.nombre AS Deportista, p.genero AS Genero, c.ciudad AS Ciudad;
+
+// CONSULTA 2: Cuál es el plato más consumido por los usuarios
+// MATCH (u:Usuario)-[:CONSUMIO]->(p:Plato)
+// RETURN p.plato AS Plato, COUNT(u) AS VecesConsumido
+// ORDER BY VecesConsumido DESC
+// LIMIT 5;
