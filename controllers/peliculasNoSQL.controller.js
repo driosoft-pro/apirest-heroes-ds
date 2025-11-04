@@ -6,7 +6,7 @@ import Multimedias from '../models/multimediasNoSQL.model.js';
 
 // GET: listar películas
 export const peliculasGet = async (req, res = response) => {
-  const { limite = 5, desde = 0 } = req.query;
+  const { limite = 50, desde = 0 } = req.query;
   try {
     const [total, peliculas] = await Promise.all([
       Peliculas.countDocuments(),

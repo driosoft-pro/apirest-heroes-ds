@@ -2,7 +2,7 @@ import { response } from 'express';
 import Heroes from '../models/heroesNoSQL.model.js';
 
 export const heroesGet = async (req, res = response) => {
-  const { limite = 5, desde = 0 } = req.query;
+  const { limite = 50, desde = 0 } = req.query;
   try {
     const [total, heroes] = await Promise.all([
       Heroes.countDocuments(),

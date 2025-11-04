@@ -16,4 +16,4 @@ PeliculasSchema.methods.toJSON = function () {
   return data;
 };
 
-export default model('Peliculas', PeliculasSchema);
+export default model('peliculas', PeliculasSchema);

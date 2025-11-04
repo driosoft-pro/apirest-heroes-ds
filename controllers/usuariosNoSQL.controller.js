@@ -60,7 +60,7 @@ export const login = async (req, res = response) => {
 
 // GET: listar usuarios
 export const usuariosGet = async (req, res = response) => {
-  const { limite = 5, desde = 0 } = req.query;
+  const { limite = 50, desde = 0 } = req.query;
   try {
     const [total, usuarios] = await Promise.all([
       Usuarios.countDocuments(),
