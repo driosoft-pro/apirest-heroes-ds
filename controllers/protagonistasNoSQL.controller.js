@@ -3,7 +3,7 @@ import Protagonistas from '../models/protagonistasNoSQL.model.js';
 
 // GET: listar protagonistas
 export const protagonistasGet = async (req, res = response) => {
-  const { limite = 5, desde = 0 } = req.query;
+  const { limite = 50, desde = 0 } = req.query;
   try {
     const [total, protagonistas] = await Promise.all([
       Protagonistas.countDocuments(),

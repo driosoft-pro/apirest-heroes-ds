@@ -28,7 +28,7 @@ router.get(
 );
 
 // Mutaciones protegidas
-router.post('/', [validarJWT, esAdminRole], multimediasHeroesPost);
+router.post('/',  multimediasHeroesPost);
 
 router.put(
   '/:id',

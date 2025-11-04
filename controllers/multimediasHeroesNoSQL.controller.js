@@ -3,7 +3,7 @@ import MultimediasHeroes from '../models/multimediasHeroesNoSQL.model.js';
 
 // GET: listar relaciones con paginación
 export const multimediasHeroesGet = async (req, res = response) => {
-  const { limite = 5, desde = 0 } = req.query;
+  const { limite = 50, desde = 0 } = req.query;
   try {
     const [total, registros] = await Promise.all([
       MultimediasHeroes.countDocuments(),
