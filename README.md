@@ -24,7 +24,7 @@ Este proyecto expone una API REST en Node.js/Express que integra tres capas de p
 
 ---
 
-## Descripción general
+## 1) Descripción general
 
 - SQL (MySQL): modelos y controladores con Sequelize.
 - NoSQL (MongoDB): modelos y controladores con Mongoose.
@@ -36,7 +36,7 @@ Puerto por defecto usado en los ejemplos: 8082.
 
 ---
 
-## Arquitectura y estructura de carpetas
+## 2) Arquitectura y estructura de carpetas
 
 ```
 ├── controllers/
@@ -159,7 +159,7 @@ Notas:
 
 ---
 
-## Ejecución y perfiles
+## 5) Ejecución y perfiles
 
 Instalación de dependencias:
 
@@ -199,7 +199,7 @@ http://localhost:8082/api/grafos
 
 ---
 
-## Enrutamiento y módulos
+## 6) Enrutamiento y módulos
 
 - app.js monta el agregador principal:
 
@@ -219,9 +219,9 @@ http://localhost:8082/api/grafos
 
 ---
 
-## Endpoints por tecnología
+## 7) Endpoints por tecnología
 
-### SQL (MySQL/Sequelize)
+### 7.1 SQL (MySQL/Sequelize)
 
 Prefijo base:
 
@@ -253,7 +253,7 @@ Ejemplos adicionales frecuentes (según tu proyecto):
 
 La selección del controlador SQL se realiza internamente según `DB_DRIVER=sql`.
 
-### NoSQL (MongoDB/Mongoose)
+### 7.2 NoSQL (MongoDB/Mongoose)
 
 Prefijo base idéntico:
 
@@ -263,7 +263,7 @@ Prefijo base idéntico:
 
 Mismos recursos y rutas que en SQL; cambia el controlador a su versión NoSQL cuando `DB_DRIVER=nosql`. Los endpoints y los contratos JSON se mantienen consistentes para permitir alternar el backend sin cambios en el cliente.
 
-### Grafos (Neo4j)
+### 7.3 Grafos (Neo4j)
 
 Prefijo base:
 
@@ -303,11 +303,11 @@ Notas:
 
 ---
 
-## Ejemplos de uso (cURL)
+## 8) Ejemplos de uso (cURL)
 
 Ajuste el puerto si corre en otro distinto a 8082.
 
-### SQL/NoSQL (endpoints comunes)
+### 8.1 SQL/NoSQL (endpoints comunes)
 
 Listar héroes:
 
@@ -339,7 +339,7 @@ Autenticación:
 curl -X POST http://localhost:8082/api/usuarios/login   -H "Content-Type: application/json"   -d '{"email":"admin@mail.com","password":"admin123"}'
 ```
 
-### Grafos (Neo4j)
+### 8.2 Grafos (Neo4j)
 
 Crear país:
 
@@ -384,7 +384,7 @@ curl http://localhost:8082/api/grafos/relaciones/Persona/<uuid-persona>
 
 ---
 
-## Autenticación y seguridad
+## 9) Autenticación y seguridad
 
 - JWT para autenticación de endpoints protegidos (por ejemplo, usuarios y administración).
 - Middleware de roles sugerido: ADMIN_ROLE, USER_ROLE.
@@ -393,7 +393,7 @@ curl http://localhost:8082/api/grafos/relaciones/Persona/<uuid-persona>
 
 ---
 
-## Migraciones y utilidades de datos (Python)
+## 10) Migraciones y utilidades de datos (Python)
 
 Dependencias Python:
 
@@ -426,7 +426,6 @@ Cada script acepta argumentos por CLI y puede leer variables desde `.env` cuando
 
 - **Deyton Riasco Ortiz** — driosoftpro@gmail.com
 - **Samuel Izquierdo Bonilla** — samuelizquierdo98@gmail.com
-
   **Año:** 2025
 
 ---
@@ -434,3 +433,11 @@ Cada script acepta argumentos por CLI y puede leer variables desde `.env` cuando
 ## Licencia
 
 Proyecto con fines académicos. Ajuste la licencia según sus necesidades internas.
+
+---
+
+## Autores
+
+- **Deyton Riasco Ortiz** — driosoftpro@gmail.com
+- **Samuel Izquierdo Bonilla** — samuelizquierdo98@gmail.com
+  **Año:** 2025
