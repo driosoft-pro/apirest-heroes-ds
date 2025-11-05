@@ -89,7 +89,29 @@ export const getDriver = () => {
   return driver;
 };
 
-// Cerrar conexión (útil para cuando se apague el servidor)
+// Obtener una sesión
+export const getSession = (mode = "READ") => {
+  if (!driver) {
+    driver = connectNeo4j();
+  }
+
+  // Reusamos la misma resolucion de config que ya tienes
+  const { database } = (function () {
+    const isRemote = (process.env.DB_ENV || "local").toLowerCase() === "remote";
+    return isRemote
+      ? { database: process.env.NEO4J_DATABASE || "neo4j" }
+      : { database: "neo4j" };
+  })();
+
+  const accessMode = mode === "READ" ? neo4j.session.READ : neo4j.session.WRITE;
+
+  return driver.session({
+    database,
+    defaultAccessMode: accessMode,
+  });
+};
+
+// Cerrar conexión
 export const closeNeo4j = async () => {
   if (driver) {
     await driver.close();

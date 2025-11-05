@@ -59,7 +59,7 @@ class Server {
     try {
       await sequelize.authenticate();
       console.log("✓ Conexión OK a MySQL/MariaDB.");
-      console.log(`  * Base de datos: ${process.env.MONGODB_REMOTE_BD}`);
+      console.log(` * Base de datos: ${sequelize.config.database}`);
     } catch (error) {
       console.error("✗ No se pudo conectar a MySQL:", error.message);
     }
@@ -70,9 +70,7 @@ class Server {
     try {
       await connectionNoSQL();
       console.log("✓ Conexión OK a MongoDB.");
-      console.log(
-        `  * Base de datos: ${process.env.NEO4J_DATABASE || "neo4j"}`,
-      );
+      console.log(` * Base de datos: ${process.env.MONGODB_REMOTE_BD}`);
     } catch (error) {
       console.error("✗ No se pudo conectar a MongoDB:", error.message);
     }
@@ -83,9 +81,7 @@ class Server {
     try {
       await verifyNeo4j();
       console.log("✓ Conexión OK a Neo4j.");
-      console.log(
-        `  * Base de datos: ${process.env.NEO4J_DATABASE || "neo4j"}`,
-      );
+      console.log(` * Base de datos: ${process.env.NEO4J_DATABASE || "neo4j"}`);
     } catch (err) {
       console.error("✗ No se pudo conectar a Neo4j:", err.message);
     }

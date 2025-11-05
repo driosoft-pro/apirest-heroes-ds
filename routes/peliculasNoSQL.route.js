@@ -1,9 +1,9 @@
-import { Router } from 'express';
-import { check } from 'express-validator';
+import { Router } from "express";
+import { check } from "express-validator";
 
-import { validarCampos } from '../middlewares/validar-campos.js';
-import { validarJWT } from '../middlewares/validar-jwt.js';
-import { esAdminRole } from '../middlewares/validar-roles.js';
+import { validarCampos } from "../middlewares/validar-campos.js";
+import { validarJWT } from "../middlewares/validar-jwt.js";
+import { esAdminRole } from "../middlewares/validar-roles.js";
 
 import {
   peliculasGet,
@@ -11,44 +11,43 @@ import {
   peliculasPost,
   peliculaPut,
   peliculaDelete,
-} from '../controllers/peliculasNoSQL.controller.js';
+} from "../controllers/peliculasNoSQL.controller.js";
 
-import { existePeliculaPorId } from '../helpers/db-validatorsNoSQL.js';
+import { existePeliculaPorId } from "../helpers/db-validatorsNoSQL.js";
 
 const router = Router();
 
 // GET públicos
-router.get('/', peliculasGet);
+router.get("/", peliculasGet);
 router.get(
-  '/:id',
-  check('id', 'No es un id de Mongo válido').isMongoId(),
-  check('id').custom(existePeliculaPorId),
+  "/:id",
+  check("id", "No es un id de Mongo válido").isMongoId(),
+  check("id").custom(existePeliculaPorId),
   validarCampos,
-  peliculaIdGet
+  peliculaIdGet,
 );
 
 // Mutaciones protegidas
-//router.post('/', [validarJWT, esAdminRole], peliculasPost);
-router.post('/', peliculasPost);
+router.post("/", peliculasPost);
 
 router.put(
-  '/:id',
+  "/:id",
   validarJWT,
   esAdminRole,
-  check('id', 'No es un id de Mongo válido').isMongoId(),
-  check('id').custom(existePeliculaPorId),
+  check("id", "No es un id de Mongo válido").isMongoId(),
+  check("id").custom(existePeliculaPorId),
   validarCampos,
-  peliculaPut
+  peliculaPut,
 );
 
 router.delete(
-  '/:id',
+  "/:id",
   validarJWT,
   esAdminRole,
-  check('id', 'No es un id de Mongo válido').isMongoId(),
-  check('id').custom(existePeliculaPorId),
+  check("id", "No es un id de Mongo válido").isMongoId(),
+  check("id").custom(existePeliculaPorId),
   validarCampos,
-  peliculaDelete
+  peliculaDelete,
 );
 
 export default router;

@@ -1,9 +1,9 @@
-import { Router } from 'express';
-import { check } from 'express-validator';
+import { Router } from "express";
+import { check } from "express-validator";
 
-import { validarCampos } from '../middlewares/validar-campos.js';
-import { validarJWT } from '../middlewares/validar-jwt.js';
-import { esAdminRole } from '../middlewares/validar-roles.js';
+import { validarCampos } from "../middlewares/validar-campos.js";
+import { validarJWT } from "../middlewares/validar-jwt.js";
+import { esAdminRole } from "../middlewares/validar-roles.js";
 
 import {
   multimediasGet,
@@ -11,43 +11,43 @@ import {
   multimediasPost,
   multimediaPut,
   multimediaDelete,
-} from '../controllers/multimediasNoSQL.controller.js';
+} from "../controllers/multimediasNoSQL.controller.js";
 
-import { existeMultimediaPorId } from '../helpers/db-validatorsNoSQL.js';
+import { existeMultimediaPorId } from "../helpers/db-validatorsNoSQL.js";
 
 const router = Router();
 
 // GET públicos
-router.get('/', multimediasGet);
+router.get("/", multimediasGet);
 router.get(
-  '/:id',
-  check('id', 'No es un id de Mongo válido').isMongoId(),
-  check('id').custom(existeMultimediaPorId),
+  "/:id",
+  check("id", "No es un id de Mongo válido").isMongoId(),
+  check("id").custom(existeMultimediaPorId),
   validarCampos,
-  multimediaIdGet
+  multimediaIdGet,
 );
 
 // Mutaciones protegidas
-router.post('/',  multimediasPost);
+router.post("/", multimediasPost);
 
 router.put(
-  '/:id',
+  "/:id",
   validarJWT,
   esAdminRole,
-  check('id', 'No es un id de Mongo válido').isMongoId(),
-  check('id').custom(existeMultimediaPorId),
+  check("id", "No es un id de Mongo válido").isMongoId(),
+  check("id").custom(existeMultimediaPorId),
   validarCampos,
-  multimediaPut
+  multimediaPut,
 );
 
 router.delete(
-  '/:id',
+  "/:id",
   validarJWT,
   esAdminRole,
-  check('id', 'No es un id de Mongo válido').isMongoId(),
-  check('id').custom(existeMultimediaPorId),
+  check("id", "No es un id de Mongo válido").isMongoId(),
+  check("id").custom(existeMultimediaPorId),
   validarCampos,
-  multimediaDelete
+  multimediaDelete,
 );
 
 export default router;

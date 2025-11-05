@@ -35,7 +35,6 @@ build/
 # yarn.lock
 # pnpm-lock.yaml
 
-
 # Devenv
 .devenv*
 devenv.local.nix
