@@ -1,37 +1,42 @@
-# API REST — SQL + NoSQL + **Grafos (Neo4j)** + Python Utils
+# API REST — SQL, NoSQL y Grafos (Neo4j)
 
-**Gestión de Héroes, Películas y Multimedia con Node.js/Express + MySQL/MongoDB + Neo4j (grafos) + utilidades Python para migraciones**
+Este proyecto expone una API REST en Node.js/Express que integra tres capas de persistencia: relacional (MySQL), documental (MongoDB) y grafos (Neo4j). La API mantiene endpoints claros y consistentes, con separación de controladores por backend y un módulo de grafos independiente.
+
+---
+
+## Índice
+
+1. Descripción general
+2. Arquitectura y estructura de carpetas
+3. Requisitos y versiones recomendadas
+4. Variables de entorno
+5. Ejecución y perfiles
+6. Enrutamiento y módulos
+7. Endpoints por tecnología
+   - SQL (MySQL/Sequelize)
+   - NoSQL (MongoDB/Mongoose)
+   - Grafos (Neo4j)
+8. Ejemplos de uso (cURL)
+9. Autenticación y seguridad
+10. Migraciones y utilidades de datos (Python)
+11. Buenas prácticas y notas
+12. Licencia
 
 ---
 
 ## Descripción general
 
-Este proyecto expone una **API REST en Node.js + Express** que puede operar contra **SQL (MySQL)**, **NoSQL (MongoDB)** y **Grafos (Neo4j)**.
-Además incorpora **utilidades en Python** para facilitar **migraciones de datos, validaciones y análisis** (exportar/importar JSON, comparar datasets y generar visualizaciones).
+- SQL (MySQL): modelos y controladores con Sequelize.
+- NoSQL (MongoDB): modelos y controladores con Mongoose.
+- Grafos (Neo4j): nodos y relaciones con el driver oficial neo4j-driver.
+- Selección de backend relacional/documental mediante variable DB_DRIVER (sql o nosql).
+- Módulo de grafos independiente montado bajo /api/grafos, no depende de DB_DRIVER.
 
-> Puedes elegir el motor relacional/documental en tiempo de ejecución con la variable `DB_DRIVER`:
->
-> - `DB_DRIVER=sql` → usa MySQL (Sequelize).
-> - `DB_DRIVER=nosql` → usa MongoDB (Mongoose).
->
-> El **módulo de grafos (Neo4j)** es **adicional** y expone sus rutas propias bajo `/api/grafos` (funciona de forma independiente a `DB_DRIVER`).
+Puerto por defecto usado en los ejemplos: 8082.
 
 ---
 
-## Tecnologías
-
-| Capa             | Tecnología                                                    | Descripción                          |
-| ---------------- | ------------------------------------------------------------- | ------------------------------------ |
-| Backend          | Node.js 18+ + Express                                         | API principal                        |
-| SQL              | MySQL 8+ (Sequelize)                                          | Gestión relacional                   |
-| NoSQL            | MongoDB 6+ (Mongoose / PyMongo)                               | Gestión documental                   |
-| **Grafos**       | **Neo4j 5+ (neo4j-driver)**                                   | **Nodos y relaciones**               |
-| Migración / Data | Python 3.11+                                                  | Scripts CLI y Notebook               |
-| Librerías Py     | pandas, polars, numpy, pymongo, matplotlib, seaborn, tabulate | Herramientas de análisis y migración |
-
----
-
-## Estructura del proyecto (actualizada)
+## Arquitectura y estructura de carpetas
 
 ```
 ├── controllers/
@@ -97,160 +102,273 @@ Además incorpora **utilidades en Python** para facilitar **migraciones de datos
 │       └── relaciones.routes.js
 │   └── grafos.route.js         # Agregador de rutas de grafos
 │
-├── scripts/
-│   └── constraints.cypher      # Constraints/índices para Neo4j
-│
 ├── app.js
 ├── package.json
 ├── .env.example
 └── README.md
 ```
 
-> Si ya contabas con otra estructura, solo **añade** las carpetas/archivos de `grafos` y el `grafos.route.js`.
+---
+
+## 3) Requisitos y versiones recomendadas
+
+- Node.js >= 18
+- npm >= 9
+- MySQL >= 8
+- MongoDB >= 6
+- Neo4j >= 5 (o AuraDB)
+- Python >= 3.11 (para utilidades de migración)
 
 ---
 
-## ⚙️ Variables de entorno
+## 4) Variables de entorno
 
-Copia/ajusta en tu `.env` (o `.env.example`):
+Cree un archivo .env con los siguientes valores. Ajuste credenciales y bases de datos según su entorno.
 
 ```env
 # Core
-PORT=4000
-DB_DRIVER=sql        # sql | nosql
+PORT=8082
+NODE_ENV=remote
+DB_DRIVER=sql              # sql | nosql
 
 # ===== SQL (MySQL) =====
 DB_HOST=localhost
 DB_USER=root
-DB_PASSWORD=tu_password
-DB_NAME=heroesdb
+DB_PASSWORD=su_password
+DB_NAME=myDb
 
 # ===== NoSQL (MongoDB) =====
-MONGO_URI=mongodb://localhost:27017/heroesdb
+MONGO_URI=mongodb://localhost:27017/BDALMA_DATOS
 MONGO_USER=
 MONGO_PASS=
 
 # ===== Grafos (Neo4j) =====
-NEO4J_URI=neo4j+s://<tu-host>.databases.neo4j.io
+NEO4J_URI=neo4j+s://<host>.databases.neo4j.io
 NEO4J_USER=neo4j
-NEO4J_PASSWORD=super-secreto
-NEO4J_DATABASE=neo4j
+NEO4J_PASSWORD=su_password
+NEO4J_DATABASE=BD_ALMADATOS
+
+# ===== JWT =====
+JWT_SECRET=su_clave_secreta_segura
 ```
 
-> El driver se inicializa en `database/connectionGrafos.js` y debe exportar **`getSession(mode)`** (READ/WRITE).
+Notas:
+
+- DB_DRIVER solo afecta al backend SQL/NoSQL. El módulo de grafos funciona siempre y se monta bajo /api/grafos.
+- connectionGrafos.js debe exportar getSession(mode) para que los modelos de grafos abran sesiones READ/WRITE sobre la base indicada.
 
 ---
 
-## Integración de rutas de grafos en la app
+## Ejecución y perfiles
 
-En tu **app.js** (ESM), agrega **una sola línea** para montar el agregador de rutas de grafos:
+Instalación de dependencias:
 
-```js
-import express from "express";
-// ...tus otras importaciones
-import grafosRoutes from "./routes/grafos.route.js";
-
-const app = express();
-// ...middlewares, rutas existentes
-
-// Monta las rutas de grafos bajo /api/grafos
-app.use("/api/grafos", grafosRoutes);
-
-// ...arranque del servidor
-export default app;
+```bash
+npm install
 ```
 
-> No se modifica nada más. El resto de tu app permanece intacto.
+Desarrollo con recarga:
+
+```bash
+npm start
+# o
+nodemon app.js
+```
+
+Cambiar de backend relacional/documental (opcional):
+
+```bash
+# SQL
+DB_DRIVER=sql npm start
+
+# NoSQL
+DB_DRIVER=nosql npm start
+```
+
+La API queda accesible en:
+
+```
+http://localhost:8082/api
+```
+
+El módulo de grafos queda en:
+
+```
+http://localhost:8082/api/grafos
+```
 
 ---
 
-## Rutas de Grafos (Neo4j)
+## Enrutamiento y módulos
 
-Base: `http://localhost:4000/api/grafos` (ajusta `PORT` si corresponde).
+- app.js monta el agregador principal:
 
-### Nodos (CRUD estándar)
-
-Para cada recurso: **`POST /`**, **`GET /`**, **`GET /:id`**, **`PUT /:id`**, **`DELETE /:id`**
-
-- **País** → `/pais`
-- **Ciudad** → `/ciudad`
-- **Persona** → `/persona`
-- **Sitio** → `/sitio`
-- **Plato** → `/plato`
-- **Usuario** → `/usuario`
-
-#### Ejemplos rápidos (cURL)
-
-**Crear País**
-
-```bash
-curl -X POST http://localhost:4000/api/grafos/pais   -H 'Content-Type: application/json'   -d '{"nombre":"Colombia","iso":"CO","idioma":"es","capital":"Bogotá"}'
-```
-
-**Listar Personas (paginado + búsqueda)**
-
-```bash
-curl 'http://localhost:4000/api/grafos/persona?q=ana&skip=0&limit=20'
-```
-
-**Actualizar Sitio**
-
-```bash
-curl -X PUT http://localhost:4000/api/grafos/sitio/<id-sitio>   -H 'Content-Type: application/json'   -d '{"tipo":"Museo","lat":4.61,"lng":-74.08}'
-```
-
-**Eliminar Plato**
-
-```bash
-curl -X DELETE http://localhost:4000/api/grafos/plato/<id-plato>
-```
-
-> **Notas**
->
-> - Si **no envías `id`** al crear, el sistema genera uno con `randomUUID()` en Neo4j.
-> - Los modelos solo aceptan **propiedades permitidas** por recurso (whitelist).
-
-### Relaciones (genéricas)
-
-Rutas: `/relaciones`
-
-- **Crear relación** → `POST /api/grafos/relaciones`
-  Body (JSON):
-
-  ```json
-  {
-    "fromLabel": "Persona",
-    "fromId": "<uuid-persona>",
-    "type": "VIVE_EN",
-    "toLabel": "Ciudad",
-    "toId": "<uuid-ciudad>",
-    "props": { "desde": "2020-01-01" }
-  }
+  ```js
+  import routes from "./routes/index.js";
+  app.use("/api", routes);
   ```
 
-- **Eliminar relación** → `DELETE /api/grafos/relaciones`
-  Body (JSON):
+- routes/index.js incluye el agregador de grafos:
 
-  ```json
-  {
-    "fromLabel": "Persona",
-    "fromId": "<uuid-persona>",
-    "type": "VIVE_EN",
-    "toLabel": "Ciudad",
-    "toId": "<uuid-ciudad>"
-  }
+  ```js
+  import grafosRoutes from "./grafos.route.js";
+  router.use("/grafos", grafosRoutes);
   ```
 
-- **Listar relaciones salientes de un nodo** → `GET /api/grafos/relaciones/:label/:id`
-  Ejemplo:
-  `GET /api/grafos/relaciones/Persona/<uuid-persona>`
+- Los routers de recursos relacionales/documentales (héroes, películas, etc.) montan controladores específicos para SQL o NoSQL de acuerdo con DB_DRIVER. Los endpoints se mantienen estables, cambiando únicamente la implementación detrás del controlador.
 
-#### Ejemplos rápidos (cURL)
+---
 
-**Crear relación VIVE_EN**
+## Endpoints por tecnología
+
+### SQL (MySQL/Sequelize)
+
+Prefijo base:
+
+```
+/api
+```
+
+Recursos principales (CRUD estándar; algunos endpoints pueden requerir JWT/roles):
+
+- Héroes: `/heroes`
+- Películas: `/peliculas`
+- Protagonistas (relación Héroe↔Película): `/protagonistas`
+- Multimedias: `/multimedias`
+- Usuarios (auth y administración): `/usuarios`
+
+Patrones comunes por recurso:
+
+- `GET /api/<recurso>` — listar
+- `GET /api/<recurso>/:id` — detalle
+- `POST /api/<recurso>` — crear
+- `PUT /api/<recurso>/:id` — actualizar
+- `DELETE /api/<recurso>/:id` — eliminar
+
+Ejemplos adicionales frecuentes (según tu proyecto):
+
+- `GET /api/peliculas/:id/protagonistas`
+- `GET /api/heroes/:id/multimedia`
+- `GET /api/peliculas/:id/multimedia`
+
+La selección del controlador SQL se realiza internamente según `DB_DRIVER=sql`.
+
+### NoSQL (MongoDB/Mongoose)
+
+Prefijo base idéntico:
+
+```
+/api
+```
+
+Mismos recursos y rutas que en SQL; cambia el controlador a su versión NoSQL cuando `DB_DRIVER=nosql`. Los endpoints y los contratos JSON se mantienen consistentes para permitir alternar el backend sin cambios en el cliente.
+
+### Grafos (Neo4j)
+
+Prefijo base:
+
+```
+/api/grafos
+```
+
+Nodos (CRUD estándar):
+
+- País: `/pais`
+- Ciudad: `/ciudad`
+- Persona: `/persona`
+- Sitio: `/sitio`
+- Plato: `/plato`
+- Usuario: `/usuario`
+
+Métodos por recurso:
+
+- `POST /api/grafos/<recurso>` — crear
+- `GET /api/grafos/<recurso>` — listar (`?q=&skip=&limit=`)
+- `GET /api/grafos/<recurso>/:id` — obtener por id
+- `PUT /api/grafos/<recurso>/:id` — actualizar
+- `DELETE /api/grafos/<recurso>/:id` — eliminar
+
+Relaciones (genéricas):
+
+- `POST /api/grafos/relaciones` — crear relación
+  - Body JSON: `{ fromLabel, fromId, type, toLabel, toId, props? }`
+- `DELETE /api/grafos/relaciones` — eliminar relación
+  - Body JSON: `{ fromLabel, fromId, type, toLabel, toId }`
+- `GET /api/grafos/relaciones/:label/:id` — listar relaciones salientes de un nodo
+
+Notas:
+
+- Si no envía `id` al crear un nodo de grafos, se genera con `randomUUID()`.
+- Cada modelo de grafos valida una lista de propiedades permitidas por tipo de nodo.
+
+---
+
+## Ejemplos de uso (cURL)
+
+Ajuste el puerto si corre en otro distinto a 8082.
+
+### SQL/NoSQL (endpoints comunes)
+
+Listar héroes:
 
 ```bash
-curl -X POST http://localhost:4000/api/grafos/relaciones   -H 'Content-Type: application/json'   -d '{
+curl http://localhost:8082/api/heroes
+```
+
+Crear héroe:
+
+```bash
+curl -X POST http://localhost:8082/api/heroes   -H "Content-Type: application/json"   -d '{"nombre":"Iron Man","poder":"Tecnología"}'
+```
+
+Asignar protagonista (Héroe↔Película):
+
+```bash
+curl -X POST http://localhost:8082/api/protagonistas   -H "Content-Type: application/json"   -d '{"heroeId":1,"peliculaId":10,"rol":"Cameo"}'
+```
+
+Listar multimedia por película:
+
+```bash
+curl http://localhost:8082/api/peliculas/10/multimedia
+```
+
+Autenticación:
+
+```bash
+curl -X POST http://localhost:8082/api/usuarios/login   -H "Content-Type: application/json"   -d '{"email":"admin@mail.com","password":"admin123"}'
+```
+
+### Grafos (Neo4j)
+
+Crear país:
+
+```bash
+curl -X POST http://localhost:8082/api/grafos/pais   -H "Content-Type: application/json"   -d '{"nombre":"Colombia","iso":"CO","idioma":"es","capital":"Bogotá"}'
+```
+
+Listar personas:
+
+```bash
+curl "http://localhost:8082/api/grafos/persona?skip=0&limit=20"
+```
+
+Actualizar sitio:
+
+```bash
+curl -X PUT http://localhost:8082/api/grafos/sitio/<id-sitio>   -H "Content-Type: application/json"   -d '{"tipo":"Museo","lat":4.61,"lng":-74.08}'
+```
+
+Eliminar plato:
+
+```bash
+curl -X DELETE http://localhost:8082/api/grafos/plato/<id-plato>
+```
+
+Crear relación Persona -> Ciudad (VIVE_EN):
+
+```bash
+curl -X POST http://localhost:8082/api/grafos/relaciones   -H "Content-Type: application/json"   -d '{
         "fromLabel":"Persona","fromId":"<uuid-persona>",
         "type":"VIVE_EN",
         "toLabel":"Ciudad","toId":"<uuid-ciudad>",
@@ -258,80 +376,49 @@ curl -X POST http://localhost:4000/api/grafos/relaciones   -H 'Content-Type: app
       }'
 ```
 
-**Eliminar relación**
+Listar relaciones de una Persona:
 
 ```bash
-curl -X DELETE http://localhost:4000/api/grafos/relaciones   -H 'Content-Type: application/json'   -d '{
-        "fromLabel":"Persona","fromId":"<uuid-persona>",
-        "type":"VIVE_EN",
-        "toLabel":"Ciudad","toId":"<uuid-ciudad>"
-      }'
-```
-
-**Listar relaciones de una Persona**
-
-```bash
-curl http://localhost:4000/api/grafos/relaciones/Persona/<uuid-persona>
+curl http://localhost:8082/api/grafos/relaciones/Persona/<uuid-persona>
 ```
 
 ---
 
-## Constraints/Índices (opcional pero recomendado)
+## Autenticación y seguridad
 
-Archivo: `scripts/constraints.cypher`
-
-```cypher
-CREATE CONSTRAINT pais_id IF NOT EXISTS FOR (n:Pais) REQUIRE n.id IS UNIQUE;
-CREATE CONSTRAINT ciudad_id IF NOT EXISTS FOR (n:Ciudad) REQUIRE n.id IS UNIQUE;
-CREATE CONSTRAINT persona_id IF NOT EXISTS FOR (n:Persona) REQUIRE n.id IS UNIQUE;
-CREATE CONSTRAINT sitio_id IF NOT EXISTS FOR (n:Sitio) REQUIRE n.id IS UNIQUE;
-CREATE CONSTRAINT plato_id IF NOT EXISTS FOR (n:Plato) REQUIRE n.id IS UNIQUE;
-CREATE CONSTRAINT usuario_id IF NOT EXISTS FOR (n:Usuario) REQUIRE n.id IS UNIQUE;
-
-CREATE INDEX pais_nombre IF NOT EXISTS FOR (n:Pais) ON (n.nombre);
-CREATE INDEX ciudad_nombre IF NOT EXISTS FOR (n:Ciudad) ON (n.nombre);
-CREATE INDEX persona_email IF NOT EXISTS FOR (n:Persona) ON (n.email);
-CREATE INDEX sitio_nombre IF NOT EXISTS FOR (n:Sitio) ON (n.nombre);
-CREATE INDEX plato_nombre IF NOT EXISTS FOR (n:Plato) ON (n.nombre);
-CREATE INDEX usuario_username IF NOT EXISTS FOR (n:Usuario) ON (n.username);
-```
-
-Ejecuta los constraints (si tienes `cypher-shell`):
-
-```bash
-cypher-shell -a "$NEO4J_URI" -u "$NEO4J_USER" -p "$NEO4J_PASSWORD" -d "$NEO4J_DATABASE" -f scripts/constraints.cypher
-```
+- JWT para autenticación de endpoints protegidos (por ejemplo, usuarios y administración).
+- Middleware de roles sugerido: ADMIN_ROLE, USER_ROLE.
+- Validaciones con express-validator y sanitización básica.
+- CORS configurado a nivel de app.js si es necesario.
 
 ---
 
-## Arranque rápido
+## Migraciones y utilidades de datos (Python)
 
-1. Instalar dependencias de Node y configurar `.env` (SQL, NoSQL y Grafos):
-
-```bash
-npm install
-```
-
-2. (Opcional) Crear constraints/índices en Neo4j (ver sección anterior).
-
-3. Levantar el servidor:
+Dependencias Python:
 
 ```bash
-npm run dev     # o npm start
+pip install -r requirements.txt
 ```
 
-4. Probar endpoints de grafos:
+Flujo típico:
 
-- `POST /api/grafos/pais`
-- `GET /api/grafos/persona`
-- `POST /api/grafos/relaciones`
+1. Exportar SQL a JSON (`export_sql_to_json.py`).
+2. Importar JSON a MongoDB (`import_json_to_mongo.py`).
+3. Comparar conteos/campos (`compare_datasets.py`).
+4. Visualizar datos (`visualize_data.py`).
+
+Cada script acepta argumentos por CLI y puede leer variables desde `.env` cuando aplique.
 
 ---
 
-## Auth / Middlewares
+## Buenas prácticas y notas
 
-Las rutas de grafos están listas para integrarse con tu esquema de **JWT** y middlewares existentes.
-Si necesitas asegurar `/api/grafos/**`, agrega tu middleware al montar `grafosRoutes` o dentro de cada router.
+- Mantener la lógica de acceso a datos aislada por backend (ya contemplado en controllers/ y database/).
+- Documentar cualquier campo adicional requerido por tus modelos reales.
+- Para Neo4j, ejecutar scripts/constraints.cypher para unicidad por id e índices útiles.
+- En ESM, usar rutas relativas con extensión .js en todos los imports.
+- Si cambias el nombre de funciones de conexión, actualiza las importaciones en los modelos/controladores.
 
 ---
 
@@ -339,10 +426,11 @@ Si necesitas asegurar `/api/grafos/**`, agrega tu middleware al montar `grafosRo
 
 - **Deyton Riasco Ortiz** — driosoftpro@gmail.com
 - **Samuel Izquierdo Bonilla** — samuelizquierdo98@gmail.com
+
   **Año:** 2025
 
 ---
 
 ## Licencia
 
-Este proyecto se distribuye con fines académicos. Ajusta la licencia según tus necesidades.
+Proyecto con fines académicos. Ajuste la licencia según sus necesidades internas.
