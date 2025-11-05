@@ -1,69 +1,83 @@
-import express from 'express';
-import cors from 'cors';
-import { sequelize } from '../database/connectionSQL.js';
-import { connectionNoSQL } from '../database/connectionNoSQL.js';
+import express from "express";
+import cors from "cors";
+import { sequelize } from "../database/connectionSQL.js";
+import { connectionNoSQL } from "../database/connectionNoSQL.js";
+import { verifyNeo4j } from "../database/connectionGrafos.js";
 
 class Server {
-    constructor() {
-        this.app = express();
-        this.port = process.env.PORT || 3000;
+  constructor() {
+    this.app = express();
+    this.port = process.env.PORT || 3000;
 
-        this.app.get('/', (req, res) => {
-            res.send('Hola Mundo desde javascript..');
-        });
+    this.app.get("/", (req, res) => {
+      res.send("Hola Mundo desde javascript..");
+    });
 
-        // Conexión SQL
-        this.connectionSQL();
+    // Conexión SQL
+    this.connectionSQL();
 
-        // Conexión NoSQL
-        this.connectionMongo();
+    // Conexión NoSQL
+    this.connectionMongo();
 
-        // Middlewares
-        this.middlewares();
+    // Conexión Neo4j
+    this.connectionNeo4j();
 
-        // Rutas
-        this.routes();
+    // Middlewares
+    this.middlewares();
+
+    // Rutas
+    this.routes();
+  }
+
+  //Conexión a MySQL (Sequelize)
+  async connectionSQL() {
+    try {
+      await sequelize.authenticate();
+      console.log("Conexión OK a MySQL.");
+    } catch (error) {
+      console.error("No se pudo conectar a la BD MySQL:", error);
     }
+  }
 
-    //Conexión a MySQL (Sequelize)
-    async connectionSQL() {
-        try {
-            await sequelize.authenticate();
-            console.log('Conexión OK a MySQL.');
-        } catch (error) {
-            console.error('No se pudo conectar a la BD MySQL:', error);
-        }
+  //Conexión a MongoDB (Mongoose)
+  async connectionMongo() {
+    try {
+      await connectionNoSQL(); // llama a la función exportada
+      console.log("Conexión OK a MongoDB.");
+    } catch (error) {
+      console.error("No se pudo conectar a la BD de MongoDB:", error);
     }
+  }
 
-    //Conexión a MongoDB (Mongoose)
-    async connectionMongo() {
-        try {
-            await connectionNoSQL(); // llama a la función exportada
-            console.log('Conexión OK a MongoDB.');
-        } catch (error) {
-            console.error('No se pudo conectar a la BD de MongoDB:', error);
-        }
+  //Conexión a Neo4j (neo4j-driver)
+  async connectionNeo4j() {
+    try {
+      await verifyNeo4j();
+      console.log("Conexión OK a Neo4j.");
+    } catch (err) {
+      console.error("No se pudo conectar a Neo4j:", err.message);
     }
+  }
 
-    //Cargar rutas
-    async routes() {
-        const routes = (await import('../routes/index.js')).default;
-        this.app.use('/api', routes);
-    }
+  //Cargar rutas
+  async routes() {
+    const routes = (await import("../routes/index.js")).default;
+    this.app.use("/api", routes);
+  }
 
-    //Middlewares
-    middlewares() {
-        this.app.use(cors());
-        this.app.use(express.json());
-        this.app.use(express.static('public')); // Directorio público
-    }
+  //Middlewares
+  middlewares() {
+    this.app.use(cors());
+    this.app.use(express.json());
+    this.app.use(express.static("public")); // Directorio público
+  }
 
-    //Iniciar servidor
-    listen() {
-        this.app.listen(this.port, () => {
-            console.log(`Servidor corriendo en puerto ${this.port}`);
-        });
-    }
+  //Iniciar servidor
+  listen() {
+    this.app.listen(this.port, () => {
+      console.log(`Servidor corriendo en puerto ${this.port}`);
+    });
+  }
 }
 
 export default Server;

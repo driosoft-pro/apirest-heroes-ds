@@ -21,14 +21,14 @@ ORDER BY c.ciudad;
 // CONSULTA 4: Usuarios que viven en Cali y los sitios que han visitado
 MATCH (u:Usuario)-[:VIVE_EN]->(c:Ciudad {ciudad:'Cali'})
 OPTIONAL MATCH (u)-[v:VISITO]->(s:Sitio)
-RETURN u.nombre AS Usuario, u.email AS Email, 
-        COLLECT(DISTINCT s.sitio) AS SitiosVisitados, 
+RETURN u.nombre AS Usuario, u.email AS Email,
+        COLLECT(DISTINCT s.sitio) AS SitiosVisitados,
         COUNT(DISTINCT s) AS TotalVisitas;
 
 // CONSULTA 5: Platos disponibles en cada país con su precio promedio
 MATCH (p:Plato)-[:SE_VENDE_EN]->(s:Sitio)-[:UBICADO_EN]->(c:Ciudad)-[:PERTENECE_A]->(pais:Pais)
-RETURN pais.pais AS Pais, 
-       COUNT(DISTINCT p.plato) AS CantidadPlatos, 
+RETURN pais.pais AS Pais,
+       COUNT(DISTINCT p.plato) AS CantidadPlatos,
        AVG(p.precio) AS PrecioPromedio,
        MIN(p.precio) AS PlatoMasBarato,
        MAX(p.precio) AS PlatoMasCaro
@@ -43,8 +43,8 @@ ORDER BY Visitas DESC, s.sitio;
 
 // CONSULTA 7: Personas famosas agrupadas por profesión y país de origen
 MATCH (p:Persona)-[:NACIO_EN]->(c:Ciudad)-[:PERTENECE_A]->(pais:Pais)
-RETURN pais.pais AS Pais, 
-       p.profesion AS Profesion, 
+RETURN pais.pais AS Pais,
+       p.profesion AS Profesion,
        COUNT(p) AS Cantidad,
        COLLECT(p.nombre) AS Nombres
 ORDER BY pais.pais, Cantidad DESC;
@@ -52,7 +52,7 @@ ORDER BY pais.pais, Cantidad DESC;
 // CONSULTA 8: Usuarios con mayor gasto en consumo de platos
 MATCH (u:Usuario)-[:CONSUMIO]->(p:Plato)
 WITH u, SUM(p.precio) AS GastoTotal, COUNT(p) AS PlatosConsumidos
-RETURN u.nombre AS Usuario, 
+RETURN u.nombre AS Usuario,
        u.email AS Email,
        PlatosConsumidos,
        GastoTotal AS TotalGastado
@@ -63,21 +63,21 @@ LIMIT 10;
 MATCH (u:Usuario)-[:VISITO]->(s:Sitio)-[:UBICADO_EN]->(c:Ciudad)-[:PERTENECE_A]->(p:Pais)
 WITH c, p, COUNT(u) AS TotalVisitas
 RETURN p.pais AS Pais,
-       c.ciudad AS Ciudad, 
+       c.ciudad AS Ciudad,
        TotalVisitas
 ORDER BY TotalVisitas DESC, p.pais;
 
 // CONSULTA 10: Platos que nunca han sido consumidos
 MATCH (p:Plato)
 WHERE NOT EXISTS((p)<-[:CONSUMIO]-())
-RETURN p.plato AS PlatoNoConsumido, 
+RETURN p.plato AS PlatoNoConsumido,
        p.precio AS Precio
 ORDER BY p.precio DESC;
 
 // CONSULTA 11: Usuarios que han visitado sitios pero no han consumido nada
 MATCH (u:Usuario)-[:VISITO]->(:Sitio)
 WHERE NOT EXISTS((u)-[:CONSUMIO]->(:Plato))
-RETURN u.nombre AS Usuario, 
+RETURN u.nombre AS Usuario,
        u.email AS Email,
        u.genero AS Genero;
 

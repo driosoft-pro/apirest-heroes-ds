@@ -38,7 +38,7 @@ CREATE
 // ============================================
 // CREAR PAÍS Y CIUDADES JAPÓN
 // ============================================
-CREATE 
+CREATE
 (:Pais {pais:'Japón'}),
 (:Ciudad {ciudad:'Tokio'}),
 (:Ciudad {ciudad:'Kioto'}),
@@ -109,7 +109,7 @@ CREATE
 // ============================================
 // PERSONAS FAMOSAS JAPÓN
 // ============================================
-CREATE 
+CREATE
 (:Persona {nombre:'Hayao Miyazaki', profesion:'Director de Cine', genero:'Masculino'}),
 (:Persona {nombre:'Naomi Osaka', profesion:'Deportista', genero:'Femenino'}),
 (:Persona {nombre:'Yoko Ono', profesion:'Artista', genero:'Femenino'}),
@@ -253,7 +253,7 @@ CREATE
 // ============================================
 // SITIOS DE JAPÓN
 // ============================================
-CREATE 
+CREATE
 (:Sitio {sitio:'Templo Kinkaku-ji', tipo:'Templo'}),
 (:Sitio {sitio:'Monte Fuji', tipo:'Montaña'}),
 (:Sitio {sitio:'Santuario Meiji', tipo:'Santuario'}),
@@ -834,18 +834,3 @@ CREATE (u)-[:CONSUMIO {fecha:'2025-11-07'}]->(p);
 
 MATCH (u:Usuario {nombre:'Taro Yamamoto'}), (p:Plato {plato:'Sashimi'})
 CREATE (u)-[:CONSUMIO {fecha:'2025-11-13'}]->(p);
-
-// ============================================
-// CONSULTAS
-// ============================================
-
-// CONSULTA 1: De las personas famosas cuales son deportistas hombres, indicando su procedencia
-// MATCH (p:Persona {profesion:'Deportista'})-[:NACIO_EN]->(c:Ciudad)
-// WHERE p.genero = 'Masculino'
-// RETURN p.nombre AS Deportista, p.genero AS Genero, c.ciudad AS Ciudad;
-
-// CONSULTA 2: Cuál es el plato más consumido por los usuarios
-// MATCH (u:Usuario)-[:CONSUMIO]->(p:Plato)
-// RETURN p.plato AS Plato, COUNT(u) AS VecesConsumido
-// ORDER BY VecesConsumido DESC
-// LIMIT 5;
