@@ -422,14 +422,6 @@ Cada script acepta argumentos por CLI y puede leer variables desde `.env` cuando
 
 ---
 
-## Autores
-
-- **Deyton Riasco Ortiz** — driosoftpro@gmail.com
-- **Samuel Izquierdo Bonilla** — samuelizquierdo98@gmail.com
-  **Año:** 2025
-
----
-
 ## Licencia
 
 Proyecto con fines académicos. Ajuste la licencia según sus necesidades internas.
@@ -440,4 +432,5 @@ Proyecto con fines académicos. Ajuste la licencia según sus necesidades intern
 
 - **Deyton Riasco Ortiz** — driosoftpro@gmail.com
 - **Samuel Izquierdo Bonilla** — samuelizquierdo98@gmail.com
+
   **Año:** 2025
