@@ -1,7 +1,7 @@
 import neo4j from "neo4j-driver";
 import dotenv from "dotenv";
 
-dotenv.config();
+dotenv.config({ quiet: true });
 
 let driver = null;
 
@@ -47,7 +47,7 @@ export const connectNeo4j = () => {
       },
     );
 
-    console.log("Driver de Neo4j creado correctamente...");
+    //console.log("Driver de Neo4j creado correctamente...");
     return driver;
   } catch (error) {
     console.error("Error al crear driver de Neo4j:", error.message);
@@ -69,7 +69,7 @@ export const verifyNeo4j = async () => {
       const result = await session.run("RETURN 1 as test");
 
       if (result.records.length > 0) {
-        console.log("Conexión a Neo4j verificada correctamente");
+        //console.log("Conexión a Neo4j verificada correctamente");
         return true;
       }
     } finally {
