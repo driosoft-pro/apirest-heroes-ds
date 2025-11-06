@@ -1,33 +1,42 @@
-# 🌐 API REST — SQL + NoSQL + Python Utils
-**Gestión de Héroes, Películas y Multimedia con Node.js/Express + MySQL/MongoDB + utilidades Python para migraciones**
+# API REST — SQL, NoSQL y Grafos (Neo4j)
+
+Este proyecto expone una API REST en Node.js/Express que integra tres capas de persistencia: relacional (MySQL), documental (MongoDB) y grafos (Neo4j). La API mantiene endpoints claros y consistentes, con separación de controladores por backend y un módulo de grafos independiente.
 
 ---
 
-## 📌 Descripción general
-Este proyecto expone una **API REST en Node.js + Express** que puede operar contra **SQL (MySQL)** o **NoSQL (MongoDB)**.  
-Además incorpora **utilidades en Python** para facilitar **migraciones de datos, validaciones y análisis** (exportar/importar JSON, comparar datasets y generar visualizaciones).
+## Índice
 
-> Puedes elegir el motor de base de datos en tiempo de ejecución con la variable `DB_DRIVER`:
-> - `DB_DRIVER=sql` → usa MySQL (Sequelize).
-> - `DB_DRIVER=nosql` → usa MongoDB (Mongoose / PyMongo).
->
-> El API expone los mismos endpoints funcionales independientemente del backend activo.
-
----
-
-## 🧩 Tecnologías
-
-| Capa | Tecnología | Descripción |
-|------|-------------|-------------|
-| Backend | Node.js 18+ + Express | API principal |
-| SQL | MySQL 8+ (Sequelize) | Gestión relacional |
-| NoSQL | MongoDB 6+ (Mongoose / PyMongo) | Gestión documental |
-| Migración / Data | Python 3.11+ | Scripts CLI y Notebook |
-| Librerías Py | pandas, polars, numpy, pymongo, matplotlib, seaborn, tabulate | Herramientas de análisis y migración |
+1. Descripción general
+2. Arquitectura y estructura de carpetas
+3. Requisitos y versiones recomendadas
+4. Variables de entorno
+5. Ejecución y perfiles
+6. Enrutamiento y módulos
+7. Endpoints por tecnología
+   - SQL (MySQL/Sequelize)
+   - NoSQL (MongoDB/Mongoose)
+   - Grafos (Neo4j)
+8. Ejemplos de uso (cURL)
+9. Autenticación y seguridad
+10. Migraciones y utilidades de datos (Python)
+11. Buenas prácticas y notas
+12. Licencia
 
 ---
 
-## 📂 Estructura del proyecto
+## 1) Descripción general
+
+- SQL (MySQL): modelos y controladores con Sequelize.
+- NoSQL (MongoDB): modelos y controladores con Mongoose.
+- Grafos (Neo4j): nodos y relaciones con el driver oficial neo4j-driver.
+- Selección de backend relacional/documental mediante variable DB_DRIVER (sql o nosql).
+- Módulo de grafos independiente montado bajo /api/grafos, no depende de DB_DRIVER.
+
+Puerto por defecto usado en los ejemplos: 8082.
+
+---
+
+## 2) Arquitectura y estructura de carpetas
 
 ```
 ├── controllers/
@@ -39,252 +48,389 @@ Además incorpora **utilidades en Python** para facilitar **migraciones de datos
 │   ├── multimediasNoSQL.controller.js
 │   ├── protagonistasSQL.controller.js
 │   ├── protagonistasNoSQL.controller.js
-│   └── usuarios.controller.js
+│   ├── usuarios.controller.js
+│   └── grafos/
+│       ├── pais.controller.js
+│       ├── ciudad.controller.js
+│       ├── persona.controller.js
+│       ├── sitio.controller.js
+│       ├── plato.controller.js
+│       ├── usuario.controller.js
+│       └── relaciones.controller.js
 │
 ├── database/
 │   ├── connectionSQL.js        # Sequelize (MySQL)
-│   └── connectionNoSQL.js      # Mongoose (MongoDB)
+│   ├── connectionNoSQL.js      # Mongoose (MongoDB)
+│   └── connectionGrafos.js     # neo4j-driver (exporta getSession(mode))
 │
 ├── helpers/
 │   ├── db-validators.js
 │   └── generar-jwt.js
 │
-├── migracion_sql_nosql/        # Nuevo módulo Python para migraciones SQL↔NoSQL
-│   ├── migracion.ipynb         # Notebook principal
-│   ├── export_sql_to_json.py   # Exporta tablas SQL a JSON
-│   ├── import_json_to_mongo.py # Importa JSON a MongoDB
-│   ├── compare_datasets.py     # Compara estructuras/datos
-│   └── visualize_data.py       # Visualizaciones y reportes
+├── migracion_sql_nosql/
+│   ├── migracion.ipynb
+│   ├── export_sql_to_json.py
+│   ├── import_json_to_mongo.py
+│   ├── compare_datasets.py
+│   └── visualize_data.py
 │
 ├── models/
 │   ├── SQL/...
-│   └── NoSQL/...
+│   ├── NoSQL/...
+│   └── grafos/
+│       ├── baseModelFactory.js
+│       ├── pais.model.js
+│       ├── ciudad.model.js
+│       ├── persona.model.js
+│       ├── sitio.model.js
+│       ├── plato.model.js
+│       └── usuario.model.js
 │
 ├── routes/
 │   ├── heroes.route.js
 │   ├── peliculas.route.js
 │   ├── multimedias.route.js
 │   ├── protagonistas.route.js
-│   └── usuarios.route.js
+│   ├── usuarios.route.js
+│   └── grafos/
+│       ├── pais.routes.js
+│       ├── ciudad.routes.js
+│       ├── persona.routes.js
+│       ├── sitio.routes.js
+│       ├── plato.routes.js
+│       ├── usuario.routes.js
+│       └── relaciones.routes.js
+│   └── grafos.route.js         # Agregador de rutas de grafos
 │
 ├── app.js
 ├── package.json
-├── requirements.txt
 ├── .env.example
 └── README.md
 ```
-> Si aún no existe la carpeta `migrations/`, créala y coloca allí los scripts Python (ver ejemplos de uso más abajo).
 
 ---
 
-## ⚙️ Requisitos
+## 3) Requisitos y versiones recomendadas
 
-### 🔹 Node.js
-- Node.js >= 18  
-- npm >= 9  
-- MySQL >= 8  
-- MongoDB >= 6  
+- Node.js >= 18
+- npm >= 9
+- MySQL >= 8
+- MongoDB >= 6
+- Neo4j >= 5 (o AuraDB)
+- Python >= 3.11 (para utilidades de migración)
 
-### 🔹 Python
-- Python >= 3.11  
-- pip >= 23  
-
-Instala las dependencias:
-```bash
-pip install -r requirements.txt
-```
 ---
 
-## 🚀 Instalación (Node.js + API)
-1) Clonar e instalar dependencias:
-```bash
-git clone https://github.com/driosoft-pro/apirest-heroes-ds.git
-cd apirest-heroes-ds
-npm install
-```
+## 4) Variables de entorno
 
-2) Configurar variables de entorno en `.env` (puedes copiar desde `.env.example`):
+Cree un archivo .env con los siguientes valores. Ajuste credenciales y bases de datos según su entorno.
+
 ```env
 # Core
-PORT=4000
-DB_DRIVER=sql        # sql | nosql
+PORT=8082
+NODE_ENV=remote
+DB_DRIVER=sql              # sql | nosql
 
 # ===== SQL (MySQL) =====
 DB_HOST=localhost
 DB_USER=root
-DB_PASSWORD=tu_password
-DB_NAME=heroesdb
+DB_PASSWORD=su_password
+DB_NAME=myDb
 
 # ===== NoSQL (MongoDB) =====
-MONGO_URI=mongodb://localhost:27017/heroesdb
+MONGO_URI=mongodb://localhost:27017/BDALMA_DATOS
 MONGO_USER=
 MONGO_PASS=
 
+# ===== Grafos (Neo4j) =====
+NEO4J_URI=neo4j+s://<host>.databases.neo4j.io
+NEO4J_USER=neo4j
+NEO4J_PASSWORD=su_password
+NEO4J_DATABASE=BD_ALMADATOS
+
 # ===== JWT =====
-JWT_SECRET=mi_secret_key
+JWT_SECRET=su_clave_secreta_segura
 ```
 
-3) Levantar el servidor:
+Notas:
+
+- DB_DRIVER solo afecta al backend SQL/NoSQL. El módulo de grafos funciona siempre y se monta bajo /api/grafos.
+- connectionGrafos.js debe exportar getSession(mode) para que los modelos de grafos abran sesiones READ/WRITE sobre la base indicada.
+
+---
+
+## 5) Ejecución y perfiles
+
+Instalación de dependencias:
+
 ```bash
-# Desarrollo (con nodemon si está configurado):
-npm run dev
+npm install
+```
 
-# Producción:
+Desarrollo con recarga:
+
+```bash
 npm start
+# o
+nodemon app.js
 ```
 
-Por defecto: `http://localhost:4000/api`
+Cambiar de backend relacional/documental (opcional):
 
-> **Tip:** Cambia dinámicamente el backend con `DB_DRIVER` sin modificar el código:
-> - `DB_DRIVER=sql npm run dev`
-> - `DB_DRIVER=nosql npm run dev`
+```bash
+# SQL
+DB_DRIVER=sql npm start
 
----
-
-## 📦 Scripts npm
-*(Si no existen en tu `package.json`, añádelos como ejemplo)*
-```json
-{
-  "scripts": {
-    "start": "node app.js",
-    "dev": "NODE_ENV=development node app.js",
-    "dev:sql": "cross-env DB_DRIVER=sql npm run dev",
-    "dev:nosql": "cross-env DB_DRIVER=nosql npm run dev",
-    "lint": "eslint .",
-    "test": "node --test"
-  }
-}
+# NoSQL
+DB_DRIVER=nosql npm start
 ```
-> En Windows puedes usar `cross-env` para inyectar variables de entorno (`npm i -D cross-env`).
+
+La API queda accesible en:
+
+```
+http://localhost:8082/api
+```
+
+El módulo de grafos queda en:
+
+```
+http://localhost:8082/api/grafos
+```
 
 ---
 
-## 🔑 Autenticación, roles y seguridad
-- **JWT** para autenticación (`/api/usuarios/login`).
-- **Roles**: `ADMIN_ROLE`, `USER_ROLE`.
-- **Validaciones** con `express-validator`.
-- CORS y sanitización de entrada recomendados.
+## 6) Enrutamiento y módulos
+
+- app.js monta el agregador principal:
+
+  ```js
+  import routes from "./routes/index.js";
+  app.use("/api", routes);
+  ```
+
+- routes/index.js incluye el agregador de grafos:
+
+  ```js
+  import grafosRoutes from "./grafos.route.js";
+  router.use("/grafos", grafosRoutes);
+  ```
+
+- Los routers de recursos relacionales/documentales (héroes, películas, etc.) montan controladores específicos para SQL o NoSQL de acuerdo con DB_DRIVER. Los endpoints se mantienen estables, cambiando únicamente la implementación detrás del controlador.
 
 ---
 
-## 🧠 Endpoints principales (resumen)
+## 7) Endpoints por tecnología
 
-### 👤 Usuarios
-- `POST /api/usuarios` — crear usuario
-- `POST /api/usuarios/login` — login + JWT
-- `GET /api/usuarios` — listar (requiere JWT + ADMIN_ROLE)
+### 7.1 SQL (MySQL/Sequelize)
 
-### 🦸 Héroes
-- `GET /api/heroes` — listar
-- `GET /api/heroes/:id` — detalle
-- `GET /api/heroes/como/:termino` — búsqueda
-- `POST /api/heroes` — crear
-- `PUT /api/heroes/:id` — actualizar
-- `DELETE /api/heroes/:id` — eliminar
+Prefijo base:
 
-### 🎬 Películas
-- `GET /api/peliculas`
-- `GET /api/peliculas/:id`
-- `POST /api/peliculas`
-- `PUT /api/peliculas/:id`
-- `DELETE /api/peliculas/:id`
+```
+/api
+```
 
-### 🎭 Protagonistas (Héroe↔Película M:M)
-- `POST /api/protagonistas` — asignar héroe + rol
-- `GET /api/protagonistas`
-- `GET /api/protagonistas/:id`
-- `PUT /api/protagonistas/:id`
-- `DELETE /api/protagonistas/:id`
+Recursos principales (CRUD estándar; algunos endpoints pueden requerir JWT/roles):
 
-### 🖼 Multimedia
-- `GET /api/multimedias`
-- `GET /api/multimedias/:id`
-- `POST /api/multimedias`
-- `PUT /api/multimedias/:id`
-- `DELETE /api/multimedias/:id`
+- Héroes: `/heroes`
+- Películas: `/peliculas`
+- Protagonistas (relación Héroe↔Película): `/protagonistas`
+- Multimedias: `/multimedias`
+- Usuarios (auth y administración): `/usuarios`
 
-### 🎞 Multimedia↔Héroes (M:M)
-- `POST /api/multimediasHeroes`
-- `GET /api/multimediasHeroes`
-- `GET /api/multimediasHeroes/:id`
-- `PUT /api/multimediasHeroes/:id`
-- `DELETE /api/multimediasHeroes/:id`
+Patrones comunes por recurso:
 
-### 🔍 Consultas adicionales
-- `GET /api/peliculas/:id/protagonistas` — protagonistas y su rol
-- `GET /api/heroes/:id/multimedia` — multimedia de un héroe
-- `GET /api/peliculas/:id/multimedia` — multimedia agregado vía héroes protagonistas
+- `GET /api/<recurso>` — listar
+- `GET /api/<recurso>/:id` — detalle
+- `POST /api/<recurso>` — crear
+- `PUT /api/<recurso>/:id` — actualizar
+- `DELETE /api/<recurso>/:id` — eliminar
+
+Ejemplos adicionales frecuentes (según tu proyecto):
+
+- `GET /api/peliculas/:id/protagonistas`
+- `GET /api/heroes/:id/multimedia`
+- `GET /api/peliculas/:id/multimedia`
+
+La selección del controlador SQL se realiza internamente según `DB_DRIVER=sql`.
+
+### 7.2 NoSQL (MongoDB/Mongoose)
+
+Prefijo base idéntico:
+
+```
+/api
+```
+
+Mismos recursos y rutas que en SQL; cambia el controlador a su versión NoSQL cuando `DB_DRIVER=nosql`. Los endpoints y los contratos JSON se mantienen consistentes para permitir alternar el backend sin cambios en el cliente.
+
+### 7.3 Grafos (Neo4j)
+
+Prefijo base:
+
+```
+/api/grafos
+```
+
+Nodos (CRUD estándar):
+
+- País: `/pais`
+- Ciudad: `/ciudad`
+- Persona: `/persona`
+- Sitio: `/sitio`
+- Plato: `/plato`
+- Usuario: `/usuario`
+
+Métodos por recurso:
+
+- `POST /api/grafos/<recurso>` — crear
+- `GET /api/grafos/<recurso>` — listar (`?q=&skip=&limit=`)
+- `GET /api/grafos/<recurso>/:id` — obtener por id
+- `PUT /api/grafos/<recurso>/:id` — actualizar
+- `DELETE /api/grafos/<recurso>/:id` — eliminar
+
+Relaciones (genéricas):
+
+- `POST /api/grafos/relaciones` — crear relación
+  - Body JSON: `{ fromLabel, fromId, type, toLabel, toId, props? }`
+- `DELETE /api/grafos/relaciones` — eliminar relación
+  - Body JSON: `{ fromLabel, fromId, type, toLabel, toId }`
+- `GET /api/grafos/relaciones/:label/:id` — listar relaciones salientes de un nodo
+
+Notas:
+
+- Si no envía `id` al crear un nodo de grafos, se genera con `randomUUID()`.
+- Cada modelo de grafos valida una lista de propiedades permitidas por tipo de nodo.
 
 ---
 
-## 🧰 Utilidades Python (migraciones y análisis)
+## 8) Ejemplos de uso (cURL)
 
-Instalar dependencias:
+Ajuste el puerto si corre en otro distinto a 8082.
+
+### 8.1 SQL/NoSQL (endpoints comunes)
+
+Listar héroes:
+
+```bash
+curl http://localhost:8082/api/heroes
+```
+
+Crear héroe:
+
+```bash
+curl -X POST http://localhost:8082/api/heroes   -H "Content-Type: application/json"   -d '{"nombre":"Iron Man","poder":"Tecnología"}'
+```
+
+Asignar protagonista (Héroe↔Película):
+
+```bash
+curl -X POST http://localhost:8082/api/protagonistas   -H "Content-Type: application/json"   -d '{"heroeId":1,"peliculaId":10,"rol":"Cameo"}'
+```
+
+Listar multimedia por película:
+
+```bash
+curl http://localhost:8082/api/peliculas/10/multimedia
+```
+
+Autenticación:
+
+```bash
+curl -X POST http://localhost:8082/api/usuarios/login   -H "Content-Type: application/json"   -d '{"email":"admin@mail.com","password":"admin123"}'
+```
+
+### 8.2 Grafos (Neo4j)
+
+Crear país:
+
+```bash
+curl -X POST http://localhost:8082/api/grafos/pais   -H "Content-Type: application/json"   -d '{"nombre":"Colombia","iso":"CO","idioma":"es","capital":"Bogotá"}'
+```
+
+Listar personas:
+
+```bash
+curl "http://localhost:8082/api/grafos/persona?skip=0&limit=20"
+```
+
+Actualizar sitio:
+
+```bash
+curl -X PUT http://localhost:8082/api/grafos/sitio/<id-sitio>   -H "Content-Type: application/json"   -d '{"tipo":"Museo","lat":4.61,"lng":-74.08}'
+```
+
+Eliminar plato:
+
+```bash
+curl -X DELETE http://localhost:8082/api/grafos/plato/<id-plato>
+```
+
+Crear relación Persona -> Ciudad (VIVE_EN):
+
+```bash
+curl -X POST http://localhost:8082/api/grafos/relaciones   -H "Content-Type: application/json"   -d '{
+        "fromLabel":"Persona","fromId":"<uuid-persona>",
+        "type":"VIVE_EN",
+        "toLabel":"Ciudad","toId":"<uuid-ciudad>",
+        "props":{"desde":"2020-01-01"}
+      }'
+```
+
+Listar relaciones de una Persona:
+
+```bash
+curl http://localhost:8082/api/grafos/relaciones/Persona/<uuid-persona>
+```
+
+---
+
+## 9) Autenticación y seguridad
+
+- JWT para autenticación de endpoints protegidos (por ejemplo, usuarios y administración).
+- Middleware de roles sugerido: ADMIN_ROLE, USER_ROLE.
+- Validaciones con express-validator y sanitización básica.
+- CORS configurado a nivel de app.js si es necesario.
+
+---
+
+## 10) Migraciones y utilidades de datos (Python)
+
+Dependencias Python:
+
 ```bash
 pip install -r requirements.txt
 ```
 
-> Todos los scripts leen variables desde `.env` cuando aplica, o puedes pasar argumentos por CLI.
+Flujo típico:
 
-### 1) Exportar SQL → JSON
-Convierte tablas MySQL a archivos JSON para migrar fácilmente a MongoDB.
-```bash
-python migrations/export_sql_to_json.py   --host "$DB_HOST" --user "$DB_USER" --password "$DB_PASSWORD" --database "$DB_NAME"   --tables heroes,peliculas,protagonistas,multimedias,multimedias_heroes,usuarios   --out ./migrations/export/
-```
-**Argumentos comunes:**
-- `--tables` coma-separado o `--all` para todas
-- `--out` carpeta de salida
+1. Exportar SQL a JSON (`export_sql_to_json.py`).
+2. Importar JSON a MongoDB (`import_json_to_mongo.py`).
+3. Comparar conteos/campos (`compare_datasets.py`).
+4. Visualizar datos (`visualize_data.py`).
 
-### 2) Importar JSON → MongoDB
-Carga los JSON exportados dentro de colecciones de `heroesdb`.
-```bash
-python migrations/import_json_to_mongo.py   --mongo-uri "$MONGO_URI"   --in ./migrations/export/   --map heroes:heroes peliculas:peliculas protagonistas:protagonistas multimedias:multimedias usuarios:usuarios
-```
-**Opciones útiles:** `--drop` (vacía colecciones antes de importar), `--upsert`.
-
-### 3) Comparar datasets SQL vs NoSQL
-Chequeos rápidos de conteos y campos clave.
-```bash
-python migrations/compare_datasets.py   --sql-host "$DB_HOST" --sql-user "$DB_USER" --sql-password "$DB_PASSWORD" --sql-db "$DB_NAME"   --mongo-uri "$MONGO_URI"   --collections heroes,peliculas,usuarios
-```
-Salida tabulada en consola (usa `tabulate`).
-
-### 4) Visualizar datos (gráficas)
-Genera gráficos de distribución, top-N, etc. (PNG).
-```bash
-python migrations/visualize_data.py   --mongo-uri "$MONGO_URI"   --collection heroes   --field rol   --out ./migrations/reports/roles_heroes.png
-```
-> Usa `matplotlib` y `seaborn`. No requiere GUI (guarda a archivo).
+Cada script acepta argumentos por CLI y puede leer variables desde `.env` cuando aplique.
 
 ---
 
-## 👤 Usuarios de prueba
-**Administradores**
-- `samuel@mail.com` / `samuel123` (ADMIN_ROLE)
-- `sofia@mail.com` / `sofia123` (ADMIN_ROLE)
+## Buenas prácticas y notas
 
-**Usuarios**
-- `deyton@mail.com` / `deyton123` (USER_ROLE)
-- `lucia@mail.com` / `lucia123` (USER_ROLE)
-
-> Recuerda cambiar contraseñas y poblar la BD según tu entorno de desarrollo.
+- Mantener la lógica de acceso a datos aislada por backend (ya contemplado en controllers/ y database/).
+- Documentar cualquier campo adicional requerido por tus modelos reales.
+- Para Neo4j, ejecutar scripts/constraints.cypher para unicidad por id e índices útiles.
+- En ESM, usar rutas relativas con extensión .js en todos los imports.
+- Si cambias el nombre de funciones de conexión, actualiza las importaciones en los modelos/controladores.
 
 ---
 
-## 📝 Notas y buenas prácticas
-- Mantén separado el **código de acceso a datos** para SQL y NoSQL (ya lo hace la carpeta `database/` + controladores por backend).
-- Usa `.env` para credenciales y `JWT_SECRET`.
-- Añade **Swagger/OpenAPI** en `docs/` para documentación viva.
-- Considera **Docker Compose** (MySQL + MongoDB + API + scripts).
+## Licencia
+
+Proyecto con fines académicos. Ajuste la licencia según sus necesidades internas.
 
 ---
 
-## ✍️ Autores
-- **Deyton Riasco Ortiz** — driosoftpro@gmail.com  
-- **Samuel Izquierdo Bonilla** — samuelizquierdo98@gmail.com  
-**Año:** 2025
+## Autores
 
----
+- **Deyton Riasco Ortiz** — driosoftpro@gmail.com
+- **Samuel Izquierdo Bonilla** — samuelizquierdo98@gmail.com
 
-## 📄 Licencia
-Este proyecto se distribuye con fines académicos. Ajusta la licencia según tus necesidades.
+  **Año:** 2025

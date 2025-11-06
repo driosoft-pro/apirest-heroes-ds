@@ -9,3 +9,4 @@ tabulate
 seaborn
 datetime
 typing
+neo4j-driver

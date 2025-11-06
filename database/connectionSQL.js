@@ -1,11 +1,11 @@
-import { Sequelize } from 'sequelize';
-import dotenv from 'dotenv';
+import { Sequelize } from "sequelize";
+import dotenv from "dotenv";
 
-dotenv.config();
+dotenv.config({ quiet: true });
 
 let dbConfig = {};
 
-if (process.env.DB_ENV === 'remote') {
+if (process.env.DB_ENV === "remote") {
   dbConfig = {
     database: process.env.DB_REMOTE_NAME,
     username: process.env.DB_REMOTE_USER,
@@ -33,5 +33,6 @@ export const sequelize = new Sequelize(
     host: dbConfig.host,
     port: dbConfig.port,
     dialect: dbConfig.dialect,
-  }
+    logging: false,
+  },
 );

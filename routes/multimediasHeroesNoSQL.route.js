@@ -1,9 +1,9 @@
-import { Router } from 'express';
-import { check } from 'express-validator';
+import { Router } from "express";
+import { check } from "express-validator";
 
-import { validarCampos } from '../middlewares/validar-campos.js';
-import { validarJWT } from '../middlewares/validar-jwt.js';
-import { esAdminRole } from '../middlewares/validar-roles.js';
+import { validarCampos } from "../middlewares/validar-campos.js";
+import { validarJWT } from "../middlewares/validar-jwt.js";
+import { esAdminRole } from "../middlewares/validar-roles.js";
 
 import {
   multimediasHeroesGet,
@@ -11,43 +11,43 @@ import {
   multimediasHeroesPost,
   multimediasHeroesPut,
   multimediasHeroesDelete,
-} from '../controllers/multimediasHeroesNoSQL.controller.js';
+} from "../controllers/multimediasHeroesNoSQL.controller.js";
 
-import { existeMultimediaHeroePorId } from '../helpers/db-validatorsNoSQL.js';
+import { existeMultimediaHeroePorId } from "../helpers/db-validatorsNoSQL.js";
 
 const router = Router();
 
 // GET públicos
-router.get('/', multimediasHeroesGet);
+router.get("/", multimediasHeroesGet);
 router.get(
-  '/:id',
-  check('id', 'No es un id de Mongo válido').isMongoId(),
-  check('id').custom(existeMultimediaHeroePorId),
+  "/:id",
+  check("id", "No es un id de Mongo válido").isMongoId(),
+  check("id").custom(existeMultimediaHeroePorId),
   validarCampos,
-  multimediasHeroesIdGet
+  multimediasHeroesIdGet,
 );
 
 // Mutaciones protegidas
-router.post('/',  multimediasHeroesPost);
+router.post("/", multimediasHeroesPost);
 
 router.put(
-  '/:id',
+  "/:id",
   validarJWT,
   esAdminRole,
-  check('id', 'No es un id de Mongo válido').isMongoId(),
-  check('id').custom(existeMultimediaHeroePorId),
+  check("id", "No es un id de Mongo válido").isMongoId(),
+  check("id").custom(existeMultimediaHeroePorId),
   validarCampos,
-  multimediasHeroesPut
+  multimediasHeroesPut,
 );
 
 router.delete(
-  '/:id',
+  "/:id",
   validarJWT,
   esAdminRole,
-  check('id', 'No es un id de Mongo válido').isMongoId(),
-  check('id').custom(existeMultimediaHeroePorId),
+  check("id", "No es un id de Mongo válido").isMongoId(),
+  check("id").custom(existeMultimediaHeroePorId),
   validarCampos,
-  multimediasHeroesDelete
+  multimediasHeroesDelete,
 );
 
 export default router;

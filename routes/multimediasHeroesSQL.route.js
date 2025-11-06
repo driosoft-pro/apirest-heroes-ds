@@ -1,31 +1,25 @@
-import { Router } from 'express';
-import { validarJWT } from '../middlewares/validar-jwt.js';
-import { esAdminRole } from '../middlewares/validar-roles.js';
+import { Router } from "express";
+import { validarJWT } from "../middlewares/validar-jwt.js";
+import { esAdminRole } from "../middlewares/validar-roles.js";
 
-import { multimediasHeroesGet, multimediasHeroesIdGet, multimediasHeroesPost, multimediasHeroesPut, multimediasHeroesDelete } from '../controllers/multimediasHeroesSQL.controller.js';
+import {
+  multimediasHeroesGet,
+  multimediasHeroesIdGet,
+  multimediasHeroesPost,
+  multimediasHeroesPut,
+  multimediasHeroesDelete,
+} from "../controllers/multimediasHeroesSQL.controller.js";
 
 const router = Router();
 
 // END Points
+router.get("/", multimediasHeroesGet);
+router.get("/:id", multimediasHeroesIdGet);
 
-// Rutas de consulta mantienen públicas
-router.get('/', multimediasHeroesGet);
-router.get('/:id', multimediasHeroesIdGet);
+router.post("/", [validarJWT, esAdminRole], multimediasHeroesPost);
 
-// Rutas de modificación y creación se protegen
-router.post('/', [
-    validarJWT, // Debe estar autenticado
-    esAdminRole, // Debe ser administrador
-], multimediasHeroesPost);
+router.put("/:id", [validarJWT, esAdminRole], multimediasHeroesPut);
 
-router.put('/:id', [
-    validarJWT, // Debe estar autenticado
-    esAdminRole, // Debe ser administrador
-], multimediasHeroesPut);
-
-router.delete('/:id', [
-    validarJWT, // Debe estar autenticado
-    esAdminRole, // Debe ser administrador
-], multimediasHeroesDelete);
+router.delete("/:id", [validarJWT, esAdminRole], multimediasHeroesDelete);
 
 export default router;
