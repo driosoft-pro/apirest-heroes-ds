@@ -834,3 +834,47 @@ CREATE (u)-[:CONSUMIO {fecha:'2025-11-07'}]->(p);
 
 MATCH (u:Usuario {nombre:'Taro Yamamoto'}), (p:Plato {plato:'Sashimi'})
 CREATE (u)-[:CONSUMIO {fecha:'2025-11-13'}]->(p);
+
+// ============================================
+// AGREGAR ID A TODOS LOS NODOS SIN IDENTIFICADOR
+// ============================================
+
+MATCH (n:Pais) WHERE n.id IS NULL
+SET n.id = randomUUID();
+
+MATCH (n:Ciudad) WHERE n.id IS NULL
+SET n.id = randomUUID();
+
+MATCH (n:Persona) WHERE n.id IS NULL
+SET n.id = randomUUID();
+
+MATCH (n:Sitio) WHERE n.id IS NULL
+SET n.id = randomUUID();
+
+MATCH (n:Plato) WHERE n.id IS NULL
+SET n.id = randomUUID();
+
+MATCH (n:Usuario) WHERE n.id IS NULL
+SET n.id = randomUUID();
+
+// ============================================
+// CREAR CONSTRAINTS E ÍNDICES SI NO EXISTEN
+// ============================================
+
+CREATE CONSTRAINT pais_id IF NOT EXISTS FOR (n:Pais) REQUIRE n.id IS UNIQUE;
+CREATE CONSTRAINT ciudad_id IF NOT EXISTS FOR (n:Ciudad) REQUIRE n.id IS UNIQUE;
+CREATE CONSTRAINT persona_id IF NOT EXISTS FOR (n:Persona) REQUIRE n.id IS UNIQUE;
+CREATE CONSTRAINT sitio_id IF NOT EXISTS FOR (n:Sitio) REQUIRE n.id IS UNIQUE;
+CREATE CONSTRAINT plato_id IF NOT EXISTS FOR (n:Plato) REQUIRE n.id IS UNIQUE;
+CREATE CONSTRAINT usuario_id IF NOT EXISTS FOR (n:Usuario) REQUIRE n.id IS UNIQUE;
+
+// ============================================
+// ÍNDICES RECOMENDADOS PARA CONSULTAS FRECUENTES
+// ============================================
+
+CREATE INDEX ciudad_nombre IF NOT EXISTS FOR (n:Ciudad) ON (n.ciudad);
+CREATE INDEX pais_nombre IF NOT EXISTS FOR (n:Pais) ON (n.pais);
+CREATE INDEX persona_nombre IF NOT EXISTS FOR (n:Persona) ON (n.nombre);
+CREATE INDEX sitio_nombre IF NOT EXISTS FOR (n:Sitio) ON (n.sitio);
+CREATE INDEX plato_nombre IF NOT EXISTS FOR (n:Plato) ON (n.plato);
+CREATE INDEX usuario_email IF NOT EXISTS FOR (n:Usuario) ON (n.email);
