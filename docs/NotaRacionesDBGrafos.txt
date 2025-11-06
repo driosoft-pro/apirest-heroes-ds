@@ -1,0 +1,71 @@
+Rutas de relaciones
+1) Entrantes y ambas direcciones
+    GET /api/grafos/relaciones/in/:label/:id → relaciones entrantes
+    GET /api/grafos/relaciones/all/:label/:id → entrantes + salientes
+
+2) Filtrar por tipo de relación
+    GET /api/grafos/relaciones/:label/:id/by-type/:type → salientes por tipo
+    GET /api/grafos/relaciones/in/:label/:id/by-type/:type → entrantes por tipo
+
+3) Actualizar propiedades de una relación (sin recrearla)
+    PATCH /api/grafos/relaciones/properties
+    Body: { fromLabel, fromId, type, toLabel, toId, props }
+
+4) Borrar todas las relaciones entre dos nodos (cualquier tipo o uno específico)
+    DELETE /api/grafos/relaciones/between
+    Body: { fromLabel, fromId, toLabel, toId, type? }
+
+5) Grado de un nodo
+    GET /api/grafos/relaciones/degree/:label/:id
+    Devuelve { out, in, all }.
+
+6) Vecindario (subgrafo por profundidad)
+    GET /api/grafos/relaciones/neighbors/:label/:id?depth=1&type=
+    Devuelve nodos y relaciones hasta depth saltos (1..3 razonable).
+    Si pasas type, limita a ese tipo.
+
+7) Camino más corto (shortest path)
+    POST /api/grafos/relaciones/shortest-path
+    Body: { fromLabel, fromId, toLabel, toId, type? }
+    Devuelve el camino (nodos y relaciones) más corto.
+
+8) Subgrafo (nodos + relaciones con formato uniforme)
+    GET /api/grafos/relaciones/subgraph/:label/:id?depth=2&type=
+    Igual que neighbors pero devuelve en arrays nodes[] y rels[] (útil para front).
+
+
+# Ejemplo
+# Entrantes hacia Persona
+curl http://localhost:8082/api/grafos/relaciones/in/Persona/<uuid-persona>
+
+# Todas (in + out)
+curl http://localhost:8082/api/grafos/relaciones/all/Persona/<uuid-persona>
+
+# Salientes por tipo
+curl http://localhost:8082/api/grafos/relaciones/Persona/<uuid-persona>/by-type/NACIO_EN
+
+# PATCH props de relación
+curl -X PATCH http://localhost:8082/api/grafos/relaciones/properties \
+  -H 'Content-Type: application/json' \
+  -d '{"fromLabel":"Persona","fromId":"<uuid>","type":"VISITO","toLabel":"Sitio","toId":"<uuid>","props":{"veces":3}}'
+
+# DELETE todas las relaciones entre dos nodos (cualquier tipo)
+curl -X DELETE http://localhost:8082/api/grafos/relaciones/between \
+  -H 'Content-Type: application/json' \
+  -d '{"fromLabel":"Persona","fromId":"<uuidA>","toLabel":"Ciudad","toId":"<uuidB>"}'
+
+# Grado
+curl http://localhost:8082/api/grafos/relaciones/degree/Persona/<uuid>
+
+# Vecindario (2 saltos, solo tipo VISITO)
+curl "http://localhost:8082/api/grafos/relaciones/neighbors/Persona/<uuid>?depth=2&type=VISITO"
+
+# Camino más corto
+curl -X POST http://localhost:8082/api/grafos/relaciones/shortest-path \
+  -H 'Content-Type: application/json' \
+  -d '{"fromLabel":"Persona","fromId":"<uuidA>","toLabel":"Pais","toId":"<uuidB>"}'
+
+
+curl http://localhost:8082/api/grafos/relaciones/Persona/<uuid>
+curl http://localhost:8082/api/grafos/relaciones/in/Ciudad/<uuid>
+curl http://localhost:8082/api/grafos/relaciones/all/Persona/<uuid>
