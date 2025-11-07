@@ -27,16 +27,335 @@ function displayName(props = {}) {
     undefined
   );
 }
+
 function firstLabel(labels) {
   return Array.isArray(labels) && labels.length ? labels[0] : "Desconocido";
 }
 
-// ========== Endpoints base (detalle y por usuario) ==========
+// ========== helpers numeric coercion ==========
+function toInt(v) {
+  return typeof v?.toInt === "function" ? v.toInt() : Number(v);
+}
+
+function toNumber(v) {
+  if (v == null) return 0;
+  if (typeof v.toNumber === "function") return v.toNumber();
+  if (typeof v.toInt === "function") return v.toInt();
+  return Number(v);
+}
+
+// ==================== FUNCIONES CRUD BÁSICAS ====================
+
+// CREATE - Crear nueva compra
+export async function create(req, res) {
+  try {
+    const {
+      usuarioId,
+      sitioId,
+      platoId,
+      fecha,
+      total,
+      cantidad = 1,
+      notas = "",
+    } = req.body;
+    const compraId = crypto.randomUUID();
+
+    const cypher = `
+      MATCH (u:Usuario {${ID_PROP}: $usuarioId})
+      MATCH (s:Sitio {${ID_PROP}: $sitioId})
+      MATCH (p:Plato {${ID_PROP}: $platoId})
+      CREATE (c:Compra {
+        ${ID_PROP}: $compraId,
+        fecha: $fecha,
+        total: $total,
+        cantidad: $cantidad,
+        notas: $notas,
+        creadaEn: datetime()
+      })
+      CREATE (u)-[:REALIZO_COMPRA]->(c)
+      CREATE (c)-[:EN_SITIO]->(s)
+      CREATE (c)-[:INCLUYE_PLATO]->(p)
+      RETURN c, u, s, p
+    `;
+
+    const rows = await runQuery(
+      cypher,
+      {
+        usuarioId,
+        sitioId,
+        platoId,
+        compraId,
+        fecha,
+        total: parseFloat(total),
+        cantidad: parseInt(cantidad),
+        notas,
+      },
+      "WRITE",
+    );
+
+    if (rows.length === 0) {
+      return res.status(404).json({
+        ok: false,
+        msg: "No se encontró el usuario, sitio o plato especificado",
+      });
+    }
+
+    const row = rows[0];
+    res.status(201).json({
+      ok: true,
+      compra: {
+        ...row.get("c").properties,
+        usuario: row.get("u").properties,
+        sitio: row.get("s").properties,
+        plato: row.get("p").properties,
+      },
+    });
+  } catch (e) {
+    console.error("Error al crear compra:", e);
+    res
+      .status(500)
+      .json({ ok: false, msg: "Error al crear compra", error: e.message });
+  }
+}
+
+// LIST - Listar todas las compras con filtros opcionales
+export async function list(req, res) {
+  try {
+    const { page = 1, limit = 10, from, to } = req.query;
+    const skipVal = (Number(page) - 1) * Number(limit);
+
+    const where = [];
+    const params = {};
+
+    if (from) {
+      where.push("c.fecha >= $from");
+      params.from = from;
+    }
+    if (to) {
+      where.push("c.fecha <= $to");
+      params.to = to;
+    }
+    const whereStr = where.length ? `WHERE ${where.join(" AND ")}` : "";
+
+    const cypher = `
+      MATCH (u:Usuario)-[:REALIZO_COMPRA]->(c:Compra)
+      OPTIONAL MATCH (c)-[:EN_SITIO]->(s:Sitio)
+      OPTIONAL MATCH (c)-[:INCLUYE_PLATO]->(p:Plato)
+      ${whereStr}
+      RETURN c, u, s, p
+      ORDER BY c.fecha DESC
+      SKIP ${skipVal}
+      LIMIT ${Number(limit)}
+    `;
+
+    const rows = await runQuery(cypher, params);
+
+    const compras = rows.map((r) => ({
+      ...r.get("c").properties,
+      usuario: r.get("u").properties,
+      sitio: r.get("s") ? r.get("s").properties : null,
+      plato: r.get("p") ? r.get("p").properties : null,
+    }));
+
+    res.json({ ok: true, compras });
+  } catch (e) {
+    console.error("Error al listar compras:", e);
+    res
+      .status(500)
+      .json({ ok: false, msg: "Error al listar compras", error: e.message });
+  }
+}
+
+// GET BY ID - Obtener una compra por ID
+export async function getById(req, res) {
+  try {
+    const { id } = req.params;
+
+    const cypher = `
+      MATCH (u:Usuario)-[:REALIZO_COMPRA]->(c:Compra {${ID_PROP}: $id})
+      OPTIONAL MATCH (c)-[:EN_SITIO]->(s:Sitio)
+      OPTIONAL MATCH (c)-[:INCLUYE_PLATO]->(p:Plato)
+      RETURN c, u, s, p
+    `;
+
+    const rows = await runQuery(cypher, { id });
+
+    if (rows.length === 0) {
+      return res.status(404).json({ ok: false, msg: "Compra no encontrada" });
+    }
+
+    const row = rows[0];
+    res.json({
+      ok: true,
+      compra: {
+        ...row.get("c").properties,
+        usuario: row.get("u").properties,
+        sitio: row.get("s") ? row.get("s").properties : null,
+        plato: row.get("p") ? row.get("p").properties : null,
+      },
+    });
+  } catch (e) {
+    console.error("Error al obtener compra:", e);
+    res
+      .status(500)
+      .json({ ok: false, msg: "Error al obtener compra", error: e.message });
+  }
+}
+
+// UPDATE - Actualizar una compra
+export async function update(req, res) {
+  try {
+    const { id } = req.params;
+    const updates = req.body;
+
+    const setClauses = [];
+    const params = { id };
+
+    if (updates.fecha) {
+      setClauses.push("c.fecha = $fecha");
+      params.fecha = updates.fecha;
+    }
+    if (updates.total !== undefined) {
+      setClauses.push("c.total = $total");
+      params.total = parseFloat(updates.total);
+    }
+    if (updates.cantidad !== undefined) {
+      setClauses.push("c.cantidad = $cantidad");
+      params.cantidad = parseInt(updates.cantidad);
+    }
+    if (updates.notas !== undefined) {
+      setClauses.push("c.notas = $notas");
+      params.notas = updates.notas;
+    }
+
+    // Actualizar propiedades básicas si hay cambios
+    if (setClauses.length > 0) {
+      setClauses.push("c.actualizadaEn = datetime()");
+      const updateCypher = `
+        MATCH (c:Compra {${ID_PROP}: $id})
+        SET ${setClauses.join(", ")}
+        RETURN c
+      `;
+      const rows = await runQuery(updateCypher, params, "WRITE");
+
+      if (rows.length === 0) {
+        return res.status(404).json({ ok: false, msg: "Compra no encontrada" });
+      }
+    }
+
+    // Actualizar relación con usuario si se proporciona
+    if (updates.usuarioId) {
+      await runQuery(
+        `
+        MATCH (c:Compra {${ID_PROP}: $id})
+        MATCH (c)<-[r:REALIZO_COMPRA]-(:Usuario)
+        DELETE r
+        WITH c
+        MATCH (u:Usuario {${ID_PROP}: $usuarioId})
+        CREATE (u)-[:REALIZO_COMPRA]->(c)
+        `,
+        { id, usuarioId: updates.usuarioId },
+        "WRITE",
+      );
+    }
+
+    // Actualizar relación con sitio si se proporciona
+    if (updates.sitioId) {
+      await runQuery(
+        `
+        MATCH (c:Compra {${ID_PROP}: $id})
+        MATCH (c)-[r:EN_SITIO]->(:Sitio)
+        DELETE r
+        WITH c
+        MATCH (s:Sitio {${ID_PROP}: $sitioId})
+        CREATE (c)-[:EN_SITIO]->(s)
+        `,
+        { id, sitioId: updates.sitioId },
+        "WRITE",
+      );
+    }
+
+    // Actualizar relación con plato si se proporciona
+    if (updates.platoId) {
+      await runQuery(
+        `
+        MATCH (c:Compra {${ID_PROP}: $id})
+        MATCH (c)-[r:INCLUYE_PLATO]->(:Plato)
+        DELETE r
+        WITH c
+        MATCH (p:Plato {${ID_PROP}: $platoId})
+        CREATE (c)-[:INCLUYE_PLATO]->(p)
+        `,
+        { id, platoId: updates.platoId },
+        "WRITE",
+      );
+    }
+
+    // Obtener la compra actualizada
+    const rows = await runQuery(
+      `
+      MATCH (u:Usuario)-[:REALIZO_COMPRA]->(c:Compra {${ID_PROP}: $id})
+      OPTIONAL MATCH (c)-[:EN_SITIO]->(s:Sitio)
+      OPTIONAL MATCH (c)-[:INCLUYE_PLATO]->(p:Plato)
+      RETURN c, u, s, p
+      `,
+      { id },
+    );
+
+    const row = rows[0];
+    res.json({
+      ok: true,
+      compra: {
+        ...row.get("c").properties,
+        usuario: row.get("u").properties,
+        sitio: row.get("s") ? row.get("s").properties : null,
+        plato: row.get("p") ? row.get("p").properties : null,
+      },
+    });
+  } catch (e) {
+    console.error("Error al actualizar compra:", e);
+    res
+      .status(500)
+      .json({ ok: false, msg: "Error al actualizar compra", error: e.message });
+  }
+}
+
+// DELETE - Eliminar una compra
+export async function remove(req, res) {
+  try {
+    const { id } = req.params;
+
+    const cypher = `
+      MATCH (c:Compra {${ID_PROP}: $id})
+      OPTIONAL MATCH (c)-[r]-()
+      DELETE r, c
+      RETURN count(c) as deleted
+    `;
+
+    const rows = await runQuery(cypher, { id }, "WRITE");
+    const deleted = toInt(rows[0].get("deleted"));
+
+    if (deleted === 0) {
+      return res.status(404).json({ ok: false, msg: "Compra no encontrada" });
+    }
+
+    res.json({ ok: true, msg: "Compra eliminada exitosamente" });
+  } catch (e) {
+    console.error("Error al eliminar compra:", e);
+    res
+      .status(500)
+      .json({ ok: false, msg: "Error al eliminar compra", error: e.message });
+  }
+}
+
+// ==================== FUNCIONES ESPECIALES/AGREGACIONES ====================
+
+// COMPRAS DE USUARIO - Obtener todas las compras de un usuario específico
 export async function comprasDeUsuario(req, res) {
   try {
     const { id } = req.params;
     const cypher = `
-      MATCH (u:Usuario { ${ID_PROP}: $id })-[:REALIZO_COMPRA]->(c:Compra)
+      MATCH (u:Usuario {${ID_PROP}: $id})-[:REALIZO_COMPRA]->(c:Compra)
       OPTIONAL MATCH (c)-[:INCLUYE_PLATO]->(p:Plato)
       OPTIONAL MATCH (c)-[:EN_SITIO]->(s:Sitio)
       RETURN u, c, p, s
@@ -58,11 +377,12 @@ export async function comprasDeUsuario(req, res) {
   }
 }
 
+// DETALLE COMPRA - Detalle de una compra específica
 export async function detalleCompra(req, res) {
   try {
     const { id } = req.params;
     const cypher = `
-      MATCH (u:Usuario)-[:REALIZO_COMPRA]->(c:Compra { ${ID_PROP}: $id })
+      MATCH (u:Usuario)-[:REALIZO_COMPRA]->(c:Compra {${ID_PROP}: $id})
       OPTIONAL MATCH (c)-[:INCLUYE_PLATO]->(p:Plato)
       OPTIONAL MATCH (c)-[:EN_SITIO]->(s:Sitio)
       RETURN u, c, p, s
@@ -83,11 +403,10 @@ export async function detalleCompra(req, res) {
   }
 }
 
-// ========== Agregados: Top-N por plato ==========
+// TOP PLATOS - Obtener los platos más comprados
 export async function topPlatos(req, res) {
   try {
     const { from, to, limit = 10 } = req.query;
-    // Si fecha está guardada en formato ISO YYYY-MM-DD, el filtro lexicográfico sirve.
     const where = [];
     const params = { limit: Number(limit) };
     if (from) {
@@ -126,7 +445,7 @@ export async function topPlatos(req, res) {
   }
 }
 
-// ========== Agregados: Top-N por sitio ==========
+// TOP SITIOS - Obtener los sitios más visitados
 export async function topSitios(req, res) {
   try {
     const { from, to, limit = 10 } = req.query;
@@ -168,7 +487,7 @@ export async function topSitios(req, res) {
   }
 }
 
-// ========== Serie diaria por fecha ==========
+// SERIE DIARIA - Obtener serie temporal de compras por día
 export async function serieDiaria(req, res) {
   try {
     const { from, to } = req.query;
@@ -205,16 +524,4 @@ export async function serieDiaria(req, res) {
   } catch (e) {
     res.status(400).json({ error: e.message });
   }
-}
-
-// ========== helpers numeric coercion ==========
-function toInt(v) {
-  return typeof v?.toInt === "function" ? v.toInt() : Number(v);
-}
-function toNumber(v) {
-  // Neo4j puede devolver Integer; coalesce con Number
-  if (v == null) return 0;
-  if (typeof v.toNumber === "function") return v.toNumber();
-  if (typeof v.toInt === "function") return v.toInt();
-  return Number(v);
 }
