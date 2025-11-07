@@ -7,6 +7,7 @@ import sitioRoutes from "./grafos/sitio.routes.js";
 import platoRoutes from "./grafos/plato.routes.js";
 import usuarioRoutes from "./grafos/usuario.routes.js";
 import relacionesRoutes from "./grafos/relaciones.routes.js";
+import comprasRoutes from "./grafos/compras.routes.js";
 
 const router = Router();
 
@@ -17,5 +18,6 @@ router.use("/sitio", sitioRoutes);
 router.use("/plato", platoRoutes);
 router.use("/usuario", usuarioRoutes);
 router.use("/relaciones", relacionesRoutes);
+router.use("/compras", comprasRoutes);
 
 export default router;

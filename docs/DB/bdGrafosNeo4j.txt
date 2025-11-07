@@ -1,158 +1,175 @@
+// ============================================
 // LIMPIAR TODO
+// ============================================
 MATCH (n) DETACH DELETE n;
 
 // ============================================
-// CREAR PAÍSES Y CIUDADES COLOMBIA
+// CREAR CONSTRAINTS E ÍNDICES
 // ============================================
-CREATE
-(:Pais {pais:'Colombia'}),
-(:Ciudad {ciudad:'Bogotá'}),
-(:Ciudad {ciudad:'Medellín'}),
-(:Ciudad {ciudad:'Cali'}),
-(:Ciudad {ciudad:'Cartagena'}),
-(:Ciudad {ciudad:'Barranquilla'}),
-(:Ciudad {ciudad:'Bucaramanga'}),
-(:Ciudad {ciudad:'Pereira'}),
-(:Ciudad {ciudad:'Boyacá'}),
-(:Ciudad {ciudad:'Santa Marta'}),
-(:Ciudad {ciudad:'Cúcuta'});
+CREATE CONSTRAINT pais_id IF NOT EXISTS FOR (n:Pais) REQUIRE n.id IS UNIQUE;
+CREATE CONSTRAINT ciudad_id IF NOT EXISTS FOR (n:Ciudad) REQUIRE n.id IS UNIQUE;
+CREATE CONSTRAINT persona_id IF NOT EXISTS FOR (n:Persona) REQUIRE n.id IS UNIQUE;
+CREATE CONSTRAINT sitio_id IF NOT EXISTS FOR (n:Sitio) REQUIRE n.id IS UNIQUE;
+CREATE CONSTRAINT plato_id IF NOT EXISTS FOR (n:Plato) REQUIRE n.id IS UNIQUE;
+CREATE CONSTRAINT usuario_id IF NOT EXISTS FOR (n:Usuario) REQUIRE n.id IS UNIQUE;
+CREATE CONSTRAINT compra_id IF NOT EXISTS FOR (n:Compra) REQUIRE n.id IS UNIQUE;
+
+CREATE INDEX ciudad_nombre IF NOT EXISTS FOR (n:Ciudad) ON (n.ciudad);
+CREATE INDEX pais_nombre IF NOT EXISTS FOR (n:Pais) ON (n.pais);
+CREATE INDEX persona_nombre IF NOT EXISTS FOR (n:Persona) ON (n.nombre);
+CREATE INDEX sitio_nombre IF NOT EXISTS FOR (n:Sitio) ON (n.sitio);
+CREATE INDEX plato_nombre IF NOT EXISTS FOR (n:Plato) ON (n.plato);
+CREATE INDEX usuario_email IF NOT EXISTS FOR (n:Usuario) ON (n.email);
+CREATE INDEX compra_fecha IF NOT EXISTS FOR (n:Compra) ON (n.fecha);
 
 // ============================================
-// CREAR PAÍSES Y CIUDADES ARGENTINA
+// CREAR PAÍSES CON ID
 // ============================================
 CREATE
-(:Pais {pais:'Argentina'}),
-(:Ciudad {ciudad:'Buenos Aires'}),
-(:Ciudad {ciudad:'Córdoba'}),
-(:Ciudad {ciudad:'Rosario'}),
-(:Ciudad {ciudad:'Mendoza'}),
-(:Ciudad {ciudad:'La Plata'}),
-(:Ciudad {ciudad:'San Miguel de Tucumán'}),
-(:Ciudad {ciudad:'Mar del Plata'}),
-(:Ciudad {ciudad:'Salta'}),
-(:Ciudad {ciudad:'San Juan'}),
-(:Ciudad {ciudad:'Neuquén'}),
-(:Ciudad {ciudad:'Bahía Blanca'}),
-(:Ciudad {ciudad:'Tandil'});
+(:Pais {id: randomUUID(), pais:'Colombia'}),
+(:Pais {id: randomUUID(), pais:'Argentina'}),
+(:Pais {id: randomUUID(), pais:'Japón'});
 
 // ============================================
-// CREAR PAÍS Y CIUDADES JAPÓN
+// CREAR CIUDADES COLOMBIA
 // ============================================
 CREATE
-(:Pais {pais:'Japón'}),
-(:Ciudad {ciudad:'Tokio'}),
-(:Ciudad {ciudad:'Kioto'}),
-(:Ciudad {ciudad:'Osaka'}),
-(:Ciudad {ciudad:'Hiroshima'}),
-(:Ciudad {ciudad:'Nagoya'}),
-(:Ciudad {ciudad:'Sapporo'}),
-(:Ciudad {ciudad:'Fukuoka'}),
-(:Ciudad {ciudad:'Nara'}),
-(:Ciudad {ciudad:'Kobe'}),
-(:Ciudad {ciudad:'Yokohama'});
+(:Ciudad {id: randomUUID(), ciudad:'Bogotá'}),
+(:Ciudad {id: randomUUID(), ciudad:'Medellín'}),
+(:Ciudad {id: randomUUID(), ciudad:'Cali'}),
+(:Ciudad {id: randomUUID(), ciudad:'Cartagena'}),
+(:Ciudad {id: randomUUID(), ciudad:'Barranquilla'}),
+(:Ciudad {id: randomUUID(), ciudad:'Bucaramanga'}),
+(:Ciudad {id: randomUUID(), ciudad:'Pereira'}),
+(:Ciudad {id: randomUUID(), ciudad:'Boyacá'}),
+(:Ciudad {id: randomUUID(), ciudad:'Santa Marta'}),
+(:Ciudad {id: randomUUID(), ciudad:'Cúcuta'});
+
+// ============================================
+// CREAR CIUDADES ARGENTINA
+// ============================================
+CREATE
+(:Ciudad {id: randomUUID(), ciudad:'Buenos Aires'}),
+(:Ciudad {id: randomUUID(), ciudad:'Córdoba'}),
+(:Ciudad {id: randomUUID(), ciudad:'Rosario'}),
+(:Ciudad {id: randomUUID(), ciudad:'Mendoza'}),
+(:Ciudad {id: randomUUID(), ciudad:'La Plata'}),
+(:Ciudad {id: randomUUID(), ciudad:'San Miguel de Tucumán'}),
+(:Ciudad {id: randomUUID(), ciudad:'Mar del Plata'}),
+(:Ciudad {id: randomUUID(), ciudad:'Salta'}),
+(:Ciudad {id: randomUUID(), ciudad:'San Juan'}),
+(:Ciudad {id: randomUUID(), ciudad:'Neuquén'});
+
+// ============================================
+// CREAR CIUDADES JAPÓN
+// ============================================
+CREATE
+(:Ciudad {id: randomUUID(), ciudad:'Tokio'}),
+(:Ciudad {id: randomUUID(), ciudad:'Kioto'}),
+(:Ciudad {id: randomUUID(), ciudad:'Osaka'}),
+(:Ciudad {id: randomUUID(), ciudad:'Hiroshima'}),
+(:Ciudad {id: randomUUID(), ciudad:'Nagoya'}),
+(:Ciudad {id: randomUUID(), ciudad:'Sapporo'}),
+(:Ciudad {id: randomUUID(), ciudad:'Fukuoka'}),
+(:Ciudad {id: randomUUID(), ciudad:'Nara'}),
+(:Ciudad {id: randomUUID(), ciudad:'Kobe'}),
+(:Ciudad {id: randomUUID(), ciudad:'Yokohama'});
 
 // ============================================
 // RELACIONAR CIUDADES CON PAÍSES
 // ============================================
-
-// Colombia
 MATCH (p:Pais {pais:'Colombia'})
 MATCH (c:Ciudad)
 WHERE c.ciudad IN ['Bogotá','Medellín','Cali','Cartagena','Barranquilla','Bucaramanga','Pereira','Boyacá','Santa Marta','Cúcuta']
 CREATE (c)-[:PERTENECE_A]->(p);
 
-// Argentina
 MATCH (p:Pais {pais:'Argentina'})
 MATCH (c:Ciudad)
-WHERE c.ciudad IN [
-  'Buenos Aires','Córdoba','Rosario','Mendoza','La Plata',
-  'San Miguel de Tucumán','Mar del Plata','Salta','San Juan','Neuquén','Bahía Blanca','Tandil'
-]
+WHERE c.ciudad IN ['Buenos Aires','Córdoba','Rosario','Mendoza','La Plata','San Miguel de Tucumán','Mar del Plata','Salta','San Juan','Neuquén']
 CREATE (c)-[:PERTENECE_A]->(p);
 
-// Japón
 MATCH (p:Pais {pais:'Japón'})
 MATCH (c:Ciudad)
 WHERE c.ciudad IN ['Tokio','Kioto','Osaka','Hiroshima','Nagoya','Sapporo','Fukuoka','Nara','Kobe','Yokohama']
 CREATE (c)-[:PERTENECE_A]->(p);
 
 // ============================================
-// PERSONAS FAMOSAS DE COLOMBIA
+// PERSONAS FAMOSAS CON ID - COLOMBIA
 // ============================================
 CREATE
-(:Persona {nombre:'Shakira', profesion:'Cantante', genero:'Femenino'}),
-(:Persona {nombre:'James Rodríguez', profesion:'Deportista', genero:'Masculino'}),
-(:Persona {nombre:'Sofía Vergara', profesion:'Actriz', genero:'Femenino'}),
-(:Persona {nombre:'Juanes', profesion:'Cantante', genero:'Masculino'}),
-(:Persona {nombre:'Fernando Botero', profesion:'Pintor', genero:'Masculino'}),
-(:Persona {nombre:'Petro', profesion:'Político', genero:'Masculino'}),
-(:Persona {nombre:'Karol G', profesion:'Cantante', genero:'Femenino'}),
-(:Persona {nombre:'Falcao García', profesion:'Deportista', genero:'Masculino'}),
-(:Persona {nombre:'Carlos Vives', profesion:'Cantante', genero:'Masculino'}),
-(:Persona {nombre:'Nairo Quintana', profesion:'Deportista', genero:'Masculino'});
+(:Persona {id: randomUUID(), nombre:'Shakira', profesion:'Cantante', genero:'Femenino'}),
+(:Persona {id: randomUUID(), nombre:'James Rodríguez', profesion:'Deportista', genero:'Masculino'}),
+(:Persona {id: randomUUID(), nombre:'Sofía Vergara', profesion:'Actriz', genero:'Femenino'}),
+(:Persona {id: randomUUID(), nombre:'Juanes', profesion:'Cantante', genero:'Masculino'}),
+(:Persona {id: randomUUID(), nombre:'Fernando Botero', profesion:'Pintor', genero:'Masculino'}),
+(:Persona {id: randomUUID(), nombre:'Petro', profesion:'Político', genero:'Masculino'}),
+(:Persona {id: randomUUID(), nombre:'Karol G', profesion:'Cantante', genero:'Femenino'}),
+(:Persona {id: randomUUID(), nombre:'Falcao García', profesion:'Deportista', genero:'Masculino'}),
+(:Persona {id: randomUUID(), nombre:'Carlos Vives', profesion:'Cantante', genero:'Masculino'}),
+(:Persona {id: randomUUID(), nombre:'Nairo Quintana', profesion:'Deportista', genero:'Masculino'});
 
 // ============================================
-// PERSONAS FAMOSAS DE ARGENTINA
+// PERSONAS FAMOSAS CON ID - ARGENTINA
 // ============================================
 CREATE
-(:Persona {nombre:'Lionel Messi', profesion:'Deportista', genero:'Masculino'}),
-(:Persona {nombre:'Diego Maradona', profesion:'Deportista', genero:'Masculino'}),
-(:Persona {nombre:'Ricardo Darín', profesion:'Actor', genero:'Masculino'}),
-(:Persona {nombre:'Cristina Fernández de Kirchner', profesion:'Política', genero:'Femenino'}),
-(:Persona {nombre:'Jorge Luis Borges', profesion:'Escritor', genero:'Masculino'}),
-(:Persona {nombre:'Gustavo Cerati', profesion:'Cantante', genero:'Masculino'}),
-(:Persona {nombre:'Lali Espósito', profesion:'Cantante', genero:'Femenino'}),
-(:Persona {nombre:'Nicki Nicole', profesion:'Cantante', genero:'Femenino'}),
-(:Persona {nombre:'Juan Martín del Potro', profesion:'Deportista', genero:'Masculino'}),
-(:Persona {nombre:'René Favaloro', profesion:'Médico', genero:'Masculino'});
+(:Persona {id: randomUUID(), nombre:'Lionel Messi', profesion:'Deportista', genero:'Masculino'}),
+(:Persona {id: randomUUID(), nombre:'Diego Maradona', profesion:'Deportista', genero:'Masculino'}),
+(:Persona {id: randomUUID(), nombre:'Ricardo Darín', profesion:'Actor', genero:'Masculino'}),
+(:Persona {id: randomUUID(), nombre:'Cristina Fernández de Kirchner', profesion:'Política', genero:'Femenino'}),
+(:Persona {id: randomUUID(), nombre:'Jorge Luis Borges', profesion:'Escritor', genero:'Masculino'}),
+(:Persona {id: randomUUID(), nombre:'Gustavo Cerati', profesion:'Cantante', genero:'Masculino'}),
+(:Persona {id: randomUUID(), nombre:'Lali Espósito', profesion:'Cantante', genero:'Femenino'}),
+(:Persona {id: randomUUID(), nombre:'Nicki Nicole', profesion:'Cantante', genero:'Femenino'}),
+(:Persona {id: randomUUID(), nombre:'Juan Martín del Potro', profesion:'Deportista', genero:'Masculino'}),
+(:Persona {id: randomUUID(), nombre:'René Favaloro', profesion:'Médico', genero:'Masculino'});
 
 // ============================================
-// PERSONAS FAMOSAS JAPÓN
+// PERSONAS FAMOSAS CON ID - JAPÓN
 // ============================================
 CREATE
-(:Persona {nombre:'Hayao Miyazaki', profesion:'Director de Cine', genero:'Masculino'}),
-(:Persona {nombre:'Naomi Osaka', profesion:'Deportista', genero:'Femenino'}),
-(:Persona {nombre:'Yoko Ono', profesion:'Artista', genero:'Femenino'}),
-(:Persona {nombre:'Shinzō Abe', profesion:'Político', genero:'Masculino'}),
-(:Persona {nombre:'Haruki Murakami', profesion:'Escritor', genero:'Masculino'}),
-(:Persona {nombre:'Ken Watanabe', profesion:'Actor', genero:'Masculino'}),
-(:Persona {nombre:'Rinko Kikuchi', profesion:'Actriz', genero:'Femenino'}),
-(:Persona {nombre:'Takeshi Kitano', profesion:'Director y Actor', genero:'Masculino'}),
-(:Persona {nombre:'Yuzuru Hanyu', profesion:'Deportista', genero:'Masculino'}),
-(:Persona {nombre:'Hikaru Utada', profesion:'Cantante', genero:'Femenino'});
+(:Persona {id: randomUUID(), nombre:'Hayao Miyazaki', profesion:'Director de Cine', genero:'Masculino'}),
+(:Persona {id: randomUUID(), nombre:'Naomi Osaka', profesion:'Deportista', genero:'Femenino'}),
+(:Persona {id: randomUUID(), nombre:'Yoko Ono', profesion:'Artista', genero:'Femenino'}),
+(:Persona {id: randomUUID(), nombre:'Shinzō Abe', profesion:'Político', genero:'Masculino'}),
+(:Persona {id: randomUUID(), nombre:'Haruki Murakami', profesion:'Escritor', genero:'Masculino'}),
+(:Persona {id: randomUUID(), nombre:'Ken Watanabe', profesion:'Actor', genero:'Masculino'}),
+(:Persona {id: randomUUID(), nombre:'Rinko Kikuchi', profesion:'Actriz', genero:'Femenino'}),
+(:Persona {id: randomUUID(), nombre:'Takeshi Kitano', profesion:'Director y Actor', genero:'Masculino'}),
+(:Persona {id: randomUUID(), nombre:'Yuzuru Hanyu', profesion:'Deportista', genero:'Masculino'}),
+(:Persona {id: randomUUID(), nombre:'Hikaru Utada', profesion:'Cantante', genero:'Femenino'});
 
 // ============================================
 // RELACIONAR PERSONAS CON CIUDADES - COLOMBIA
 // ============================================
-MATCH (s:Persona {nombre:'Shakira'}), (c:Ciudad {ciudad:'Barranquilla'})
-CREATE (s)-[:NACIO_EN]->(c);
+MATCH (p:Persona {nombre:'Shakira'}), (c:Ciudad {ciudad:'Barranquilla'})
+CREATE (p)-[:NACIO_EN]->(c);
 
-MATCH (j:Persona {nombre:'James Rodríguez'}), (c:Ciudad {ciudad:'Cúcuta'})
-CREATE (j)-[:NACIO_EN]->(c);
+MATCH (p:Persona {nombre:'James Rodríguez'}), (c:Ciudad {ciudad:'Cúcuta'})
+CREATE (p)-[:NACIO_EN]->(c);
 
-MATCH (s:Persona {nombre:'Sofía Vergara'}), (c:Ciudad {ciudad:'Barranquilla'})
-CREATE (s)-[:NACIO_EN]->(c);
+MATCH (p:Persona {nombre:'Sofía Vergara'}), (c:Ciudad {ciudad:'Barranquilla'})
+CREATE (p)-[:NACIO_EN]->(c);
 
-MATCH (j:Persona {nombre:'Juanes'}), (c:Ciudad {ciudad:'Medellín'})
-CREATE (j)-[:NACIO_EN]->(c);
+MATCH (p:Persona {nombre:'Juanes'}), (c:Ciudad {ciudad:'Medellín'})
+CREATE (p)-[:NACIO_EN]->(c);
 
-MATCH (k:Persona {nombre:'Karol G'}), (c:Ciudad {ciudad:'Medellín'})
-CREATE (k)-[:NACIO_EN]->(c);
+MATCH (p:Persona {nombre:'Karol G'}), (c:Ciudad {ciudad:'Medellín'})
+CREATE (p)-[:NACIO_EN]->(c);
 
 MATCH (p:Persona {nombre:'Petro'}), (c:Ciudad {ciudad:'Bogotá'})
 CREATE (p)-[:NACIO_EN]->(c);
 
-MATCH (cv:Persona {nombre:'Carlos Vives'}), (c:Ciudad {ciudad:'Santa Marta'})
-CREATE (cv)-[:NACIO_EN]->(c);
+MATCH (p:Persona {nombre:'Carlos Vives'}), (c:Ciudad {ciudad:'Santa Marta'})
+CREATE (p)-[:NACIO_EN]->(c);
 
-MATCH (fb:Persona {nombre:'Fernando Botero'}), (c:Ciudad {ciudad:'Medellín'})
-CREATE (fb)-[:NACIO_EN]->(c);
+MATCH (p:Persona {nombre:'Fernando Botero'}), (c:Ciudad {ciudad:'Medellín'})
+CREATE (p)-[:NACIO_EN]->(c);
 
-MATCH (fg:Persona {nombre:'Falcao García'}), (c:Ciudad {ciudad:'Santa Marta'})
-CREATE (fg)-[:NACIO_EN]->(c);
+MATCH (p:Persona {nombre:'Falcao García'}), (c:Ciudad {ciudad:'Santa Marta'})
+CREATE (p)-[:NACIO_EN]->(c);
 
-MATCH (n:Persona {nombre:'Nairo Quintana'}), (c:Ciudad {ciudad:'Boyacá'})
-CREATE (n)-[:NACIO_EN]->(c);
+MATCH (p:Persona {nombre:'Nairo Quintana'}), (c:Ciudad {ciudad:'Boyacá'})
+CREATE (p)-[:NACIO_EN]->(c);
 
 // ============================================
 // RELACIONAR PERSONAS CON CIUDADES - ARGENTINA
@@ -179,9 +196,6 @@ MATCH (p:Persona {nombre:'Lali Espósito'}), (c:Ciudad {ciudad:'Buenos Aires'})
 CREATE (p)-[:NACIO_EN]->(c);
 
 MATCH (p:Persona {nombre:'Nicki Nicole'}), (c:Ciudad {ciudad:'Rosario'})
-CREATE (p)-[:NACIO_EN]->(c);
-
-MATCH (p:Persona {nombre:'Juan Martín del Potro'}), (c:Ciudad {ciudad:'Tandil'})
 CREATE (p)-[:NACIO_EN]->(c);
 
 MATCH (p:Persona {nombre:'René Favaloro'}), (c:Ciudad {ciudad:'La Plata'})
@@ -221,49 +235,49 @@ MATCH (p:Persona {nombre:'Hikaru Utada'}), (c:Ciudad {ciudad:'Tokio'})
 CREATE (p)-[:NACIO_EN]->(c);
 
 // ============================================
-// SITIOS DE COLOMBIA
+// SITIOS CON ID - COLOMBIA
 // ============================================
 CREATE
-(:Sitio {sitio:'Museo del Oro', tipo:'Museo'}),
-(:Sitio {sitio:'Parque Tayrona', tipo:'Parque'}),
-(:Sitio {sitio:'Cerro Monserrate', tipo:'Turístico'}),
-(:Sitio {sitio:'Restaurante Andrés Carne de Res', tipo:'Restaurante'}),
-(:Sitio {sitio:'Hotel Caribe', tipo:'Hotel'}),
-(:Sitio {sitio:'Castillo de San Felipe', tipo:'Histórico'}),
-(:Sitio {sitio:'Parque del Café', tipo:'Parque'}),
-(:Sitio {sitio:'Museo de Antioquia', tipo:'Museo'}),
-(:Sitio {sitio:'Catedral de Sal', tipo:'Iglesia'}),
-(:Sitio {sitio:'Malecón de Barranquilla', tipo:'Turístico'});
+(:Sitio {id: randomUUID(), sitio:'Museo del Oro', tipo:'Museo'}),
+(:Sitio {id: randomUUID(), sitio:'Parque Tayrona', tipo:'Parque'}),
+(:Sitio {id: randomUUID(), sitio:'Cerro Monserrate', tipo:'Turístico'}),
+(:Sitio {id: randomUUID(), sitio:'Restaurante Andrés Carne de Res', tipo:'Restaurante'}),
+(:Sitio {id: randomUUID(), sitio:'Hotel Caribe', tipo:'Hotel'}),
+(:Sitio {id: randomUUID(), sitio:'Castillo de San Felipe', tipo:'Histórico'}),
+(:Sitio {id: randomUUID(), sitio:'Parque del Café', tipo:'Parque'}),
+(:Sitio {id: randomUUID(), sitio:'Museo de Antioquia', tipo:'Museo'}),
+(:Sitio {id: randomUUID(), sitio:'Catedral de Sal', tipo:'Iglesia'}),
+(:Sitio {id: randomUUID(), sitio:'Malecón de Barranquilla', tipo:'Turístico'});
 
 // ============================================
-// SITIOS DE ARGENTINA
+// SITIOS CON ID - ARGENTINA
 // ============================================
 CREATE
-(:Sitio {sitio:'Obelisco de Buenos Aires', tipo:'Monumento'}),
-(:Sitio {sitio:'Teatro Colón', tipo:'Teatro'}),
-(:Sitio {sitio:'La Bombonera', tipo:'Estadio'}),
-(:Sitio {sitio:'Cataratas del Iguazú', tipo:'Parque Natural'}),
-(:Sitio {sitio:'Museo Nacional de Bellas Artes', tipo:'Museo'}),
-(:Sitio {sitio:'Cerro de la Gloria', tipo:'Turístico'}),
-(:Sitio {sitio:'Parque San Martín', tipo:'Parque'}),
-(:Sitio {sitio:'Restaurante Don Julio', tipo:'Restaurante'}),
-(:Sitio {sitio:'Hotel Alvear Palace', tipo:'Hotel'}),
-(:Sitio {sitio:'Iglesia Catedral de Córdoba', tipo:'Iglesia'});
+(:Sitio {id: randomUUID(), sitio:'Obelisco de Buenos Aires', tipo:'Monumento'}),
+(:Sitio {id: randomUUID(), sitio:'Teatro Colón', tipo:'Teatro'}),
+(:Sitio {id: randomUUID(), sitio:'La Bombonera', tipo:'Estadio'}),
+(:Sitio {id: randomUUID(), sitio:'Cataratas del Iguazú', tipo:'Parque Natural'}),
+(:Sitio {id: randomUUID(), sitio:'Museo Nacional de Bellas Artes', tipo:'Museo'}),
+(:Sitio {id: randomUUID(), sitio:'Cerro de la Gloria', tipo:'Turístico'}),
+(:Sitio {id: randomUUID(), sitio:'Parque San Martín', tipo:'Parque'}),
+(:Sitio {id: randomUUID(), sitio:'Restaurante Don Julio', tipo:'Restaurante'}),
+(:Sitio {id: randomUUID(), sitio:'Hotel Alvear Palace', tipo:'Hotel'}),
+(:Sitio {id: randomUUID(), sitio:'Iglesia Catedral de Córdoba', tipo:'Iglesia'});
 
 // ============================================
-// SITIOS DE JAPÓN
+// SITIOS CON ID - JAPÓN
 // ============================================
 CREATE
-(:Sitio {sitio:'Templo Kinkaku-ji', tipo:'Templo'}),
-(:Sitio {sitio:'Monte Fuji', tipo:'Montaña'}),
-(:Sitio {sitio:'Santuario Meiji', tipo:'Santuario'}),
-(:Sitio {sitio:'Castillo de Osaka', tipo:'Histórico'}),
-(:Sitio {sitio:'Parque de la Paz de Hiroshima', tipo:'Memorial'}),
-(:Sitio {sitio:'Torre de Tokio', tipo:'Monumento'}),
-(:Sitio {sitio:'Acuario de Okinawa', tipo:'Acuario'}),
-(:Sitio {sitio:'Museo Nacional de Kioto', tipo:'Museo'}),
-(:Sitio {sitio:'Restaurante Sukiyabashi Jiro', tipo:'Restaurante'}),
-(:Sitio {sitio:'Hotel Park Hyatt Tokio', tipo:'Hotel'});
+(:Sitio {id: randomUUID(), sitio:'Templo Kinkaku-ji', tipo:'Templo'}),
+(:Sitio {id: randomUUID(), sitio:'Monte Fuji', tipo:'Montaña'}),
+(:Sitio {id: randomUUID(), sitio:'Santuario Meiji', tipo:'Santuario'}),
+(:Sitio {id: randomUUID(), sitio:'Castillo de Osaka', tipo:'Histórico'}),
+(:Sitio {id: randomUUID(), sitio:'Parque de la Paz de Hiroshima', tipo:'Memorial'}),
+(:Sitio {id: randomUUID(), sitio:'Torre de Tokio', tipo:'Monumento'}),
+(:Sitio {id: randomUUID(), sitio:'Acuario de Okinawa', tipo:'Acuario'}),
+(:Sitio {id: randomUUID(), sitio:'Museo Nacional de Kioto', tipo:'Museo'}),
+(:Sitio {id: randomUUID(), sitio:'Restaurante Sukiyabashi Jiro', tipo:'Restaurante'}),
+(:Sitio {id: randomUUID(), sitio:'Hotel Park Hyatt Tokio', tipo:'Hotel'});
 
 // ============================================
 // RELACIONAR SITIOS CON CIUDADES - COLOMBIA
@@ -365,174 +379,115 @@ MATCH (s:Sitio {sitio:'Hotel Park Hyatt Tokio'}), (c:Ciudad {ciudad:'Tokio'})
 CREATE (s)-[:UBICADO_EN]->(c);
 
 // ============================================
-// CREACIÓN DE PLATOS - COLOMBIA
+// PLATOS CON ID - COLOMBIA
 // ============================================
 CREATE
-(:Plato {plato:'Bandeja Paisa', precio:35000}),
-(:Plato {plato:'Ajiaco', precio:28000}),
-(:Plato {plato:'Sancocho', precio:25000}),
-(:Plato {plato:'Arepa Antioqueña', precio:5000}),
-(:Plato {plato:'Lechona', precio:30000}),
-(:Plato {plato:'Empanadas', precio:3000}),
-(:Plato {plato:'Tamales', precio:10000}),
-(:Plato {plato:'Pandebono', precio:4000}),
-(:Plato {plato:'Arroz con Coco', precio:20000}),
-(:Plato {plato:'Changua', precio:8000});
+(:Plato {id: randomUUID(), plato:'Bandeja Paisa', precio:35000}),
+(:Plato {id: randomUUID(), plato:'Ajiaco', precio:28000}),
+(:Plato {id: randomUUID(), plato:'Sancocho', precio:25000}),
+(:Plato {id: randomUUID(), plato:'Arepa Antioqueña', precio:5000}),
+(:Plato {id: randomUUID(), plato:'Lechona', precio:30000}),
+(:Plato {id: randomUUID(), plato:'Empanadas', precio:3000}),
+(:Plato {id: randomUUID(), plato:'Tamales', precio:10000}),
+(:Plato {id: randomUUID(), plato:'Pandebono', precio:4000}),
+(:Plato {id: randomUUID(), plato:'Arroz con Coco', precio:20000}),
+(:Plato {id: randomUUID(), plato:'Changua', precio:8000});
 
 // ============================================
-// CREACIÓN DE PLATOS - ARGENTINA
+// PLATOS CON ID - ARGENTINA
 // ============================================
 CREATE
-(:Plato {plato:'Asado', precio:30000}),
-(:Plato {plato:'Empanadas Argentinas', precio:8000}),
-(:Plato {plato:'Milanesa Napolitana', precio:20000}),
-(:Plato {plato:'Locro', precio:18000}),
-(:Plato {plato:'Choripán', precio:7000}),
-(:Plato {plato:'Provoleta', precio:12000}),
-(:Plato {plato:'Dulce de Leche', precio:5000}),
-(:Plato {plato:'Matambre a la pizza', precio:25000}),
-(:Plato {plato:'Carbonada', precio:19000}),
-(:Plato {plato:'Helado Artesanal', precio:10000});
+(:Plato {id: randomUUID(), plato:'Asado', precio:30000}),
+(:Plato {id: randomUUID(), plato:'Empanadas Argentinas', precio:8000}),
+(:Plato {id: randomUUID(), plato:'Milanesa Napolitana', precio:20000}),
+(:Plato {id: randomUUID(), plato:'Locro', precio:18000}),
+(:Plato {id: randomUUID(), plato:'Choripán', precio:7000}),
+(:Plato {id: randomUUID(), plato:'Provoleta', precio:12000}),
+(:Plato {id: randomUUID(), plato:'Dulce de Leche', precio:5000}),
+(:Plato {id: randomUUID(), plato:'Matambre a la pizza', precio:25000}),
+(:Plato {id: randomUUID(), plato:'Carbonada', precio:19000}),
+(:Plato {id: randomUUID(), plato:'Helado Artesanal', precio:10000});
 
 // ============================================
-// CREACIÓN DE PLATOS - JAPÓN
+// PLATOS CON ID - JAPÓN
 // ============================================
 CREATE
-(:Plato {plato:'Sushi', precio:25000}),
-(:Plato {plato:'Ramen', precio:18000}),
-(:Plato {plato:'Tempura', precio:22000}),
-(:Plato {plato:'Okonomiyaki', precio:20000}),
-(:Plato {plato:'Yakitori', precio:15000}),
-(:Plato {plato:'Onigiri', precio:8000}),
-(:Plato {plato:'Tonkatsu', precio:21000}),
-(:Plato {plato:'Mochi', precio:7000}),
-(:Plato {plato:'Udon', precio:17000}),
-(:Plato {plato:'Sashimi', precio:24000});
+(:Plato {id: randomUUID(), plato:'Sushi', precio:25000}),
+(:Plato {id: randomUUID(), plato:'Ramen', precio:18000}),
+(:Plato {id: randomUUID(), plato:'Tempura', precio:22000}),
+(:Plato {id: randomUUID(), plato:'Okonomiyaki', precio:20000}),
+(:Plato {id: randomUUID(), plato:'Yakitori', precio:15000}),
+(:Plato {id: randomUUID(), plato:'Onigiri', precio:8000}),
+(:Plato {id: randomUUID(), plato:'Tonkatsu', precio:21000}),
+(:Plato {id: randomUUID(), plato:'Mochi', precio:7000}),
+(:Plato {id: randomUUID(), plato:'Udon', precio:17000}),
+(:Plato {id: randomUUID(), plato:'Sashimi', precio:24000});
 
 // ============================================
 // RELACIONAR PLATOS CON SITIOS - COLOMBIA
 // ============================================
-MATCH (r:Sitio {sitio:'Restaurante Andrés Carne de Res'}), (p:Plato {plato:'Bandeja Paisa'})
+MATCH (r:Sitio {sitio:'Restaurante Andrés Carne de Res'}), (p:Plato)
+WHERE p.plato IN ['Bandeja Paisa', 'Ajiaco', 'Empanadas', 'Tamales', 'Changua']
 CREATE (p)-[:SE_VENDE_EN]->(r);
 
-MATCH (r:Sitio {sitio:'Restaurante Andrés Carne de Res'}), (p:Plato {plato:'Ajiaco'})
-CREATE (p)-[:SE_VENDE_EN]->(r);
-
-MATCH (r:Sitio {sitio:'Restaurante Andrés Carne de Res'}), (p:Plato {plato:'Empanadas'})
-CREATE (p)-[:SE_VENDE_EN]->(r);
-
-MATCH (r:Sitio {sitio:'Restaurante Andrés Carne de Res'}), (p:Plato {plato:'Tamales'})
-CREATE (p)-[:SE_VENDE_EN]->(r);
-
-MATCH (r:Sitio {sitio:'Restaurante Andrés Carne de Res'}), (p:Plato {plato:'Changua'})
-CREATE (p)-[:SE_VENDE_EN]->(r);
-
-MATCH (h:Sitio {sitio:'Hotel Caribe'}), (p:Plato {plato:'Arroz con Coco'})
+MATCH (h:Sitio {sitio:'Hotel Caribe'}), (p:Plato)
+WHERE p.plato IN ['Arroz con Coco', 'Sancocho', 'Lechona']
 CREATE (p)-[:SE_VENDE_EN]->(h);
 
-MATCH (h:Sitio {sitio:'Hotel Caribe'}), (p:Plato {plato:'Sancocho'})
-CREATE (p)-[:SE_VENDE_EN]->(h);
-
-MATCH (m:Sitio {sitio:'Museo de Antioquia'}), (p:Plato {plato:'Arepa Antioqueña'})
+MATCH (m:Sitio {sitio:'Museo de Antioquia'}), (p:Plato)
+WHERE p.plato IN ['Arepa Antioqueña', 'Pandebono']
 CREATE (p)-[:SE_VENDE_EN]->(m);
-
-MATCH (m:Sitio {sitio:'Museo de Antioquia'}), (p:Plato {plato:'Pandebono'})
-CREATE (p)-[:SE_VENDE_EN]->(m);
-
-MATCH (h:Sitio {sitio:'Hotel Caribe'}), (p:Plato {plato:'Lechona'})
-CREATE (p)-[:SE_VENDE_EN]->(h);
 
 // ============================================
 // RELACIONAR PLATOS CON SITIOS - ARGENTINA
 // ============================================
-MATCH (r:Sitio {sitio:'Restaurante Don Julio'}), (p:Plato {plato:'Asado'})
+MATCH (r:Sitio {sitio:'Restaurante Don Julio'}), (p:Plato)
+WHERE p.plato IN ['Asado', 'Choripán', 'Provoleta', 'Locro', 'Carbonada']
 CREATE (p)-[:SE_VENDE_EN]->(r);
 
-MATCH (r:Sitio {sitio:'Restaurante Don Julio'}), (p:Plato {plato:'Choripán'})
-CREATE (p)-[:SE_VENDE_EN]->(r);
-
-MATCH (r:Sitio {sitio:'Restaurante Don Julio'}), (p:Plato {plato:'Provoleta'})
-CREATE (p)-[:SE_VENDE_EN]->(r);
-
-MATCH (r:Sitio {sitio:'Restaurante Don Julio'}), (p:Plato {plato:'Locro'})
-CREATE (p)-[:SE_VENDE_EN]->(r);
-
-MATCH (r:Sitio {sitio:'Restaurante Don Julio'}), (p:Plato {plato:'Carbonada'})
-CREATE (p)-[:SE_VENDE_EN]->(r);
-
-MATCH (h:Sitio {sitio:'Hotel Alvear Palace'}), (p:Plato {plato:'Milanesa Napolitana'})
+MATCH (h:Sitio {sitio:'Hotel Alvear Palace'}), (p:Plato)
+WHERE p.plato IN ['Milanesa Napolitana', 'Dulce de Leche', 'Helado Artesanal']
 CREATE (p)-[:SE_VENDE_EN]->(h);
 
-MATCH (h:Sitio {sitio:'Hotel Alvear Palace'}), (p:Plato {plato:'Dulce de Leche'})
-CREATE (p)-[:SE_VENDE_EN]->(h);
-
-MATCH (h:Sitio {sitio:'Hotel Alvear Palace'}), (p:Plato {plato:'Helado Artesanal'})
-CREATE (p)-[:SE_VENDE_EN]->(h);
-
-MATCH (m:Sitio {sitio:'Museo Nacional de Bellas Artes'}), (p:Plato {plato:'Empanadas Argentinas'})
-CREATE (p)-[:SE_VENDE_EN]->(m);
-
-MATCH (m:Sitio {sitio:'Museo Nacional de Bellas Artes'}), (p:Plato {plato:'Matambre a la pizza'})
+MATCH (m:Sitio {sitio:'Museo Nacional de Bellas Artes'}), (p:Plato)
+WHERE p.plato IN ['Empanadas Argentinas', 'Matambre a la pizza']
 CREATE (p)-[:SE_VENDE_EN]->(m);
 
 // ============================================
 // RELACIONAR PLATOS CON SITIOS - JAPÓN
 // ============================================
-MATCH (r:Sitio {sitio:'Restaurante Sukiyabashi Jiro'}), (p:Plato {plato:'Sushi'})
+MATCH (r:Sitio {sitio:'Restaurante Sukiyabashi Jiro'}), (p:Plato)
+WHERE p.plato IN ['Sushi', 'Ramen', 'Tempura', 'Sashimi', 'Yakitori']
 CREATE (p)-[:SE_VENDE_EN]->(r);
 
-MATCH (r:Sitio {sitio:'Restaurante Sukiyabashi Jiro'}), (p:Plato {plato:'Ramen'})
-CREATE (p)-[:SE_VENDE_EN]->(r);
-
-MATCH (r:Sitio {sitio:'Restaurante Sukiyabashi Jiro'}), (p:Plato {plato:'Tempura'})
-CREATE (p)-[:SE_VENDE_EN]->(r);
-
-MATCH (r:Sitio {sitio:'Restaurante Sukiyabashi Jiro'}), (p:Plato {plato:'Sashimi'})
-CREATE (p)-[:SE_VENDE_EN]->(r);
-
-MATCH (r:Sitio {sitio:'Restaurante Sukiyabashi Jiro'}), (p:Plato {plato:'Yakitori'})
-CREATE (p)-[:SE_VENDE_EN]->(r);
-
-MATCH (h:Sitio {sitio:'Hotel Park Hyatt Tokio'}), (p:Plato {plato:'Onigiri'})
-CREATE (p)-[:SE_VENDE_EN]->(h);
-
-MATCH (h:Sitio {sitio:'Hotel Park Hyatt Tokio'}), (p:Plato {plato:'Tonkatsu'})
-CREATE (p)-[:SE_VENDE_EN]->(h);
-
-MATCH (h:Sitio {sitio:'Hotel Park Hyatt Tokio'}), (p:Plato {plato:'Mochi'})
-CREATE (p)-[:SE_VENDE_EN]->(h);
-
-MATCH (h:Sitio {sitio:'Hotel Park Hyatt Tokio'}), (p:Plato {plato:'Udon'})
-CREATE (p)-[:SE_VENDE_EN]->(h);
-
-MATCH (h:Sitio {sitio:'Hotel Park Hyatt Tokio'}), (p:Plato {plato:'Okonomiyaki'})
+MATCH (h:Sitio {sitio:'Hotel Park Hyatt Tokio'}), (p:Plato)
+WHERE p.plato IN ['Onigiri', 'Tonkatsu', 'Mochi', 'Udon', 'Okonomiyaki']
 CREATE (p)-[:SE_VENDE_EN]->(h);
 
 // ============================================
-// CREAR USUARIOS
+// USUARIOS CON ID
 // ============================================
 CREATE
-(:Usuario {nombre:'Sam', email:'sam@gmail.com', genero:'Masculino'}),
-(:Usuario {nombre:'Deyton', email:'deyton@gmail.com', genero:'Masculino'}),
-(:Usuario {nombre:'Carlos', email:'carlos@hotmail.com', genero:'Masculino'}),
-(:Usuario {nombre:'Diana', email:'diana@gmail.com', genero:'Femenino'}),
-(:Usuario {nombre:'Andrés', email:'andres@gmail.com', genero:'Masculino'}),
-(:Usuario {nombre:'Lucía', email:'lucia@gmail.com', genero:'Femenino'}),
-(:Usuario {nombre:'Martín', email:'martin@gmail.com', genero:'Masculino'}),
-(:Usuario {nombre:'Valentina', email:'valentina@gmail.com', genero:'Femenino'}),
-(:Usuario {nombre:'Nicolás', email:'nicolas@gmail.com', genero:'Masculino'}),
-(:Usuario {nombre:'Camila', email:'camila@gmail.com', genero:'Femenino'}),
-(:Usuario {nombre:'Agustín', email:'agustin@gmail.com', genero:'Masculino'}),
-(:Usuario {nombre:'Florencia', email:'florencia@gmail.com', genero:'Femenino'}),
-(:Usuario {nombre:'Mateo', email:'mateo@gmail.com', genero:'Masculino'}),
-(:Usuario {nombre:'Sofía', email:'sofia@gmail.com', genero:'Femenino'}),
-(:Usuario {nombre:'Benjamín', email:'benjamin@gmail.com', genero:'Masculino'}),
-(:Usuario {nombre:'Hiroshi Tanaka', email:'hiroshi@gmail.com', genero:'Masculino'}),
-(:Usuario {nombre:'Yumi Nakamura', email:'yumi@gmail.com', genero:'Femenino'}),
-(:Usuario {nombre:'Kenji Sato', email:'kenji@gmail.com', genero:'Masculino'}),
-(:Usuario {nombre:'Aiko Suzuki', email:'aiko@gmail.com', genero:'Femenino'}),
-(:Usuario {nombre:'Taro Yamamoto', email:'taro@gmail.com', genero:'Masculino'}),
-(:Usuario {nombre:'Isabella', email:'isabella@gmail.com', genero:'Femenino'});
+(:Usuario {id: randomUUID(), nombre:'Sam', email:'sam@gmail.com', genero:'Masculino'}),
+(:Usuario {id: randomUUID(), nombre:'Deyton', email:'deyton@gmail.com', genero:'Masculino'}),
+(:Usuario {id: randomUUID(), nombre:'Carlos', email:'carlos@hotmail.com', genero:'Masculino'}),
+(:Usuario {id: randomUUID(), nombre:'Diana', email:'diana@gmail.com', genero:'Femenino'}),
+(:Usuario {id: randomUUID(), nombre:'Andrés', email:'andres@gmail.com', genero:'Masculino'}),
+(:Usuario {id: randomUUID(), nombre:'Lucía', email:'lucia@gmail.com', genero:'Femenino'}),
+(:Usuario {id: randomUUID(), nombre:'Martín', email:'martin@gmail.com', genero:'Masculino'}),
+(:Usuario {id: randomUUID(), nombre:'Valentina', email:'valentina@gmail.com', genero:'Femenino'}),
+(:Usuario {id: randomUUID(), nombre:'Nicolás', email:'nicolas@gmail.com', genero:'Masculino'}),
+(:Usuario {id: randomUUID(), nombre:'Camila', email:'camila@gmail.com', genero:'Femenino'}),
+(:Usuario {id: randomUUID(), nombre:'Agustín', email:'agustin@gmail.com', genero:'Masculino'}),
+(:Usuario {id: randomUUID(), nombre:'Florencia', email:'florencia@gmail.com', genero:'Femenino'}),
+(:Usuario {id: randomUUID(), nombre:'Mateo', email:'mateo@gmail.com', genero:'Masculino'}),
+(:Usuario {id: randomUUID(), nombre:'Sofía', email:'sofia@gmail.com', genero:'Femenino'}),
+(:Usuario {id: randomUUID(), nombre:'Benjamín', email:'benjamin@gmail.com', genero:'Masculino'}),
+(:Usuario {id: randomUUID(), nombre:'Hiroshi Tanaka', email:'hiroshi@gmail.com', genero:'Masculino'}),
+(:Usuario {id: randomUUID(), nombre:'Yumi Nakamura', email:'yumi@gmail.com', genero:'Femenino'}),
+(:Usuario {id: randomUUID(), nombre:'Kenji Sato', email:'kenji@gmail.com', genero:'Masculino'}),
+(:Usuario {id: randomUUID(), nombre:'Aiko Suzuki', email:'aiko@gmail.com', genero:'Femenino'}),
+(:Usuario {id: randomUUID(), nombre:'Taro Yamamoto', email:'taro@gmail.com', genero:'Masculino'});
 
 // ============================================
 // RELACIONAR USUARIOS CON CIUDADES - COLOMBIA
@@ -688,193 +643,496 @@ MATCH (u:Usuario {nombre:'Taro Yamamoto'}), (s:Sitio {sitio:'Restaurante Sukiyab
 CREATE (u)-[:VISITO {fecha:'2025-10-30', hora:'21:00'}]->(s);
 
 // ============================================
-// REGISTRO DE CONSUMOS
+// MODELO MEJORADO DE COMPRAS
+// Usuario -[:REALIZO_COMPRA]-> Compra -[:INCLUYE_PLATO]-> Plato
+//                                    -[:EN_SITIO]-> Sitio
 // ============================================
 
-// Sam
-MATCH (u:Usuario {nombre:'Sam'}), (p:Plato {plato:'Sancocho'})
-CREATE (u)-[:CONSUMIO {fecha:'2025-10-30'}]->(p);
+// Compras de Sam
+MATCH (u:Usuario {nombre:'Sam'}), (p:Plato {plato:'Sancocho'}), (s:Sitio {sitio:'Hotel Caribe'})
+CREATE (compra:Compra {
+  id: randomUUID(),
+  fecha: '2025-10-30',
+  cantidad: 1,
+  total: p.precio
+})
+CREATE (u)-[:REALIZO_COMPRA]->(compra)
+CREATE (compra)-[:INCLUYE_PLATO]->(p)
+CREATE (compra)-[:EN_SITIO]->(s);
 
-MATCH (u:Usuario {nombre:'Sam'}), (p:Plato {plato:'Bandeja Paisa'})
-CREATE (u)-[:CONSUMIO {fecha:'2025-11-05'}]->(p);
+MATCH (u:Usuario {nombre:'Sam'}), (p:Plato {plato:'Bandeja Paisa'}), (s:Sitio {sitio:'Restaurante Andrés Carne de Res'})
+CREATE (compra:Compra {
+  id: randomUUID(),
+  fecha: '2025-11-05',
+  cantidad: 1,
+  total: p.precio
+})
+CREATE (u)-[:REALIZO_COMPRA]->(compra)
+CREATE (compra)-[:INCLUYE_PLATO]->(p)
+CREATE (compra)-[:EN_SITIO]->(s);
 
-MATCH (u:Usuario {nombre:'Sam'}), (p:Plato {plato:'Ajiaco'})
-CREATE (u)-[:CONSUMIO {fecha:'2025-11-10'}]->(p);
+MATCH (u:Usuario {nombre:'Sam'}), (p:Plato {plato:'Ajiaco'}), (s:Sitio {sitio:'Restaurante Andrés Carne de Res'})
+CREATE (compra:Compra {
+  id: randomUUID(),
+  fecha: '2025-11-10',
+  cantidad: 1,
+  total: p.precio
+})
+CREATE (u)-[:REALIZO_COMPRA]->(compra)
+CREATE (compra)-[:INCLUYE_PLATO]->(p)
+CREATE (compra)-[:EN_SITIO]->(s);
 
-// Deyton
-MATCH (u:Usuario {nombre:'Deyton'}), (p:Plato {plato:'Arroz con Coco'})
-CREATE (u)-[:CONSUMIO {fecha:'2025-10-31'}]->(p);
+// Compras de Deyton
+MATCH (u:Usuario {nombre:'Deyton'}), (p:Plato {plato:'Arroz con Coco'}), (s:Sitio {sitio:'Hotel Caribe'})
+CREATE (compra:Compra {
+  id: randomUUID(),
+  fecha: '2025-10-31',
+  cantidad: 1,
+  total: p.precio
+})
+CREATE (u)-[:REALIZO_COMPRA]->(compra)
+CREATE (compra)-[:INCLUYE_PLATO]->(p)
+CREATE (compra)-[:EN_SITIO]->(s);
 
-MATCH (u:Usuario {nombre:'Deyton'}), (p:Plato {plato:'Sancocho'})
-CREATE (u)-[:CONSUMIO {fecha:'2025-11-06'}]->(p);
+MATCH (u:Usuario {nombre:'Deyton'}), (p:Plato {plato:'Sancocho'}), (s:Sitio {sitio:'Hotel Caribe'})
+CREATE (compra:Compra {
+  id: randomUUID(),
+  fecha: '2025-11-06',
+  cantidad: 1,
+  total: p.precio
+})
+CREATE (u)-[:REALIZO_COMPRA]->(compra)
+CREATE (compra)-[:INCLUYE_PLATO]->(p)
+CREATE (compra)-[:EN_SITIO]->(s);
 
-MATCH (u:Usuario {nombre:'Deyton'}), (p:Plato {plato:'Provoleta'})
-CREATE (u)-[:CONSUMIO {fecha:'2025-11-13'}]->(p);
+MATCH (u:Usuario {nombre:'Deyton'}), (p:Plato {plato:'Provoleta'}), (s:Sitio {sitio:'Restaurante Don Julio'})
+CREATE (compra:Compra {
+  id: randomUUID(),
+  fecha: '2025-11-13',
+  cantidad: 1,
+  total: p.precio
+})
+CREATE (u)-[:REALIZO_COMPRA]->(compra)
+CREATE (compra)-[:INCLUYE_PLATO]->(p)
+CREATE (compra)-[:EN_SITIO]->(s);
 
-// Carlos
-MATCH (u:Usuario {nombre:'Carlos'}), (p:Plato {plato:'Empanadas Argentinas'})
-CREATE (u)-[:CONSUMIO {fecha:'2025-10-30'}]->(p);
+// Compras de Carlos
+MATCH (u:Usuario {nombre:'Carlos'}), (p:Plato {plato:'Empanadas Argentinas'}), (s:Sitio {sitio:'Museo Nacional de Bellas Artes'})
+CREATE (compra:Compra {
+  id: randomUUID(),
+  fecha: '2025-10-30',
+  cantidad: 1,
+  total: p.precio
+})
+CREATE (u)-[:REALIZO_COMPRA]->(compra)
+CREATE (compra)-[:INCLUYE_PLATO]->(p)
+CREATE (compra)-[:EN_SITIO]->(s);
 
-MATCH (u:Usuario {nombre:'Carlos'}), (p:Plato {plato:'Milanesa Napolitana'})
-CREATE (u)-[:CONSUMIO {fecha:'2025-11-08'}]->(p);
+MATCH (u:Usuario {nombre:'Carlos'}), (p:Plato {plato:'Milanesa Napolitana'}), (s:Sitio {sitio:'Hotel Alvear Palace'})
+CREATE (compra:Compra {
+  id: randomUUID(),
+  fecha: '2025-11-08',
+  cantidad: 1,
+  total: p.precio
+})
+CREATE (u)-[:REALIZO_COMPRA]->(compra)
+CREATE (compra)-[:INCLUYE_PLATO]->(p)
+CREATE (compra)-[:EN_SITIO]->(s);
 
-MATCH (u:Usuario {nombre:'Carlos'}), (p:Plato {plato:'Asado'})
-CREATE (u)-[:CONSUMIO {fecha:'2025-11-14'}]->(p);
+MATCH (u:Usuario {nombre:'Carlos'}), (p:Plato {plato:'Asado'}), (s:Sitio {sitio:'Restaurante Don Julio'})
+CREATE (compra:Compra {
+  id: randomUUID(),
+  fecha: '2025-11-14',
+  cantidad: 1,
+  total: p.precio
+})
+CREATE (u)-[:REALIZO_COMPRA]->(compra)
+CREATE (compra)-[:INCLUYE_PLATO]->(p)
+CREATE (compra)-[:EN_SITIO]->(s);
 
-// Diana
-MATCH (u:Usuario {nombre:'Diana'}), (p:Plato {plato:'Matambre a la pizza'})
-CREATE (u)-[:CONSUMIO {fecha:'2025-11-01'}]->(p);
+// Compras de Diana
+MATCH (u:Usuario {nombre:'Diana'}), (p:Plato {plato:'Matambre a la pizza'}), (s:Sitio {sitio:'Museo Nacional de Bellas Artes'})
+CREATE (compra:Compra {
+  id: randomUUID(),
+  fecha: '2025-11-01',
+  cantidad: 1,
+  total: p.precio
+})
+CREATE (u)-[:REALIZO_COMPRA]->(compra)
+CREATE (compra)-[:INCLUYE_PLATO]->(p)
+CREATE (compra)-[:EN_SITIO]->(s);
 
-MATCH (u:Usuario {nombre:'Diana'}), (p:Plato {plato:'Carbonada'})
-CREATE (u)-[:CONSUMIO {fecha:'2025-11-09'}]->(p);
+MATCH (u:Usuario {nombre:'Diana'}), (p:Plato {plato:'Carbonada'}), (s:Sitio {sitio:'Restaurante Don Julio'})
+CREATE (compra:Compra {
+  id: randomUUID(),
+  fecha: '2025-11-09',
+  cantidad: 1,
+  total: p.precio
+})
+CREATE (u)-[:REALIZO_COMPRA]->(compra)
+CREATE (compra)-[:INCLUYE_PLATO]->(p)
+CREATE (compra)-[:EN_SITIO]->(s);
 
-MATCH (u:Usuario {nombre:'Diana'}), (p:Plato {plato:'Ajiaco'})
-CREATE (u)-[:CONSUMIO {fecha:'2025-11-15'}]->(p);
+MATCH (u:Usuario {nombre:'Diana'}), (p:Plato {plato:'Ajiaco'}), (s:Sitio {sitio:'Restaurante Andrés Carne de Res'})
+CREATE (compra:Compra {
+  id: randomUUID(),
+  fecha: '2025-11-15',
+  cantidad: 1,
+  total: p.precio
+})
+CREATE (u)-[:REALIZO_COMPRA]->(compra)
+CREATE (compra)-[:INCLUYE_PLATO]->(p)
+CREATE (compra)-[:EN_SITIO]->(s);
 
-// Isabella
-MATCH (u:Usuario {nombre:'Isabella'}), (p:Plato {plato:'Sancocho'})
-CREATE (u)-[:CONSUMIO {fecha:'2025-10-20'}]->(p);
+// Compras de Isabella
+MATCH (u:Usuario {nombre:'Isabella'}), (p:Plato {plato:'Sancocho'}), (s:Sitio {sitio:'Hotel Caribe'})
+CREATE (compra:Compra {
+  id: randomUUID(),
+  fecha: '2025-10-20',
+  cantidad: 1,
+  total: p.precio
+})
+CREATE (u)-[:REALIZO_COMPRA]->(compra)
+CREATE (compra)-[:INCLUYE_PLATO]->(p)
+CREATE (compra)-[:EN_SITIO]->(s);
 
-// Lucía
-MATCH (u:Usuario {nombre:'Lucía'}), (p:Plato {plato:'Helado Artesanal'})
-CREATE (u)-[:CONSUMIO {fecha:'2025-10-31'}]->(p);
+// Compras de Lucía
+MATCH (u:Usuario {nombre:'Lucía'}), (p:Plato {plato:'Helado Artesanal'}), (s:Sitio {sitio:'Hotel Alvear Palace'})
+CREATE (compra:Compra {
+  id: randomUUID(),
+  fecha: '2025-10-31',
+  cantidad: 1,
+  total: p.precio
+})
+CREATE (u)-[:REALIZO_COMPRA]->(compra)
+CREATE (compra)-[:INCLUYE_PLATO]->(p)
+CREATE (compra)-[:EN_SITIO]->(s);
 
-MATCH (u:Usuario {nombre:'Lucía'}), (p:Plato {plato:'Asado'})
-CREATE (u)-[:CONSUMIO {fecha:'2025-11-06'}]->(p);
+MATCH (u:Usuario {nombre:'Lucía'}), (p:Plato {plato:'Asado'}), (s:Sitio {sitio:'Restaurante Don Julio'})
+CREATE (compra:Compra {
+  id: randomUUID(),
+  fecha: '2025-11-06',
+  cantidad: 1,
+  total: p.precio
+})
+CREATE (u)-[:REALIZO_COMPRA]->(compra)
+CREATE (compra)-[:INCLUYE_PLATO]->(p)
+CREATE (compra)-[:EN_SITIO]->(s);
 
-MATCH (u:Usuario {nombre:'Lucía'}), (p:Plato {plato:'Sancocho'})
-CREATE (u)-[:CONSUMIO {fecha:'2025-11-12'}]->(p);
+MATCH (u:Usuario {nombre:'Lucía'}), (p:Plato {plato:'Sancocho'}), (s:Sitio {sitio:'Hotel Caribe'})
+CREATE (compra:Compra {
+  id: randomUUID(),
+  fecha: '2025-11-12',
+  cantidad: 1,
+  total: p.precio
+})
+CREATE (u)-[:REALIZO_COMPRA]->(compra)
+CREATE (compra)-[:INCLUYE_PLATO]->(p)
+CREATE (compra)-[:EN_SITIO]->(s);
 
-// Valentina
-MATCH (u:Usuario {nombre:'Valentina'}), (p:Plato {plato:'Dulce de Leche'})
-CREATE (u)-[:CONSUMIO {fecha:'2025-11-02'}]->(p);
+// Compras de Valentina
+MATCH (u:Usuario {nombre:'Valentina'}), (p:Plato {plato:'Dulce de Leche'}), (s:Sitio {sitio:'Hotel Alvear Palace'})
+CREATE (compra:Compra {
+  id: randomUUID(),
+  fecha: '2025-11-02',
+  cantidad: 1,
+  total: p.precio
+})
+CREATE (u)-[:REALIZO_COMPRA]->(compra)
+CREATE (compra)-[:INCLUYE_PLATO]->(p)
+CREATE (compra)-[:EN_SITIO]->(s);
 
-MATCH (u:Usuario {nombre:'Valentina'}), (p:Plato {plato:'Milanesa Napolitana'})
-CREATE (u)-[:CONSUMIO {fecha:'2025-11-07'}]->(p);
+MATCH (u:Usuario {nombre:'Valentina'}), (p:Plato {plato:'Milanesa Napolitana'}), (s:Sitio {sitio:'Hotel Alvear Palace'})
+CREATE (compra:Compra {
+  id: randomUUID(),
+  fecha: '2025-11-07',
+  cantidad: 1,
+  total: p.precio
+})
+CREATE (u)-[:REALIZO_COMPRA]->(compra)
+CREATE (compra)-[:INCLUYE_PLATO]->(p)
+CREATE (compra)-[:EN_SITIO]->(s);
 
-MATCH (u:Usuario {nombre:'Valentina'}), (p:Plato {plato:'Provoleta'})
-CREATE (u)-[:CONSUMIO {fecha:'2025-11-13'}]->(p);
+MATCH (u:Usuario {nombre:'Valentina'}), (p:Plato {plato:'Provoleta'}), (s:Sitio {sitio:'Restaurante Don Julio'})
+CREATE (compra:Compra {
+  id: randomUUID(),
+  fecha: '2025-11-13',
+  cantidad: 1,
+  total: p.precio
+})
+CREATE (u)-[:REALIZO_COMPRA]->(compra)
+CREATE (compra)-[:INCLUYE_PLATO]->(p)
+CREATE (compra)-[:EN_SITIO]->(s);
 
-// Mateo
-MATCH (u:Usuario {nombre:'Mateo'}), (p:Plato {plato:'Empanadas Argentinas'})
-CREATE (u)-[:CONSUMIO {fecha:'2025-10-30'}]->(p);
+// Compras de Mateo
+MATCH (u:Usuario {nombre:'Mateo'}), (p:Plato {plato:'Empanadas Argentinas'}), (s:Sitio {sitio:'Museo Nacional de Bellas Artes'})
+CREATE (compra:Compra {
+  id: randomUUID(),
+  fecha: '2025-10-30',
+  cantidad: 1,
+  total: p.precio
+})
+CREATE (u)-[:REALIZO_COMPRA]->(compra)
+CREATE (compra)-[:INCLUYE_PLATO]->(p)
+CREATE (compra)-[:EN_SITIO]->(s);
 
-MATCH (u:Usuario {nombre:'Mateo'}), (p:Plato {plato:'Sancocho'})
-CREATE (u)-[:CONSUMIO {fecha:'2025-11-05'}]->(p);
+MATCH (u:Usuario {nombre:'Mateo'}), (p:Plato {plato:'Sancocho'}), (s:Sitio {sitio:'Hotel Caribe'})
+CREATE (compra:Compra {
+  id: randomUUID(),
+  fecha: '2025-11-05',
+  cantidad: 1,
+  total: p.precio
+})
+CREATE (u)-[:REALIZO_COMPRA]->(compra)
+CREATE (compra)-[:INCLUYE_PLATO]->(p)
+CREATE (compra)-[:EN_SITIO]->(s);
 
-MATCH (u:Usuario {nombre:'Mateo'}), (p:Plato {plato:'Asado'})
-CREATE (u)-[:CONSUMIO {fecha:'2025-11-11'}]->(p);
+MATCH (u:Usuario {nombre:'Mateo'}), (p:Plato {plato:'Asado'}), (s:Sitio {sitio:'Restaurante Don Julio'})
+CREATE (compra:Compra {
+  id: randomUUID(),
+  fecha: '2025-11-11',
+  cantidad: 1,
+  total: p.precio
+})
+CREATE (u)-[:REALIZO_COMPRA]->(compra)
+CREATE (compra)-[:INCLUYE_PLATO]->(p)
+CREATE (compra)-[:EN_SITIO]->(s);
 
-// Sofía
-MATCH (u:Usuario {nombre:'Sofía'}), (p:Plato {plato:'Carbonada'})
-CREATE (u)-[:CONSUMIO {fecha:'2025-11-03'}]->(p);
+// Compras de Sofía
+MATCH (u:Usuario {nombre:'Sofía'}), (p:Plato {plato:'Carbonada'}), (s:Sitio {sitio:'Restaurante Don Julio'})
+CREATE (compra:Compra {
+  id: randomUUID(),
+  fecha: '2025-11-03',
+  cantidad: 1,
+  total: p.precio
+})
+CREATE (u)-[:REALIZO_COMPRA]->(compra)
+CREATE (compra)-[:INCLUYE_PLATO]->(p)
+CREATE (compra)-[:EN_SITIO]->(s);
 
-MATCH (u:Usuario {nombre:'Sofía'}), (p:Plato {plato:'Locro'})
-CREATE (u)-[:CONSUMIO {fecha:'2025-11-08'}]->(p);
+MATCH (u:Usuario {nombre:'Sofía'}), (p:Plato {plato:'Locro'}), (s:Sitio {sitio:'Restaurante Don Julio'})
+CREATE (compra:Compra {
+  id: randomUUID(),
+  fecha: '2025-11-08',
+  cantidad: 1,
+  total: p.precio
+})
+CREATE (u)-[:REALIZO_COMPRA]->(compra)
+CREATE (compra)-[:INCLUYE_PLATO]->(p)
+CREATE (compra)-[:EN_SITIO]->(s);
 
-MATCH (u:Usuario {nombre:'Sofía'}), (p:Plato {plato:'Choripán'})
-CREATE (u)-[:CONSUMIO {fecha:'2025-11-14'}]->(p);
+MATCH (u:Usuario {nombre:'Sofía'}), (p:Plato {plato:'Choripán'}), (s:Sitio {sitio:'Restaurante Don Julio'})
+CREATE (compra:Compra {
+  id: randomUUID(),
+  fecha: '2025-11-14',
+  cantidad: 1,
+  total: p.precio
+})
+CREATE (u)-[:REALIZO_COMPRA]->(compra)
+CREATE (compra)-[:INCLUYE_PLATO]->(p)
+CREATE (compra)-[:EN_SITIO]->(s);
 
-// Benjamín
-MATCH (u:Usuario {nombre:'Benjamín'}), (p:Plato {plato:'Ajiaco'})
-CREATE (u)-[:CONSUMIO {fecha:'2025-11-01'}]->(p);
+// Compras de Benjamín
+MATCH (u:Usuario {nombre:'Benjamín'}), (p:Plato {plato:'Ajiaco'}), (s:Sitio {sitio:'Restaurante Andrés Carne de Res'})
+CREATE (compra:Compra {
+  id: randomUUID(),
+  fecha: '2025-11-01',
+  cantidad: 1,
+  total: p.precio
+})
+CREATE (u)-[:REALIZO_COMPRA]->(compra)
+CREATE (compra)-[:INCLUYE_PLATO]->(p)
+CREATE (compra)-[:EN_SITIO]->(s);
 
-MATCH (u:Usuario {nombre:'Benjamín'}), (p:Plato {plato:'Empanadas Argentinas'})
-CREATE (u)-[:CONSUMIO {fecha:'2025-11-07'}]->(p);
+MATCH (u:Usuario {nombre:'Benjamín'}), (p:Plato {plato:'Empanadas Argentinas'}), (s:Sitio {sitio:'Museo Nacional de Bellas Artes'})
+CREATE (compra:Compra {
+  id: randomUUID(),
+  fecha: '2025-11-07',
+  cantidad: 1,
+  total: p.precio
+})
+CREATE (u)-[:REALIZO_COMPRA]->(compra)
+CREATE (compra)-[:INCLUYE_PLATO]->(p)
+CREATE (compra)-[:EN_SITIO]->(s);
 
-MATCH (u:Usuario {nombre:'Benjamín'}), (p:Plato {plato:'Asado'})
-CREATE (u)-[:CONSUMIO {fecha:'2025-11-12'}]->(p);
+MATCH (u:Usuario {nombre:'Benjamín'}), (p:Plato {plato:'Asado'}), (s:Sitio {sitio:'Restaurante Don Julio'})
+CREATE (compra:Compra {
+  id: randomUUID(),
+  fecha: '2025-11-12',
+  cantidad: 1,
+  total: p.precio
+})
+CREATE (u)-[:REALIZO_COMPRA]->(compra)
+CREATE (compra)-[:INCLUYE_PLATO]->(p)
+CREATE (compra)-[:EN_SITIO]->(s);
 
-// Hiroshi Tanaka
-MATCH (u:Usuario {nombre:'Hiroshi Tanaka'}), (p:Plato {plato:'Sushi'})
-CREATE (u)-[:CONSUMIO {fecha:'2025-10-20'}]->(p);
+// Compras de Hiroshi Tanaka
+MATCH (u:Usuario {nombre:'Hiroshi Tanaka'}), (p:Plato {plato:'Sushi'}), (s:Sitio {sitio:'Restaurante Sukiyabashi Jiro'})
+CREATE (compra:Compra {
+  id: randomUUID(),
+  fecha: '2025-10-20',
+  cantidad: 1,
+  total: p.precio
+})
+CREATE (u)-[:REALIZO_COMPRA]->(compra)
+CREATE (compra)-[:INCLUYE_PLATO]->(p)
+CREATE (compra)-[:EN_SITIO]->(s);
 
-MATCH (u:Usuario {nombre:'Hiroshi Tanaka'}), (p:Plato {plato:'Tempura'})
-CREATE (u)-[:CONSUMIO {fecha:'2025-11-01'}]->(p);
+MATCH (u:Usuario {nombre:'Hiroshi Tanaka'}), (p:Plato {plato:'Tempura'}), (s:Sitio {sitio:'Restaurante Sukiyabashi Jiro'})
+CREATE (compra:Compra {
+  id: randomUUID(),
+  fecha: '2025-11-01',
+  cantidad: 1,
+  total: p.precio
+})
+CREATE (u)-[:REALIZO_COMPRA]->(compra)
+CREATE (compra)-[:INCLUYE_PLATO]->(p)
+CREATE (compra)-[:EN_SITIO]->(s);
 
-MATCH (u:Usuario {nombre:'Hiroshi Tanaka'}), (p:Plato {plato:'Sashimi'})
-CREATE (u)-[:CONSUMIO {fecha:'2025-11-08'}]->(p);
+MATCH (u:Usuario {nombre:'Hiroshi Tanaka'}), (p:Plato {plato:'Sashimi'}), (s:Sitio {sitio:'Restaurante Sukiyabashi Jiro'})
+CREATE (compra:Compra {
+  id: randomUUID(),
+  fecha: '2025-11-08',
+  cantidad: 1,
+  total: p.precio
+})
+CREATE (u)-[:REALIZO_COMPRA]->(compra)
+CREATE (compra)-[:INCLUYE_PLATO]->(p)
+CREATE (compra)-[:EN_SITIO]->(s);
 
-// Yumi Nakamura
-MATCH (u:Usuario {nombre:'Yumi Nakamura'}), (p:Plato {plato:'Ramen'})
-CREATE (u)-[:CONSUMIO {fecha:'2025-10-22'}]->(p);
+// Compras de Yumi Nakamura
+MATCH (u:Usuario {nombre:'Yumi Nakamura'}), (p:Plato {plato:'Ramen'}), (s:Sitio {sitio:'Restaurante Sukiyabashi Jiro'})
+CREATE (compra:Compra {
+  id: randomUUID(),
+  fecha: '2025-10-22',
+  cantidad: 1,
+  total: p.precio
+})
+CREATE (u)-[:REALIZO_COMPRA]->(compra)
+CREATE (compra)-[:INCLUYE_PLATO]->(p)
+CREATE (compra)-[:EN_SITIO]->(s);
 
-MATCH (u:Usuario {nombre:'Yumi Nakamura'}), (p:Plato {plato:'Mochi'})
-CREATE (u)-[:CONSUMIO {fecha:'2025-11-03'}]->(p);
+MATCH (u:Usuario {nombre:'Yumi Nakamura'}), (p:Plato {plato:'Mochi'}), (s:Sitio {sitio:'Hotel Park Hyatt Tokio'})
+CREATE (compra:Compra {
+  id: randomUUID(),
+  fecha: '2025-11-03',
+  cantidad: 1,
+  total: p.precio
+})
+CREATE (u)-[:REALIZO_COMPRA]->(compra)
+CREATE (compra)-[:INCLUYE_PLATO]->(p)
+CREATE (compra)-[:EN_SITIO]->(s);
 
-MATCH (u:Usuario {nombre:'Yumi Nakamura'}), (p:Plato {plato:'Udon'})
-CREATE (u)-[:CONSUMIO {fecha:'2025-11-10'}]->(p);
+MATCH (u:Usuario {nombre:'Yumi Nakamura'}), (p:Plato {plato:'Udon'}), (s:Sitio {sitio:'Hotel Park Hyatt Tokio'})
+CREATE (compra:Compra {
+  id: randomUUID(),
+  fecha: '2025-11-10',
+  cantidad: 1,
+  total: p.precio
+})
+CREATE (u)-[:REALIZO_COMPRA]->(compra)
+CREATE (compra)-[:INCLUYE_PLATO]->(p)
+CREATE (compra)-[:EN_SITIO]->(s);
 
-// Kenji Sato
-MATCH (u:Usuario {nombre:'Kenji Sato'}), (p:Plato {plato:'Yakitori'})
-CREATE (u)-[:CONSUMIO {fecha:'2025-10-25'}]->(p);
+// Compras de Kenji Sato
+MATCH (u:Usuario {nombre:'Kenji Sato'}), (p:Plato {plato:'Yakitori'}), (s:Sitio {sitio:'Restaurante Sukiyabashi Jiro'})
+CREATE (compra:Compra {
+  id: randomUUID(),
+  fecha: '2025-10-25',
+  cantidad: 1,
+  total: p.precio
+})
+CREATE (u)-[:REALIZO_COMPRA]->(compra)
+CREATE (compra)-[:INCLUYE_PLATO]->(p)
+CREATE (compra)-[:EN_SITIO]->(s);
 
-MATCH (u:Usuario {nombre:'Kenji Sato'}), (p:Plato {plato:'Okonomiyaki'})
-CREATE (u)-[:CONSUMIO {fecha:'2025-11-05'}]->(p);
+MATCH (u:Usuario {nombre:'Kenji Sato'}), (p:Plato {plato:'Okonomiyaki'}), (s:Sitio {sitio:'Hotel Park Hyatt Tokio'})
+CREATE (compra:Compra {
+  id: randomUUID(),
+  fecha: '2025-11-05',
+  cantidad: 1,
+  total: p.precio
+})
+CREATE (u)-[:REALIZO_COMPRA]->(compra)
+CREATE (compra)-[:INCLUYE_PLATO]->(p)
+CREATE (compra)-[:EN_SITIO]->(s);
 
-MATCH (u:Usuario {nombre:'Kenji Sato'}), (p:Plato {plato:'Ramen'})
-CREATE (u)-[:CONSUMIO {fecha:'2025-11-12'}]->(p);
+MATCH (u:Usuario {nombre:'Kenji Sato'}), (p:Plato {plato:'Ramen'}), (s:Sitio {sitio:'Restaurante Sukiyabashi Jiro'})
+CREATE (compra:Compra {
+  id: randomUUID(),
+  fecha: '2025-11-12',
+  cantidad: 1,
+  total: p.precio
+})
+CREATE (u)-[:REALIZO_COMPRA]->(compra)
+CREATE (compra)-[:INCLUYE_PLATO]->(p)
+CREATE (compra)-[:EN_SITIO]->(s);
 
-// Aiko Suzuki
-MATCH (u:Usuario {nombre:'Aiko Suzuki'}), (p:Plato {plato:'Onigiri'})
-CREATE (u)-[:CONSUMIO {fecha:'2025-10-28'}]->(p);
+// Compras de Aiko Suzuki
+MATCH (u:Usuario {nombre:'Aiko Suzuki'}), (p:Plato {plato:'Onigiri'}), (s:Sitio {sitio:'Hotel Park Hyatt Tokio'})
+CREATE (compra:Compra {
+  id: randomUUID(),
+  fecha: '2025-10-28',
+  cantidad: 1,
+  total: p.precio
+})
+CREATE (u)-[:REALIZO_COMPRA]->(compra)
+CREATE (compra)-[:INCLUYE_PLATO]->(p)
+CREATE (compra)-[:EN_SITIO]->(s);
 
-MATCH (u:Usuario {nombre:'Aiko Suzuki'}), (p:Plato {plato:'Tonkatsu'})
-CREATE (u)-[:CONSUMIO {fecha:'2025-11-06'}]->(p);
+MATCH (u:Usuario {nombre:'Aiko Suzuki'}), (p:Plato {plato:'Tonkatsu'}), (s:Sitio {sitio:'Hotel Park Hyatt Tokio'})
+CREATE (compra:Compra {
+  id: randomUUID(),
+  fecha: '2025-11-06',
+  cantidad: 1,
+  total: p.precio
+})
+CREATE (u)-[:REALIZO_COMPRA]->(compra)
+CREATE (compra)-[:INCLUYE_PLATO]->(p)
+CREATE (compra)-[:EN_SITIO]->(s);
 
-MATCH (u:Usuario {nombre:'Aiko Suzuki'}), (p:Plato {plato:'Mochi'})
-CREATE (u)-[:CONSUMIO {fecha:'2025-11-14'}]->(p);
+MATCH (u:Usuario {nombre:'Aiko Suzuki'}), (p:Plato {plato:'Mochi'}), (s:Sitio {sitio:'Hotel Park Hyatt Tokio'})
+CREATE (compra:Compra {
+  id: randomUUID(),
+  fecha: '2025-11-14',
+  cantidad: 1,
+  total: p.precio
+})
+CREATE (u)-[:REALIZO_COMPRA]->(compra)
+CREATE (compra)-[:INCLUYE_PLATO]->(p)
+CREATE (compra)-[:EN_SITIO]->(s);
 
-// Taro Yamamoto
-MATCH (u:Usuario {nombre:'Taro Yamamoto'}), (p:Plato {plato:'Sushi'})
-CREATE (u)-[:CONSUMIO {fecha:'2025-10-30'}]->(p);
+// Compras de Taro Yamamoto
+MATCH (u:Usuario {nombre:'Taro Yamamoto'}), (p:Plato {plato:'Sushi'}), (s:Sitio {sitio:'Restaurante Sukiyabashi Jiro'})
+CREATE (compra:Compra {
+  id: randomUUID(),
+  fecha: '2025-10-30',
+  cantidad: 1,
+  total: p.precio
+})
+CREATE (u)-[:REALIZO_COMPRA]->(compra)
+CREATE (compra)-[:INCLUYE_PLATO]->(p)
+CREATE (compra)-[:EN_SITIO]->(s);
 
-MATCH (u:Usuario {nombre:'Taro Yamamoto'}), (p:Plato {plato:'Tempura'})
-CREATE (u)-[:CONSUMIO {fecha:'2025-11-07'}]->(p);
+MATCH (u:Usuario {nombre:'Taro Yamamoto'}), (p:Plato {plato:'Tempura'}), (s:Sitio {sitio:'Restaurante Sukiyabashi Jiro'})
+CREATE (compra:Compra {
+  id: randomUUID(),
+  fecha: '2025-11-07',
+  cantidad: 1,
+  total: p.precio
+})
+CREATE (u)-[:REALIZO_COMPRA]->(compra)
+CREATE (compra)-[:INCLUYE_PLATO]->(p)
+CREATE (compra)-[:EN_SITIO]->(s);
 
-MATCH (u:Usuario {nombre:'Taro Yamamoto'}), (p:Plato {plato:'Sashimi'})
-CREATE (u)-[:CONSUMIO {fecha:'2025-11-13'}]->(p);
+MATCH (u:Usuario {nombre:'Taro Yamamoto'}), (p:Plato {plato:'Sashimi'}), (s:Sitio {sitio:'Restaurante Sukiyabashi Jiro'})
+CREATE (compra:Compra {
+  id: randomUUID(),
+  fecha: '2025-11-13',
+  cantidad: 1,
+  total: p.precio
+})
+CREATE (u)-[:REALIZO_COMPRA]->(compra)
+CREATE (compra)-[:INCLUYE_PLATO]->(p)
+CREATE (compra)-[:EN_SITIO]->(s);
 
-// ============================================
-// AGREGAR ID A TODOS LOS NODOS SIN IDENTIFICADOR
-// ============================================
-
-MATCH (n:Pais) WHERE n.id IS NULL
-SET n.id = randomUUID();
-
-MATCH (n:Ciudad) WHERE n.id IS NULL
-SET n.id = randomUUID();
-
-MATCH (n:Persona) WHERE n.id IS NULL
-SET n.id = randomUUID();
-
-MATCH (n:Sitio) WHERE n.id IS NULL
-SET n.id = randomUUID();
-
-MATCH (n:Plato) WHERE n.id IS NULL
-SET n.id = randomUUID();
-
-MATCH (n:Usuario) WHERE n.id IS NULL
-SET n.id = randomUUID();
-
-// ============================================
-// CREAR CONSTRAINTS E ÍNDICES SI NO EXISTEN
-// ============================================
-
-CREATE CONSTRAINT pais_id IF NOT EXISTS FOR (n:Pais) REQUIRE n.id IS UNIQUE;
-CREATE CONSTRAINT ciudad_id IF NOT EXISTS FOR (n:Ciudad) REQUIRE n.id IS UNIQUE;
-CREATE CONSTRAINT persona_id IF NOT EXISTS FOR (n:Persona) REQUIRE n.id IS UNIQUE;
-CREATE CONSTRAINT sitio_id IF NOT EXISTS FOR (n:Sitio) REQUIRE n.id IS UNIQUE;
-CREATE CONSTRAINT plato_id IF NOT EXISTS FOR (n:Plato) REQUIRE n.id IS UNIQUE;
-CREATE CONSTRAINT usuario_id IF NOT EXISTS FOR (n:Usuario) REQUIRE n.id IS UNIQUE;
-
-// ============================================
-// ÍNDICES RECOMENDADOS PARA CONSULTAS FRECUENTES
-// ============================================
-
-CREATE INDEX ciudad_nombre IF NOT EXISTS FOR (n:Ciudad) ON (n.ciudad);
-CREATE INDEX pais_nombre IF NOT EXISTS FOR (n:Pais) ON (n.pais);
-CREATE INDEX persona_nombre IF NOT EXISTS FOR (n:Persona) ON (n.nombre);
-CREATE INDEX sitio_nombre IF NOT EXISTS FOR (n:Sitio) ON (n.sitio);
-CREATE INDEX plato_nombre IF NOT EXISTS FOR (n:Plato) ON (n.plato);
-CREATE INDEX usuario_email IF NOT EXISTS FOR (n:Usuario) ON (n.email);

@@ -1,91 +1,109 @@
 // ============================================
-// CONSULTAS DE EJEMPLO
+// VERIFICACIÓN
 // ============================================
 
-// CONSULTA 1: De las personas famosas cuales son deportistas hombres, indicando su procedencia
-MATCH (p:Persona {profesion:'Deportista'})-[:NACIO_EN]->(c:Ciudad)
-WHERE p.genero = 'Masculino'
-RETURN p.nombre AS Deportista, p.genero AS Genero, c.ciudad AS Ciudad;
+// Contar todos los nodos por tipo
+MATCH (n)
+RETURN labels(n)[0] as tipo, COUNT(n) as cantidad
+ORDER BY cantidad DESC;
 
-// CONSULTA 2: Cuál es el plato más consumido por los usuarios
-MATCH (u:Usuario)-[:CONSUMIO]->(p:Plato)
-RETURN p.plato AS Plato, COUNT(u) AS VecesConsumido
-ORDER BY VecesConsumido DESC
-LIMIT 5;
+// Verificar que todos los nodos tienen ID
+MATCH (n)
+WHERE n.id IS NULL
+RETURN labels(n)[0] as tipo_sin_id, COUNT(n) as cantidad;
 
-// CONSULTA 3: Obtener todos los sitios turísticos de Colombia con su ubicación
-MATCH (s:Sitio)-[:UBICADO_EN]->(c:Ciudad)-[:PERTENECE_A]->(p:Pais {pais:'Colombia'})
-RETURN s.sitio AS Sitio, s.tipo AS Tipo, c.ciudad AS Ciudad
-ORDER BY c.ciudad;
+// Ver resumen de relaciones
+MATCH ()-[r]->()
+RETURN type(r) as tipo_relacion, COUNT(r) as cantidad
+ORDER BY cantidad DESC;
 
-// CONSULTA 4: Usuarios que viven en Cali y los sitios que han visitado
+// ============================================
+// CONSULTAS
+// ============================================
+
+// 1. Ver todas las compras de un usuario
+MATCH (u:Usuario {email:'sam@gmail.com'})-[:REALIZO_COMPRA]->(c:Compra)-[:INCLUYE_PLATO]->(p:Plato)
+MATCH (c)-[:EN_SITIO]->(s:Sitio)
+RETURN u.id, u.nombre, c.id, c.fecha, p.plato, c.total, s.sitio
+ORDER BY c.fecha DESC;
+
+// 2. Ver total gastado por usuario
+MATCH (u:Usuario)-[:REALIZO_COMPRA]->(c:Compra)
+RETURN u.id, u.nombre, u.email, SUM(c.total) as total_gastado
+ORDER BY total_gastado DESC;
+
+// 3. Ver platos más vendidos
+MATCH (c:Compra)-[:INCLUYE_PLATO]->(p:Plato)
+RETURN p.id, p.plato, COUNT(c) as veces_vendido, p.precio
+ORDER BY veces_vendido DESC;
+
+// 4. Ver compras por sitio
+MATCH (s:Sitio)<-[:EN_SITIO]-(c:Compra)-[:INCLUYE_PLATO]->(p:Plato)
+RETURN s.id, s.sitio, COUNT(c) as total_compras, SUM(c.total) as ingresos_totales
+ORDER BY ingresos_totales DESC;
+
+// 5. Ver compras en un rango de fechas
+MATCH (c:Compra)-[:INCLUYE_PLATO]->(p:Plato)
+WHERE c.fecha >= '2025-11-01' AND c.fecha <= '2025-11-15'
+RETURN c.id, c.fecha, p.plato, c.total
+ORDER BY c.fecha;
+
+// 6. Ver historial completo de un usuario (visitas + compras)
+MATCH (u:Usuario {email:'sam@gmail.com'})
+OPTIONAL MATCH (u)-[v:VISITO]->(sitio_visitado:Sitio)
+OPTIONAL MATCH (u)-[:REALIZO_COMPRA]->(c:Compra)-[:EN_SITIO]->(sitio_compra:Sitio)
+OPTIONAL MATCH (c)-[:INCLUYE_PLATO]->(p:Plato)
+RETURN u.nombre, v.fecha as fecha_visita, sitio_visitado.sitio,
+       c.fecha as fecha_compra, sitio_compra.sitio, p.plato, c.total
+ORDER BY coalesce(c.fecha, v.fecha) DESC;
+
+// 7. Ver usuarios que viven en una ciudad específica
 MATCH (u:Usuario)-[:VIVE_EN]->(c:Ciudad {ciudad:'Cali'})
-OPTIONAL MATCH (u)-[v:VISITO]->(s:Sitio)
-RETURN u.nombre AS Usuario, u.email AS Email,
-        COLLECT(DISTINCT s.sitio) AS SitiosVisitados,
-        COUNT(DISTINCT s) AS TotalVisitas;
+RETURN u.id, u.nombre, u.email, c.ciudad;
 
-// CONSULTA 5: Platos disponibles en cada país con su precio promedio
-MATCH (p:Plato)-[:SE_VENDE_EN]->(s:Sitio)-[:UBICADO_EN]->(c:Ciudad)-[:PERTENECE_A]->(pais:Pais)
-RETURN pais.pais AS Pais,
-       COUNT(DISTINCT p.plato) AS CantidadPlatos,
-       AVG(p.precio) AS PrecioPromedio,
-       MIN(p.precio) AS PlatoMasBarato,
-       MAX(p.precio) AS PlatoMasCaro
-ORDER BY PrecioPromedio DESC;
+// 8. Ver personas famosas de un país
+MATCH (p:Persona)-[:NACIO_EN]->(c:Ciudad)-[:PERTENECE_A]->(pais:Pais {pais:'Colombia'})
+RETURN p.id, p.nombre, p.profesion, p.genero, c.ciudad
+ORDER BY p.profesion, p.nombre;
 
-// CONSULTA 6: Ranking de restaurantes y hoteles más visitados
-MATCH (u:Usuario)-[:VISITO]->(s:Sitio)
-WHERE s.tipo IN ['Restaurante', 'Hotel']
-WITH s, COUNT(u) AS Visitas
-RETURN s.sitio AS Establecimiento, s.tipo AS Tipo, Visitas
-ORDER BY Visitas DESC, s.sitio;
+// 9. Ver sitios turísticos de una ciudad
+MATCH (s:Sitio)-[:UBICADO_EN]->(c:Ciudad {ciudad:'Bogotá'})
+RETURN s.id, s.sitio, s.tipo, c.ciudad
+ORDER BY s.tipo;
 
-// CONSULTA 7: Personas famosas agrupadas por profesión y país de origen
-MATCH (p:Persona)-[:NACIO_EN]->(c:Ciudad)-[:PERTENECE_A]->(pais:Pais)
-RETURN pais.pais AS Pais,
-       p.profesion AS Profesion,
-       COUNT(p) AS Cantidad,
-       COLLECT(p.nombre) AS Nombres
-ORDER BY pais.pais, Cantidad DESC;
+// 10. Ver menú disponible en un sitio
+MATCH (p:Plato)-[:SE_VENDE_EN]->(s:Sitio {sitio:'Restaurante Andrés Carne de Res'})
+RETURN s.id, s.sitio, p.id, p.plato, p.precio
+ORDER BY p.precio;
 
-// CONSULTA 8: Usuarios con mayor gasto en consumo de platos
-MATCH (u:Usuario)-[:CONSUMIO]->(p:Plato)
-WITH u, SUM(p.precio) AS GastoTotal, COUNT(p) AS PlatosConsumidos
-RETURN u.nombre AS Usuario,
-       u.email AS Email,
-       PlatosConsumidos,
-       GastoTotal AS TotalGastado
-ORDER BY GastoTotal DESC
-LIMIT 10;
+// 11. Ver ciudades de un país con conteo de sitios
+MATCH (c:Ciudad)-[:PERTENECE_A]->(p:Pais {pais:'Colombia'})
+OPTIONAL MATCH (s:Sitio)-[:UBICADO_EN]->(c)
+RETURN c.id, c.ciudad, p.pais, COUNT(s) as total_sitios
+ORDER BY total_sitios DESC;
 
-// CONSULTA 9: Ciudades más populares por cantidad de visitas a sus sitios
-MATCH (u:Usuario)-[:VISITO]->(s:Sitio)-[:UBICADO_EN]->(c:Ciudad)-[:PERTENECE_A]->(p:Pais)
-WITH c, p, COUNT(u) AS TotalVisitas
-RETURN p.pais AS Pais,
-       c.ciudad AS Ciudad,
-       TotalVisitas
-ORDER BY TotalVisitas DESC, p.pais;
+// 12. Ver usuarios que visitaron un sitio específico
+MATCH (u:Usuario)-[v:VISITO]->(s:Sitio {sitio:'Museo del Oro'})
+RETURN u.id, u.nombre, u.email, v.fecha, v.hora
+ORDER BY v.fecha DESC;
 
-// CONSULTA 10: Platos que nunca han sido consumidos
-MATCH (p:Plato)
-WHERE NOT EXISTS((p)<-[:CONSUMIO]-())
-RETURN p.plato AS PlatoNoConsumido,
-       p.precio AS Precio
-ORDER BY p.precio DESC;
+// 13. Ver platos de un país específico (a través de sitios)
+MATCH (p:Plato)-[:SE_VENDE_EN]->(s:Sitio)-[:UBICADO_EN]->(c:Ciudad)-[:PERTENECE_A]->(pais:Pais {pais:'Colombia'})
+RETURN DISTINCT p.id, p.plato, p.precio
+ORDER BY p.plato;
 
-// CONSULTA 11: Usuarios que han visitado sitios pero no han consumido nada
-MATCH (u:Usuario)-[:VISITO]->(:Sitio)
-WHERE NOT EXISTS((u)-[:CONSUMIO]->(:Plato))
-RETURN u.nombre AS Usuario,
-       u.email AS Email,
-       u.genero AS Genero;
+// 14. Ver compras realizadas en sitios de una ciudad
+MATCH (c:Compra)-[:EN_SITIO]->(s:Sitio)-[:UBICADO_EN]->(ciudad:Ciudad {ciudad:'Bogotá'})
+MATCH (c)-[:INCLUYE_PLATO]->(p:Plato)
+MATCH (u:Usuario)-[:REALIZO_COMPRA]->(c)
+RETURN ciudad.ciudad, s.sitio, u.nombre, p.plato, c.fecha, c.total
+ORDER BY c.fecha DESC;
 
-// CONSULTA 12: Análisis de consumo por género de usuarios
-MATCH (u:Usuario)-[:CONSUMIO]->(p:Plato)
-WITH u.genero AS Genero, SUM(p.precio) AS TotalGastado, COUNT(p) AS TotalConsumos
-RETURN Genero,
-       TotalConsumos AS CantidadConsumos,
-       TotalGastado AS GastoTotal,
-       ROUND(TotalGastado * 1.0 / TotalConsumos) AS PromedioGastoPorConsumo
-ORDER BY TotalGastado DESC;
+// 15. Ver estadísticas de un usuario
+MATCH (u:Usuario {email:'sam@gmail.com'})
+OPTIONAL MATCH (u)-[:REALIZO_COMPRA]->(compra:Compra)
+OPTIONAL MATCH (u)-[:VISITO]->(sitio:Sitio)
+RETURN u.id, u.nombre, u.email,
+       COUNT(DISTINCT compra) as total_compras,
+       SUM(compra.total) as total_gastado,
+       COUNT(DISTINCT sitio) as sitios_visitados;
